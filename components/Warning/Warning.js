@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Warning({ children }) {
+export default function Warning({ isCompact, children }) {
   return (
     <div
       css={`
@@ -14,6 +14,7 @@ export default function Warning({ children }) {
         margin-top: 24px;
         padding: 32px;
         font-weight: 300;
+        ${isCompact && `font-size: 14px;`}
       `}
     >
       {children}

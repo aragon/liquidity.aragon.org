@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import NavBar from 'components/NavBar/NavBar'
 import StakeModule from 'components/StakeModule/StakeModule'
 
@@ -16,9 +17,7 @@ export default function Unipool() {
       `}
     >
       <NavBar logoMode={'ant'} />
-      <div>
-        <StakeModule />
-      </div>
+      <StakeModule />
     </div>
   )
 }

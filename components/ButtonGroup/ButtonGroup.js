@@ -25,12 +25,12 @@ export default function ButtonGroup({
       {elements.map((el, idx) => (
         <Button
           activeKey={activeKey}
-          key={idx}
+          key={el.id}
           lastChild={elements.length - 1 === idx}
           index={idx}
           onSetActiveKey={onSetActiveKey}
         >
-          {el}
+          {!isCompact ? el.copy : el.copyCompact}
         </Button>
       ))}
     </div>
@@ -64,7 +64,7 @@ const ButtonBase = styled.button`
   border: 0;
   border-radius: 8px;
   padding: 0;
-  margin-right: 8px;
+  margin-right: 6px;
   width: 227px;
   height: 59px;
   cursor: pointer;

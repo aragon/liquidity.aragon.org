@@ -33,7 +33,6 @@ export default function StatsRow({ balanceUni, decimalsUni, isCompact }) {
         APY:{' '}
         <span
           css={`
-            font-weight: bold;
             color: black;
           `}
         >
@@ -50,10 +49,9 @@ export default function StatsRow({ balanceUni, decimalsUni, isCompact }) {
             `}
         `}
       >
-        Your Wallet balance:{' '}
+        Your account’s balance:{' '}
         <span
           css={`
-            font-weight: bold;
             color: black;
           `}
         >
