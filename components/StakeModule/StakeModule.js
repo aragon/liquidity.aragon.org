@@ -133,14 +133,19 @@ function WithdrawSection({ isCompact }) {
         margin-top: 20px;
         ${isCompact &&
           `
-        flex-direction: column;
-      `}
+          flex-direction: column;
+        `}
       `}
     >
       <Card
         css={`
           display: flex;
           flex-direction: column;
+          margin: 0 9px 0 0;
+          ${isCompact &&
+            `
+            margin: 0 0 9px 0;
+          `}
         `}
       >
         <span
@@ -167,6 +172,11 @@ function WithdrawSection({ isCompact }) {
             display: block;
             color: #7893ae;
             font-weight: 300;
+            margin: 0 9px 0 0;
+            ${isCompact &&
+              `
+            margin: 0 0 9px 0;
+          `}
           `}
         >
           Rewards claimed
@@ -203,6 +213,12 @@ function StatsSection({ isCompact }) {
           css={`
             display: flex;
             flex-direction: column;
+            margin-right: 9px;
+            margin: 0 9px 0 0;
+            ${isCompact &&
+              `
+            margin: 0 0 9px 0;
+          `}
           `}
         >
           <span
@@ -229,6 +245,11 @@ function StatsSection({ isCompact }) {
               display: block;
               color: #7893ae;
               font-weight: 300;
+              margin: 0 9px 0 0;
+              ${isCompact &&
+                `
+                margin: 0 0 9px 0;
+              `}
             `}
           >
             Rewards claimed
@@ -253,6 +274,12 @@ function StatsSection({ isCompact }) {
           css={`
             display: flex;
             flex-direction: column;
+            margin-right: 9px;
+            margin: 0 9px 0 0;
+            ${isCompact &&
+              `
+              margin: 0 0 9px 0;
+            `}
           `}
         >
           <span
@@ -303,6 +330,7 @@ function StatsSection({ isCompact }) {
           css={`
             display: flex;
             flex-direction: column;
+            margin-right: 9px;
           `}
         >
           <span
