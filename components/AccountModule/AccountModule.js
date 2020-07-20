@@ -195,15 +195,20 @@ function ConnectedMode() {
   return (
     <Container ref={containerRef}>
       <ButtonBase
+        onClick={deactivate}
         css={`
+          display: flex;
+          flex-direction: row;
           position: relative;
-          background: rgba(255, 255, 255, 0.5);
+          align-items: center;
+          justify-content: center;
+          font-weight: normal;
+          width: 178px;
           &:active {
             top: 1px;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
           }
         `}
-        onClick={deactivate}
       >
         <div
           css={`
