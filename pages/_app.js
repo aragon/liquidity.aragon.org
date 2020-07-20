@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }) {
     <ViewportProvider>
       <animated.div style={revealProps}>
         <NextHead>
-          <title>Aragon Converter</title>
+          <title>Aragon Liquidity Program</title>
         </NextHead>
         <GlobalStyles />
         <WalletProvider>

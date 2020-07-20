@@ -1,6 +1,24 @@
 import React from 'react'
-import ConvertForm from 'components/ConvertForm/ConvertForm'
+import NavBar from 'components/NavBar/NavBar'
+import StakeModule from 'components/StakeModule/StakeModule'
 
 export default () => {
-  return <ConvertForm />
+return (
+  <div
+    css={`
+      position: relative;
+      min-height: 100vh;
+      background: #f6f9fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    `}
+  >
+    <NavBar logoMode={'ant'} />
+    <div>
+      <StakeModule />
+    </div>
+  </div>
+)
 }

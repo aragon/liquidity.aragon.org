@@ -8,6 +8,8 @@ import StatsRow from './StatsRow'
 import { useWalletAugmented } from 'lib/wallet'
 import { useTokenBalance, useTokenDecimals } from 'lib/web3-contracts'
 
+const SECTIONS = ['Stake', 'Withdraw', 'Stats']
+
 export default function StakeModule() {
   const [activeKey, setActiveKey] = useState(0)
   const { below } = useViewport()
@@ -48,54 +50,300 @@ export default function StakeModule() {
     >
       <ButtonGroup
         activeKey={activeKey}
-        elements={['Deposit', 'Withdraw', 'Stats']}
+        elements={SECTIONS}
         isCompact={isCompact}
         onSetActiveKey={setActiveKey}
       />
-      <StatsRow
-        balanceUni={balanceUni}
-        decimalsUni={decimalsUni}
-        isCompact={isCompact}
-      />
+      {SECTIONS[activeKey] !== 'Stats' && (
+        <StatsRow
+          balanceUni={balanceUni}
+          decimalsUni={decimalsUni}
+          isCompact={isCompact}
+        />
+      )}
+      {SECTIONS[activeKey] === 'Stake' && <StakeSection />}
+      {SECTIONS[activeKey] === 'Withdraw' && (
+        <WithdrawSection isCompact={isCompact} />
+      )}
+      {SECTIONS[activeKey] === 'Stats' && (
+        <StatsSection isCompact={isCompact} />
+      )}
+      {!connected && SECTIONS[activeKey] !== 'Stats' && (
+        <Warning>Please, connect your wallet to get started.</Warning>
+      )}
+      {connected && SECTIONS[activeKey] !== 'Stats' && (
+        <ActionButton
+          type="button"
+          css={`
+            margin-top: 60px;
+          `}
+        >
+          {' '}
+          Stake{' '}
+        </ActionButton>
+      )}
+    </main>
+  )
+}
+
+function StakeSection() {
+  return (
+    <Card
+      css={`
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+      `}
+    >
+      <Logo mode="ant" />
+      <div
+        css={`
+          display: flex;
+          flex-direction: column;
+          margin-left: 20px;
+        `}
+      >
+        <span
+          css={`
+            display: block;
+            font-weight: 300;
+            color: #7893ae;
+            margin-bottom: 12px;
+          `}
+        >
+          Your estimated rewards
+        </span>
+        <span
+          css={`
+            display: block;
+          `}
+        >
+          <b>0.00 ANT</b> / Month
+        </span>
+      </div>
+    </Card>
+  )
+}
+
+function WithdrawSection({ isCompact }) {
+  return (
+    <div
+      css={`
+        display: flex;
+        margin-top: 20px;
+        ${isCompact &&
+          `
+        flex-direction: column;
+      `}
+      `}
+    >
       <Card
         css={`
           display: flex;
-          align-items: center;
-          margin-top: 20px;
+          flex-direction: column;
         `}
       >
-        <Logo mode="ant" />
-        <div
+        <span
+          css={`
+            display: block;
+            color: #7893ae;
+            font-weight: 300;
+          `}
+        >
+          Amount to withdraw
+        </span>
+        <span
+          css={`
+            display: block;
+            font-size: 24px;
+          `}
+        >
+          $0
+        </span>
+      </Card>
+      <Card>
+        <span
+          css={`
+            display: block;
+            color: #7893ae;
+            font-weight: 300;
+          `}
+        >
+          Rewards claimed
+        </span>
+        <span
+          css={`
+            display: block;
+            font-size: 24px;
+          `}
+        >
+          0 ANT
+        </span>
+      </Card>
+    </div>
+  )
+}
+
+function StatsSection({ isCompact }) {
+  return (
+    <div
+      css={`
+        display: flex;
+        margin-top: 20px;
+        flex-direction: column;
+      `}
+    >
+      <div
+        css={`
+          display: flex;
+          margin-bottom: 9px;
+        `}
+      >
+        <Card
           css={`
             display: flex;
             flex-direction: column;
-            margin-left: 20px;
           `}
         >
           <span
             css={`
               display: block;
-              font-weight: 300;
               color: #7893ae;
-              margin-bottom: 12px;
+              font-weight: 300;
             `}
           >
-            Your estimated rewards
+            Amount to withdraw
           </span>
           <span
             css={`
               display: block;
+              font-size: 24px;
             `}
           >
-            <b>0.00 ANT</b> / Month
+            $0
           </span>
-        </div>
-      </Card>
-      {!connected && (
-        <Warning>Please, connect your wallet to get started.</Warning>
-      )}
-      <ActionButton css={`margin-top: 60px;`}> Stake </ActionButton>
-    </main>
+        </Card>
+        <Card>
+          <span
+            css={`
+              display: block;
+              color: #7893ae;
+              font-weight: 300;
+            `}
+          >
+            Rewards claimed
+          </span>
+          <span
+            css={`
+              display: block;
+              font-size: 24px;
+            `}
+          >
+            0 ANT
+          </span>
+        </Card>
+      </div>
+      <div
+        css={`
+          display: flex;
+          margin-bottom: 9px;
+        `}
+      >
+        <Card
+          css={`
+            display: flex;
+            flex-direction: column;
+          `}
+        >
+          <span
+            css={`
+              display: block;
+              color: #7893ae;
+              font-weight: 300;
+            `}
+          >
+            Locked Rewards
+          </span>
+          <span
+            css={`
+              display: block;
+              font-size: 24px;
+            `}
+          >
+            $0
+          </span>
+        </Card>
+        <Card>
+          <span
+            css={`
+              display: block;
+              color: #7893ae;
+              font-weight: 300;
+            `}
+          >
+            Unlocked Rewards
+          </span>
+          <span
+            css={`
+              display: block;
+              font-size: 24px;
+            `}
+          >
+            0 ANT
+          </span>
+        </Card>
+      </div>
+      <div
+        css={`
+          display: flex;
+          margin-bottom: 9px;
+        `}
+      >
+        <Card
+          css={`
+            display: flex;
+            flex-direction: column;
+          `}
+        >
+          <span
+            css={`
+              display: block;
+              color: #7893ae;
+              font-weight: 300;
+            `}
+          >
+            Program Duration
+          </span>
+          <span
+            css={`
+              display: block;
+              font-size: 24px;
+            `}
+          >
+            0 Days
+          </span>
+        </Card>
+        <Card>
+          <span
+            css={`
+              display: block;
+              color: #7893ae;
+              font-weight: 300;
+            `}
+          >
+            Rewards Unlock Rate
+          </span>
+          <span
+            css={`
+              display: block;
+              font-size: 24px;
+            `}
+          >
+            0 ANT / Month
+          </span>
+        </Card>
+      </div>
+    </div>
   )
 }
 
@@ -118,6 +366,9 @@ const ActionButton = styled.button`
   cursor: pointer;
   &:active {
     top: 1px;
+  }
+  &:focus {
+    background: red;
   }
   background: linear-gradient(342.22deg, #01e8f7 -5.08%, #00c2ff 81.4%);
   color: white;
