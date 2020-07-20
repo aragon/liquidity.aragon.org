@@ -58,6 +58,7 @@ function Button({ activeKey, children, lastChild, index, onSetActiveKey }) {
 }
 
 const ButtonBase = styled.button`
+  position: relative;
   background: #ffffff;
   box-shadow: 0px 3px 6px rgba(139, 166, 194, 0.35);
   border: 0;
@@ -69,6 +70,7 @@ const ButtonBase = styled.button`
   cursor: pointer;
   transition: all 0.1s ease-out;
   &:active {
+    top: 1px;
     border: 2px solid #00c2ff;
   }
 `
