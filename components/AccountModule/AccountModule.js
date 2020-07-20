@@ -86,6 +86,7 @@ function DisconnectedMode() {
                   padding-left: 16px;
                   font-size: 16px;
                   font-family: 'Manrope', helvetica;
+                  font-weight: 300;
                 `}
               >
                 Use Account From
