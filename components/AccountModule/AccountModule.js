@@ -61,7 +61,7 @@ function DisconnectedMode() {
       <OverlayTrigger
         trigger="click"
         rootClose
-        placement="bottom-start"
+        placement="bottom-end"
         overlay={
           <StyledPopover
             css={`
@@ -73,10 +73,9 @@ function DisconnectedMode() {
               css={`
                 position: relative;
                 width: 100%;
-                height: 32px;
+                height: 40px;
                 border-bottom: 0.5px solid #dde4e8;
-                text-transform: uppercase;
-                color: #637381;
+                color: #7893ae;
               `}
             >
               <span
@@ -85,11 +84,11 @@ function DisconnectedMode() {
                   width: 100%;
                   padding-top: 8px;
                   padding-left: 16px;
-                  padding-bottom: 8px;
-                  font-size: 12px;
+                  font-size: 16px;
+                  font-family: 'Manrope', helvetica;
                 `}
               >
-                Ethereum Providers
+                Use Account From
               </span>
               <div
                 css={`
@@ -230,8 +229,9 @@ const Container = styled.div`
 const StyledPopover = styled(Popover)`
   overflow: hidden;
   background: #fff;
-  box-shadow: 0px 7px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 7px 17px rgba(139, 166, 194, 0.35);
   border: 0 solid transparent;
+  border-radius: 8px;
   width: 410px;
   max-width: 90vw;
   height: 277px;
