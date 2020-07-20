@@ -7,7 +7,9 @@ function NavBar({ logoMode }) {
   return (
     <div
       css={`
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
         z-index: 5;
         width: 100vw;
         display: flex;
