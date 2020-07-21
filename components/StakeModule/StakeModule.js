@@ -15,6 +15,7 @@ import {
   useStake,
   useTokenBalance,
   useTokenDecimals,
+  useTokenReserve,
   useUniStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
@@ -245,7 +246,7 @@ function StakeSection() {
             margin-bottom: 12px;
           `}
         >
-          Amount of UNI Staked
+          Amount of UNI staked
         </span>
         <span
           css={`
@@ -337,6 +338,9 @@ function WithdrawSection({ isCompact }) {
 function ClaimSection() {
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
+  const [tokenReserves, loadingReserves] = useTokenReserve('ANT')
+  // useEffect(() => console.log('reserve', data[0]?.toString()), [data])
+
   return (
     <div>
       <Card
@@ -370,7 +374,9 @@ function ClaimSection() {
               font-size: 22px;
             `}
           >
-            0.00 ANT
+            {loadingReserves || !tokenReserves
+              ? 'loading...'
+              : TokenAmount.format(tokenReserves, 18, { symbol: 'ANT' })}
           </span>
         </div>
       </Card>
@@ -410,9 +416,9 @@ function ClaimSection() {
                 font-size: 22px;
               `}
             >
-          {loading
-            ? 'loading...'
-            : TokenAmount.format(paid, 18, { symbol: 'ANT' })}
+              {loading
+                ? 'loading...'
+                : TokenAmount.format(paid, 18, { symbol: 'ANT' })}
             </span>
           </span>
         </div>
