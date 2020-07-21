@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { utils as EthersUtils } from 'ethers'
 import styled from 'styled-components'
 import TokenAmount from 'token-amount'
 import { useViewport } from 'use-viewport'
@@ -19,10 +20,9 @@ import {
   useTokenDecimals,
   useTokenUniswapInfo,
   useUniStaked,
-  useUniTotalSupply,
   useWithdraw,
 } from 'lib/web3-contracts'
-import { parseUnits, useTokenUsdRate } from 'lib/web3-utils'
+import { parseUnits } from 'lib/web3-utils'
 
 const SECTIONS = [
   { id: 'stake', copy: 'Stake', copyCompact: 'Stake' },
@@ -67,8 +67,22 @@ function useConvertInputs() {
   }, [])
 
   const inputValues = useMemo(
-    () => ({ amountUni, handleSetInputValue, inputValue, resetInputs }),
-    [amountUni, handleSetInputValue, inputValue, resetInputs]
+    () => ({
+      amountUni,
+      handleSetInputValue,
+      inputValue,
+      resetInputs,
+      setAmountUni,
+      setInputValue,
+    }),
+    [
+      amountUni,
+      handleSetInputValue,
+      inputValue,
+      resetInputs,
+      setAmountUni,
+      setInputValue,
+    ]
   )
 
   return inputValues
@@ -84,6 +98,8 @@ export default function StakeModule() {
     handleSetInputValue,
     amountUni: amount,
     resetInputs,
+    setAmountUni,
+    setInputValue,
   } = useConvertInputs()
   const { connected } = useWalletAugmented()
   const selectedTokenBalance = useTokenBalance(mode.toUpperCase())
@@ -109,14 +125,22 @@ export default function StakeModule() {
     resetInputs()
   }, [activeKey, connected, mode, resetInputs])
 
-  useEffect(() => console.log(amount.toString()), [amount])
+  const inputError = useMemo(() => amount.gt(selectedTokenBalance), [
+    amount,
+    selectedTokenBalance,
+  ])
 
-  const handleChangeMode = useCallback(
-    () => setMode(mode === 'uni' ? 'ant' : 'uni'),
-    [mode]
-  )
+  const handleMax = useCallback(() => {
+    const newInputValue = EthersUtils.formatEther(
+      selectedTokenBalance.toString()
+    )
+    setAmountUni(selectedTokenBalance)
+    setInputValue(newInputValue)
+  }, [selectedTokenBalance, setAmountUni, setInputValue])
+
   const handleSubmit = useCallback(async () => {
     try {
+      handleMax()
       setDisabled(true)
       if (SECTIONS[activeKey].id === 'stake') {
         mode === 'uni' ? await stake(amount) : await provideLiquidity(amount)
@@ -134,7 +158,16 @@ export default function StakeModule() {
     } finally {
       setDisabled(false)
     }
-  }, [activeKey, amount, claim, mode, provideLiquidity, stake, withdraw])
+  }, [
+    activeKey,
+    amount,
+    claim,
+    mode,
+    provideLiquidity,
+    stake,
+    withdraw,
+    handleMax,
+  ])
 
   return (
     <div
@@ -186,12 +219,12 @@ export default function StakeModule() {
           </Info>
         )}
         {SECTIONS[activeKey].id === 'withdraw' && (
-          <Info mode="info" height="40" padding="16" Compact={isCompact}>
+          <Info mode="info" padding="16" Compact={isCompact}>
             Withdraw all of your staked UNI.
           </Info>
         )}
         {SECTIONS[activeKey].id === 'claim' && (
-          <Info mode="info" height="40" padding="16" Compact={isCompact}>
+          <Info mode="info" padding="16" Compact={isCompact}>
             Claim all of your rewards from your staked UNI.
           </Info>
         )}
@@ -209,7 +242,7 @@ export default function StakeModule() {
             mode={mode}
             inputValue={inputValue}
             onChange={handleSetInputValue}
-            onModeChange={handleChangeMode}
+            onMax={handleMax}
           />
         )}
         {SECTIONS[activeKey].id === 'stake' && <StakeSection mode={mode} />}
@@ -227,19 +260,20 @@ export default function StakeModule() {
         {connected && (
           <ActionButton
             type="button"
-            disabled={disabled}
+            disabled={disabled || inputError}
             onClick={disabled ? undefined : handleSubmit}
             css={`
               margin-top: 60px;
-              ${disabled &&
-                `
+              ${disabled ||
+                (inputError &&
+                  `
                 background: #F6F9FC;
                 color: #8398AC;
                 cursor: default;
                 &:active {
                   top: 0px;
                 }
-              `}
+              `)}
             `}
           >
             {SECTIONS[activeKey].copy}

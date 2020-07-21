@@ -10,7 +10,6 @@ export default function Info({
   mode = 'warning',
   padding = '8',
   isCompact,
-  height = '100',
 }) {
   const modeColor = MODES.get(mode.toLowerCase())
 
@@ -25,7 +24,7 @@ export default function Info({
         font-size: 16px;
         margin-top: 24px;
         padding: ${padding}px;
-        height: ${height}px;
+        height: 100%;
         font-weight: 300;
         ${isCompact && `font-size: 14px;`}
       `}
