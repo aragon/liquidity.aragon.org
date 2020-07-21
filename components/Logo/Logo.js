@@ -5,6 +5,7 @@ import { useTransition, animated } from 'react-spring'
 import logo from './logo.svg'
 import logoAnt from './logo-ant.svg'
 import logoAnj from './logo-anj.svg'
+import uniswapSvg from '../Input/assets/uniswap.svg'
 
 function getImage(mode) {
   if (mode === 'ant') {
@@ -12,6 +13,9 @@ function getImage(mode) {
   }
   if (mode === 'anj') {
     return logoAnj
+  }
+  if (mode === 'uni') {
+    return uniswapSvg
   }
   return logo
 }
@@ -72,6 +76,7 @@ function Logo({
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
           `}
         />
       ))}

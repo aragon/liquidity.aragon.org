@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import TokenAmount from 'token-amount'
 import { useViewport } from 'use-viewport'
 import ButtonGroup from 'components/ButtonGroup/ButtonGroup'
 import Logo from 'components/Logo/Logo'
@@ -10,9 +11,11 @@ import { bigNum } from 'lib/utils'
 import { useWalletAugmented } from 'lib/wallet'
 import {
   useClaim,
+  useRewardsPaid,
   useStake,
   useTokenBalance,
   useTokenDecimals,
+  useUniStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
 import { parseUnits } from 'lib/web3-utils'
@@ -159,7 +162,7 @@ export default function StakeModule() {
         />
 
         {SECTIONS[activeKey].id === 'withdraw' && (
-          <Info mode="info" height='40' padding="16" Compact={isCompact}>
+          <Info mode="info" height="40" padding="16" Compact={isCompact}>
             Withdraw all of your staked UNI.
           </Info>
         )}
@@ -216,6 +219,8 @@ export default function StakeModule() {
 }
 
 function StakeSection() {
+  const { account } = useWalletAugmented()
+  const { loading, staked } = useUniStaked()
   return (
     <Card
       css={`
@@ -224,7 +229,7 @@ function StakeSection() {
         margin-top: 20px;
       `}
     >
-      <Logo mode="ant" />
+      <Logo mode="uni" />
       <div
         css={`
           display: flex;
@@ -240,14 +245,16 @@ function StakeSection() {
             margin-bottom: 12px;
           `}
         >
-          Your estimated rewards
+          Amount of UNI Staked
         </span>
         <span
           css={`
             display: block;
           `}
         >
-          0.00 ANT / Month
+          {loading
+            ? 'loading...'
+            : TokenAmount.format(staked, 18, { symbol: 'UNI' })}
         </span>
       </div>
     </Card>
@@ -255,6 +262,8 @@ function StakeSection() {
 }
 
 function WithdrawSection({ isCompact }) {
+  const { account } = useWalletAugmented()
+  const { loading, paid } = useRewardsPaid(account)
   return (
     <div
       css={`
@@ -316,7 +325,9 @@ function WithdrawSection({ isCompact }) {
             font-size: 24px;
           `}
         >
-          0 ANT
+          {loading
+            ? 'loading...'
+            : TokenAmount.format(paid, 18, { symbol: 'UNI' })}
         </span>
       </Card>
     </div>
@@ -324,6 +335,8 @@ function WithdrawSection({ isCompact }) {
 }
 
 function ClaimSection() {
+  const { account } = useWalletAugmented()
+  const { loading, paid } = useRewardsPaid(account)
   return (
     <div>
       <Card
@@ -397,7 +410,9 @@ function ClaimSection() {
                 font-size: 22px;
               `}
             >
-              0.00 ANT
+          {loading
+            ? 'loading...'
+            : TokenAmount.format(paid, 18, { symbol: 'ANT' })}
             </span>
           </span>
         </div>
