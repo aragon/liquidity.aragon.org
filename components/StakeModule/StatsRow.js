@@ -67,12 +67,3 @@ export default function StatsRow({ balanceUni, decimalsUni, isCompact }) {
     </div>
   )
 }
-
-const Card = styled.div`
-  width: 100%;
-  height: 120px;
-  background: #ffffff;
-  box-shadow: 0px 7px 17px rgba(139, 166, 194, 0.15);
-  border-radius: 8px;
-  padding: 32px;
-`

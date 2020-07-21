@@ -6,8 +6,16 @@ import Logo from 'components/Logo/Logo'
 import Input from 'components/Input/Input'
 import StatsRow from './StatsRow'
 import Warning from 'components/Warning/Warning'
+import { bigNum } from 'lib/utils'
 import { useWalletAugmented } from 'lib/wallet'
-import { useTokenBalance, useTokenDecimals } from 'lib/web3-contracts'
+import {
+  useClaim,
+  useStake,
+  useTokenBalance,
+  useTokenDecimals,
+  useWithdraw,
+} from 'lib/web3-contracts'
+import { parseUnits } from 'lib/web3-utils'
 
 const SECTIONS = [
   { id: 'stake', copy: 'Stake', copyCompact: 'Stake' },
@@ -15,12 +23,68 @@ const SECTIONS = [
   { id: 'claim', copy: 'Claim rewards', copyCompact: 'Claim' },
 ]
 
+// Filters and parse the input value of a token amount.
+// Returns a BN.js instance and the filtered value.
+function parseInputValue(inputValue, decimals) {
+  if (decimals === -1) {
+    return null
+  }
+
+  inputValue = inputValue.trim()
+
+  // amount is the parsed value (BN.js instance)
+  const amount = parseUnits(inputValue, { digits: decimals })
+
+  if (amount.lt(0)) {
+    return null
+  }
+
+  return { amount, inputValue }
+}
+
+function useConvertInputs() {
+  const [inputValue, setInputValue] = useState('')
+  const [amountUni, setAmountUni] = useState(bigNum(0))
+
+  const handleSetInputValue = useCallback(e => {
+    const parsedValue = parseInputValue(e.target.value, 18)
+    if (parsedValue !== null) {
+      console.log(parsedValue.amount.toString())
+      setInputValue(parsedValue.inputValue)
+      setAmountUni(parsedValue.amount)
+    }
+  }, [])
+
+  const resetInputs = useCallback(() => {
+    setInputValue('')
+    setAmountUni(bigNum(0))
+  }, [])
+
+  const inputValues = useMemo(
+    () => ({ amountUni, handleSetInputValue, inputValue, resetInputs }),
+    [amountUni, handleSetInputValue, inputValue, resetInputs]
+  )
+
+  return inputValues
+}
+
 export default function StakeModule() {
   const [activeKey, setActiveKey] = useState(0)
-  const { below } = useViewport()
-  const { account, connected } = useWalletAugmented()
+  const [disabled, setDisabled] = useState(false)
+
+  const {
+    inputValue,
+    handleSetInputValue,
+    amountUni,
+    resetInputs,
+  } = useConvertInputs()
+  const { connected } = useWalletAugmented()
   const balanceUni = useTokenBalance('UNI')
   const decimalsUni = useTokenDecimals('UNI')
+  const claim = useClaim()
+  const stake = useStake()
+  const withdraw = useWithdraw()
+  const { below } = useViewport()
   // Super ugly Next.js workaround to let us have differences between SSR & client
   const [isCompact, setIsCompact] = useState(false)
   const smallLayout = below(415)
@@ -29,6 +93,33 @@ export default function StakeModule() {
       setIsCompact(smallLayout)
     }, 0)
   }, [smallLayout])
+
+  // Reset all values on connection change
+  useEffect(() => {
+    resetInputs()
+  }, [activeKey, connected, resetInputs])
+
+  const handleSubmit = useCallback(async () => {
+    try {
+      setDisabled(true)
+      if (SECTIONS[activeKey].id === 'stake') {
+        console.log(amountUni.toString(), 'stake')
+        await stake(amountUni)
+      }
+
+      if (SECTIONS[activeKey].id === 'withdraw') {
+        await withdraw(amountUni)
+      }
+
+      if (SECTIONS[activeKey].id === 'claim') {
+        await claim()
+      }
+    } catch (err) {
+      console.log(JSON.stringify(err))
+    } finally {
+      setDisabled(false)
+    }
+  }, [activeKey, amountUni, claim, stake, withdraw])
 
   return (
     <div
@@ -72,8 +163,12 @@ export default function StakeModule() {
           />
         )}
         {SECTIONS[activeKey].id !== 'claim' && (
-          <Input />
-          )}
+          <Input
+            disabled={!connected}
+            inputValue={inputValue}
+            onChange={handleSetInputValue}
+          />
+        )}
         {SECTIONS[activeKey].id === 'stake' && <StakeSection />}
         {SECTIONS[activeKey].id === 'withdraw' && (
           <WithdrawSection isCompact={isCompact} />
@@ -86,15 +181,16 @@ export default function StakeModule() {
             Please, connect your wallet to get started.
           </Warning>
         )}
-        {connected && SECTIONS[activeKey] !== 'Stats' && (
+        {connected && (
           <ActionButton
             type="button"
+            disabled={disabled}
+            onClick={handleSubmit}
             css={`
               margin-top: 60px;
             `}
           >
-            {' '}
-            Stake{' '}
+            {SECTIONS[activeKey].copy}
           </ActionButton>
         )}
       </main>

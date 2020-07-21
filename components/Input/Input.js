@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { animated, useTransition } from 'react-spring'
 import uniswapSvg from './assets/uniswap.svg'
 
-const ESCAPE_KEY = 27
 const noop = () => {}
-const SPRING = { mass: 0.4, tension: 400, friction: 20 }
 
 function Input({
+  disabled,
   inputValue,
   onBlur = noop,
   onChange = noop,
   onFocus = noop,
   onSelect = noop,
-  options = [],
-  placeholder,
-  selectedOption = 0,
+  placeholder = 'Enter amount',
 }) {
   const [opened, setOpened] = useState(false)
   const buttonRef = useRef()
@@ -27,31 +23,6 @@ function Input({
     }
   }, [opened])
 
-  const handleSelect = useCallback(
-    optionIndex => {
-      setOpened(opened => !opened)
-      onSelect(optionIndex)
-    },
-    [onSelect]
-  )
-
-  const handleDropdownBlur = useCallback(event => {
-    const focused = event.relatedTarget
-    if (focused === buttonRef.current || menuRef.current.contains(focused)) {
-      return
-    }
-    if (event.relatedTarget && !event.relatedTarget.id) {
-      setOpened(false)
-    }
-  }, [])
-
-  const handleDropdownKeyDown = useCallback(event => {
-    if (event.keyCode === ESCAPE_KEY) {
-      setOpened(false)
-      inputRef.current.focus()
-    }
-  }, [])
-
   const handleButtonClick = useCallback(() => {
     setOpened(isOpen => !isOpen)
   }, [])
@@ -63,28 +34,33 @@ function Input({
         z-index: 1;
         width: 100%;
         height: 50px;
+        margin: 16px 0 20px 0;
         background: #ffffff;
         display: flex;
         padding: 0;
+        opacity: ${disabled ? '0.5' : '1'};
       `}
     >
       <input
+        disabled={disabled}
         ref={inputRef}
         onBlur={onBlur}
         onChange={onChange}
         onFocus={onFocus}
         placeholder={placeholder}
-        value={inputValue}
+        value={!disabled ? inputValue : ''}
         css={`
           position: absolute;
           z-index: 1;
           width: 100%;
-          height: 50px;
+          height: 69px;
           padding: 6px 12px 0;
           background: #ffffff;
           border: 1px solid #dde4e9;
           color: #212b36;
-          border-radius: 4px 4px 4px 4px;
+          box-sizing: border-box;
+          box-shadow: inset 0px 4px 8px rgba(139, 166, 194, 0.35);
+          border-radius: 8px;
           appearance: none;
           font-size: 20px;
           font-weight: 400;
@@ -109,7 +85,6 @@ function Input({
       <DropdownButton
         ref={buttonRef}
         onClick={handleButtonClick}
-        label={options[selectedOption]}
         opened={opened}
       />
     </div>
@@ -132,7 +107,7 @@ const DropdownButton = React.forwardRef(function DropdownButton(
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 50px;
+        height: 69px;
         width: 150px;
         padding: 0 0 0 10px;
         color: #212b36;
@@ -159,111 +134,6 @@ const DropdownButton = React.forwardRef(function DropdownButton(
     </button>
   )
 })
-
-const DropDownMenu = React.forwardRef(function DropDownMenu(
-  { items, onBlur, onKeyDown, opened, onSelect },
-  ref
-) {
-  const transitions = useTransition(opened, null, {
-    from: { opacity: 0, transform: 'scale3d(0.95, 0.95, 1)' },
-    enter: { opacity: 1, transform: 'scale3d(1, 1, 1)' },
-    leave: { opacity: 0, transform: 'scale3d(0.95, 0.95, 1)' },
-    config: SPRING,
-  })
-
-  return (
-    <>
-      {transitions.map(({ item, key, props: style }) => {
-        return (
-          item && (
-            <div
-              key={key}
-              ref={ref}
-              onBlur={onBlur}
-              onKeyDown={onKeyDown}
-              tabIndex="0"
-              css={`
-                position: absolute;
-                z-index: 3;
-                top: 100%;
-                right: 0;
-                outline: 0;
-
-                // Center mode:
-                // top: 50%;
-                // transform: translateY(-50%);
-              `}
-            >
-              <animated.ul
-                style={{
-                  ...style,
-                  pointerEvents: opened ? 'auto' : 'none',
-                }}
-                css={`
-                  overflow: hidden;
-                  margin: 0;
-                  padding: 0;
-                  min-width: 130px;
-                  border: 1px solid #dde6ed;
-                  border-radius: 4px;
-                  background: white;
-                  list-style: none;
-                  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
-                  transform-origin: 50% 0;
-                  li {
-                    width: 100%;
-                    height: 100%;
-                  }
-                `}
-              >
-                {items.map((item, index) => (
-                  <li key={index}>
-                    <MenuItem id={index} label={item} onSelect={onSelect} />
-                  </li>
-                ))}
-              </animated.ul>
-            </div>
-          )
-        )
-      })}
-    </>
-  )
-})
-
-function MenuItem({ id, label, onSelect }) {
-  const handleClick = useCallback(() => {
-    onSelect(id)
-  }, [onSelect, id])
-  return (
-    <button
-      onClick={handleClick}
-      type="button"
-      css={`
-        position: relative;
-        border: none;
-        padding: 0;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        padding: 0 24px 0 10px;
-        background: transparent;
-        transition: none;
-        outline: 0;
-        cursor: pointer;
-        &::-moz-focus-inner {
-          border: 0;
-        }
-        :hover,
-        :focus {
-          background: #f3f8fc;
-          outline: 0;
-        }
-      `}
-    >
-      {label}
-    </button>
-  )
-}
 
 function UniswapAdornment() {
   return (
