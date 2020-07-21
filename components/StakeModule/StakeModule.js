@@ -261,8 +261,24 @@ function StakeSection() {
 }
 
 function WithdrawSection({ isCompact }) {
+  const [amountToWithdraw, setAmountToWithdraw] = useState(0)
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
+  const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
+  const { loading: loadingStaked, staked } = useUniStaked()
+
+  useEffect(() => {
+    if (!tokenInfo || loadingInfo || loadingStaked) {
+      return
+    }
+    const userUni = Number(TokenAmount.format(staked, 18))
+    console.log(tokenInfo.tokenLiquidity)
+    const poolSizeUSD = Number(tokenInfo.combinedBalanceInUSD)
+    const totalUni = Number(tokenInfo.totalUniToken)
+    const totalAmountToWithdraw = (userUni * poolSizeUSD) / totalUni
+    setAmountToWithdraw(totalAmountToWithdraw)
+  }, [loadingInfo, loadingStaked, staked, tokenInfo])
+
   return (
     <div
       css={`
@@ -300,33 +316,8 @@ function WithdrawSection({ isCompact }) {
             font-size: 24px;
           `}
         >
-          $0
-        </span>
-      </Card>
-      <Card>
-        <span
-          css={`
-            display: block;
-            color: #7893ae;
-            font-weight: 300;
-            margin: 0 9px 0 0;
-            ${isCompact &&
-              `
-            margin: 0 0 9px 0;
-          `}
-          `}
-        >
-          Rewards claimed
-        </span>
-        <span
-          css={`
-            display: block;
-            font-size: 24px;
-          `}
-        >
-          {loading
-            ? 'loading...'
-            : TokenAmount.format(paid, 18, { symbol: 'UNI' })}
+          ${' '}
+          {amountToWithdraw === 0 ? 'Loading...' : amountToWithdraw.toFixed(2)}
         </span>
       </Card>
     </div>
@@ -337,8 +328,7 @@ function ClaimSection() {
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
   const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
-  const [tokenReserves, loadingReserves] = useTokenReserve('ANT')
-  console.log(tokenInfo)
+
   return (
     <div>
       <Card
