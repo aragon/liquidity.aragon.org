@@ -12,7 +12,7 @@ function Input({
   onBlur = noop,
   onChange = noop,
   onFocus = noop,
-  onModeChange = noop,
+  onMax = noop,
   onSelect = noop,
   placeholder = 'Enter amount',
 }) {
@@ -98,6 +98,7 @@ function Input({
           ref={buttonRef}
           mode={mode}
           onClick={handleButtonClick}
+          onMax={onMax}
           opened={opened}
         />
       </div>
@@ -106,7 +107,7 @@ function Input({
 }
 
 const DropdownButton = React.forwardRef(function DropdownButton(
-  { disabled, mode, onClick, onModeChange, label, opened },
+  { disabled, onMax, onClick, onModeChange, label, opened },
   ref
 ) {
   return (
@@ -142,8 +143,16 @@ const DropdownButton = React.forwardRef(function DropdownButton(
         }
       `}
     >
-      <div onClick={disabled ? undefined : onModeChange}>
-        <Adornment mode={mode} />
+      <div
+        onClick={disabled ? undefined : onMax}
+        css={`
+          position: relative;
+          &:active {
+            top: 1px;
+          }
+        `}
+      >
+        <Adornment mode="uni" />
       </div>
     </button>
   )
@@ -157,7 +166,7 @@ function Adornment({ mode }) {
         alt="Token Logo"
         width={36}
       />
-      <span>{mode === 'uni' ? 'UNI' : 'ANT'}</span>
+      <span>MAX</span>
     </div>
   )
 }
