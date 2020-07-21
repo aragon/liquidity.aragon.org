@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 export default function ButtonGroup({
   activeKey,
+  disabled,
   elements,
   isCompact,
   onSetActiveKey,
@@ -24,11 +25,12 @@ export default function ButtonGroup({
     >
       {elements.map((el, idx) => (
         <Button
+          disabled={disabled && activeKey !== idx}
           activeKey={activeKey}
           key={el.id}
           lastChild={elements.length - 1 === idx}
           index={idx}
-          onSetActiveKey={onSetActiveKey}
+          onSetActiveKey={disabled ? () => {} : onSetActiveKey}
         >
           {!isCompact ? el.copy : el.copyCompact}
         </Button>
@@ -37,7 +39,14 @@ export default function ButtonGroup({
   )
 }
 
-function Button({ activeKey, children, lastChild, index, onSetActiveKey }) {
+function Button({
+  activeKey,
+  children,
+  disabled,
+  lastChild,
+  index,
+  onSetActiveKey,
+}) {
   const selected = useMemo(() => activeKey === index, [activeKey, index])
   const setSelected = useCallback(() => onSetActiveKey(index), [
     index,
@@ -48,6 +57,7 @@ function Button({ activeKey, children, lastChild, index, onSetActiveKey }) {
     <ButtonBase
       onClick={setSelected}
       css={`
+        ${disabled ? 'background: #F6F9FC;' : ''}
         ${selected ? 'border: 2px solid #00c2ff;' : 'border: 0;'}
         ${lastChild ? 'margin-right: 0px;' : ''}
       `}

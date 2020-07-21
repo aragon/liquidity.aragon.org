@@ -5,7 +5,7 @@ import ButtonGroup from 'components/ButtonGroup/ButtonGroup'
 import Logo from 'components/Logo/Logo'
 import Input from 'components/Input/Input'
 import StatsRow from './StatsRow'
-import Warning from 'components/Warning/Warning'
+import Info from 'components/Info/Info'
 import { bigNum } from 'lib/utils'
 import { useWalletAugmented } from 'lib/wallet'
 import {
@@ -102,6 +102,7 @@ export default function StakeModule() {
   const handleSubmit = useCallback(async () => {
     try {
       setDisabled(true)
+      console.log('is disabled')
       if (SECTIONS[activeKey].id === 'stake') {
         console.log(amountUni.toString(), 'stake')
         await stake(amountUni)
@@ -151,10 +152,17 @@ export default function StakeModule() {
       >
         <ButtonGroup
           activeKey={activeKey}
+          disabled={disabled}
           elements={SECTIONS}
           isCompact={isCompact}
           onSetActiveKey={setActiveKey}
         />
+
+        {SECTIONS[activeKey].id === 'withdraw' && (
+          <Info mode="info" height='40' padding="16" Compact={isCompact}>
+            Withdraw all of your staked UNI.
+          </Info>
+        )}
         {SECTIONS[activeKey].id !== 'claim' && (
           <StatsRow
             balanceUni={balanceUni}
@@ -162,9 +170,9 @@ export default function StakeModule() {
             isCompact={isCompact}
           />
         )}
-        {SECTIONS[activeKey].id !== 'claim' && (
+        {SECTIONS[activeKey].id === 'stake' && (
           <Input
-            disabled={!connected}
+            disabled={!connected || disabled}
             inputValue={inputValue}
             onChange={handleSetInputValue}
           />
@@ -177,17 +185,26 @@ export default function StakeModule() {
           <ClaimSection isCompact={isCompact} />
         )}
         {!connected && (
-          <Warning isCompact={isCompact}>
+          <Info isCompact={isCompact}>
             Please, connect your wallet to get started.
-          </Warning>
+          </Info>
         )}
         {connected && (
           <ActionButton
             type="button"
             disabled={disabled}
-            onClick={handleSubmit}
+            onClick={disabled ? undefined : handleSubmit}
             css={`
               margin-top: 60px;
+              ${disabled &&
+                `
+                background: #F6F9FC;
+                color: #8398AC;
+                cursor: default;
+                &:active {
+                  top: 0px;
+                }
+              `}
             `}
           >
             {SECTIONS[activeKey].copy}

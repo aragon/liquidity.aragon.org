@@ -28,7 +28,6 @@ const GlobalStyles = createGlobalStyle`
   html {
     margin: 0;
     padding: 0;
-    overflow-y: hidden;
     font-size: 16px;
   }
 `
