@@ -25,3 +25,5 @@ npm-debug.log*
 .yarn/unplugged/
 yarn-debug.log*
 yarn-error.log*
+
+.vercel
