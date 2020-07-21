@@ -170,9 +170,19 @@ export default function StakeModule() {
           onSetActiveKey={setActiveKey}
         />
 
+        {SECTIONS[activeKey].id === 'stake' && (
+          <Info mode="info" height="40" padding="16" Compact={isCompact}>
+            Learn how to participate.
+          </Info>
+        )}
         {SECTIONS[activeKey].id === 'withdraw' && (
           <Info mode="info" height="40" padding="16" Compact={isCompact}>
             Withdraw all of your staked UNI.
+          </Info>
+        )}
+        {SECTIONS[activeKey].id === 'claim' && (
+          <Info mode="info" height="40" padding="16" Compact={isCompact}>
+            Claim all of your rewards from your staked UNI.
           </Info>
         )}
         {SECTIONS[activeKey].id !== 'claim' && (
@@ -200,7 +210,7 @@ export default function StakeModule() {
           <ClaimSection isCompact={isCompact} />
         )}
         {!connected && (
-          <Info isCompact={isCompact}>
+          <Info padding="16" isCompact={isCompact}>
             Please, connect your wallet to get started.
           </Info>
         )}

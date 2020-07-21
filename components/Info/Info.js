@@ -8,7 +8,7 @@ const MODES = new Map([
 export default function Info({
   children,
   mode = 'warning',
-  padding = '32',
+  padding = '8',
   isCompact,
   height = '100',
 }) {
@@ -20,12 +20,11 @@ export default function Info({
         display: flex;
         align-items: center;
         width: 100%;
-        height: ${height}px;
         border-radius: 6px;
         background: ${modeColor};
-        font-size: 18px;
+        font-size: 16px;
         margin-top: 24px;
-        padding: 8px;
+        padding: ${padding}px;
         height: ${height}px;
         font-weight: 300;
         ${isCompact && `font-size: 14px;`}

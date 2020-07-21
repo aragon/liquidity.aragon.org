@@ -115,10 +115,10 @@ function Input({
           border: 1px solid #dde4e9;
           border-radius: 8px;
           box-shadow: inset 0px 4px 8px rgba(139, 166, 194, 0.35);
-          cursor: pointer;
+          cursor: ${disabled ? 'normal' : 'pointer'};
           text-align: center;
           &:active {
-            top: 1px;
+            top: ${disabled ? '0px' : '1px'};
           }
         `}
       >
