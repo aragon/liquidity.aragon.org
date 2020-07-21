@@ -21,7 +21,7 @@ function getImage(mode) {
 }
 
 function Logo({
-  label = 'Aragon Bonding Curve Converter',
+  label = 'ANT Liquidity Rewards',
   onClick = () => {},
   mode = 'normal',
   mini = false,
