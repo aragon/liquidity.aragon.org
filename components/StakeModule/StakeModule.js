@@ -15,12 +15,12 @@ import {
   useStake,
   useTokenBalance,
   useTokenDecimals,
-  useTokenReserve,
   useTokenUniswapInfo,
   useUniStaked,
+  useUniTotalSupply,
   useWithdraw,
 } from 'lib/web3-contracts'
-import { parseUnits } from 'lib/web3-utils'
+import { parseUnits, useTokenUsdRate } from 'lib/web3-utils'
 
 const SECTIONS = [
   { id: 'stake', copy: 'Stake', copyCompact: 'Stake' },
@@ -262,22 +262,46 @@ function StakeSection() {
 }
 
 function WithdrawSection({ isCompact }) {
+  const [loading, setLoading] = useState(false)
   const [amountToWithdraw, setAmountToWithdraw] = useState(0)
   const { account } = useWalletAugmented()
-  const { loading, paid } = useRewardsPaid(account)
   const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
   const { loading: loadingStaked, staked } = useUniStaked(account)
+  const { loadingSupply, supply } = useUniTotalSupply()
+  const rate = useTokenUsdRate('ANT')
 
   useEffect(() => {
-    if (!tokenInfo || loadingInfo || loadingStaked) {
+    if (!tokenInfo || loadingInfo || loadingStaked || loadingSupply || !rate) {
+      console.log(
+        'meh',
+        loadingSupply,
+        rate,
+        loadingInfo,
+        loadingStaked,
+        tokenInfo
+      )
       return
     }
+    setLoading(true)
+    console.log('yay')
+    console.log(rate)
     const userUni = Number(TokenAmount.format(staked, 18))
-    const poolSizeUSD = Number(tokenInfo.combinedBalanceInUSD)
-    const totalUni = Number(tokenInfo.totalUniToken)
-    const totalAmountToWithdraw = (userUni * poolSizeUSD) / totalUni
+    const totalUni = Number(TokenAmount.format(supply, 18))
+    const poolSizeAnt = Number(tokenInfo.reserve0)
+    const poolSizeUsd = poolSizeAnt * rate.USD
+    console.log(poolSizeUsd, totalUni, userUni)
+    const totalAmountToWithdraw = (userUni * poolSizeUsd) / totalUni
     setAmountToWithdraw(totalAmountToWithdraw)
-  }, [loadingInfo, loadingStaked, staked, tokenInfo])
+    setLoading(false)
+  }, [
+    loadingInfo,
+    loadingStaked,
+    loadingSupply,
+    rate,
+    supply,
+    staked,
+    tokenInfo,
+  ])
 
   return (
     <div
@@ -316,8 +340,7 @@ function WithdrawSection({ isCompact }) {
             font-size: 24px;
           `}
         >
-          ${' '}
-          {amountToWithdraw === 0 ? 'Loading...' : amountToWithdraw.toFixed(2)}
+          $ {loading ? 'Loading...' : amountToWithdraw.toFixed(2)}
         </span>
       </Card>
     </div>
@@ -364,7 +387,9 @@ function ClaimSection() {
           >
             {loadingInfo || !tokenInfo
               ? 'loading...'
-              : Number(tokenInfo?.tokenLiquidity).toFixed(4)}
+              : Number(tokenInfo?.token0?.totalLiquidity).toLocaleString(
+                  'en-US'
+                )}
           </span>
         </div>
       </Card>
