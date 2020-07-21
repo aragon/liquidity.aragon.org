@@ -11,9 +11,7 @@ function useApprove() {
   const antContract = useKnownContract('TOKEN_ANT')
   const [unipoolAddress] = getKnownContract('UNIPOOL')
   return amount => {
-    console.log(antContract, unipoolAddress)
     if (!antContract || !unipoolAddress) {
-      console.log('no antcontract or unipool addr')
       return false
     }
 

@@ -16,6 +16,7 @@ import {
   useTokenBalance,
   useTokenDecimals,
   useTokenReserve,
+  useTokenUniswapInfo,
   useUniStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
@@ -53,7 +54,6 @@ function useConvertInputs() {
   const handleSetInputValue = useCallback(e => {
     const parsedValue = parseInputValue(e.target.value, 18)
     if (parsedValue !== null) {
-      console.log(parsedValue.amount.toString())
       setInputValue(parsedValue.inputValue)
       setAmountUni(parsedValue.amount)
     }
@@ -106,9 +106,7 @@ export default function StakeModule() {
   const handleSubmit = useCallback(async () => {
     try {
       setDisabled(true)
-      console.log('is disabled')
       if (SECTIONS[activeKey].id === 'stake') {
-        console.log(amountUni.toString(), 'stake')
         await stake(amountUni)
       }
 
@@ -120,7 +118,7 @@ export default function StakeModule() {
         await claim()
       }
     } catch (err) {
-      console.log(JSON.stringify(err))
+      console.log(err)
     } finally {
       setDisabled(false)
     }
@@ -338,9 +336,9 @@ function WithdrawSection({ isCompact }) {
 function ClaimSection() {
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
+  const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
   const [tokenReserves, loadingReserves] = useTokenReserve('ANT')
-  // useEffect(() => console.log('reserve', data[0]?.toString()), [data])
-
+  console.log(tokenInfo)
   return (
     <div>
       <Card
@@ -374,9 +372,9 @@ function ClaimSection() {
               font-size: 22px;
             `}
           >
-            {loadingReserves || !tokenReserves
+            {loadingInfo || !tokenInfo
               ? 'loading...'
-              : TokenAmount.format(tokenReserves, 18, { symbol: 'ANT' })}
+              : Number(tokenInfo?.tokenLiquidity).toFixed(4)}
           </span>
         </div>
       </Card>
