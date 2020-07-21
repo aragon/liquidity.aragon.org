@@ -86,7 +86,7 @@ function Logo({
 
 Logo.propTypes = {
   label: PropTypes.string,
-  mode: PropTypes.oneOf(['ant', 'anj', 'normal']),
+  mode: PropTypes.oneOf(['ant', 'anj', 'normal', 'uni']),
   onClick: PropTypes.func,
 }
 
