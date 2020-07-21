@@ -174,7 +174,15 @@ export default function StakeModule() {
 
         {SECTIONS[activeKey].id === 'stake' && (
           <Info mode="info" height="40" padding="16" Compact={isCompact}>
-            Learn how to participate.
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://aragon.org/blog/liquidity-rewards"
+            >
+              {' '}
+              Learn how to participate in the rewards program
+            </a>
+            .
           </Info>
         )}
         {SECTIONS[activeKey].id === 'withdraw' && (
