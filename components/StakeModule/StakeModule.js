@@ -109,6 +109,8 @@ export default function StakeModule() {
     resetInputs()
   }, [activeKey, connected, mode, resetInputs])
 
+  useEffect(() => console.log(amount.toString()), [amount])
+
   const handleChangeMode = useCallback(
     () => setMode(mode === 'uni' ? 'ant' : 'uni'),
     [mode]
@@ -284,7 +286,7 @@ function StakeSection({ mode }) {
             : TokenAmount.format(
                 mode === 'uni' ? staked : unipoolAntBalance,
                 18,
-                { symbol: mode === 'uni' ? 'UNI' : 'ANT' }
+                { symbol: mode === 'uni' ? 'UNI' : 'ANT', digits: 9 }
               )}
         </span>
       </div>
@@ -294,45 +296,8 @@ function StakeSection({ mode }) {
 
 function WithdrawSection({ isCompact }) {
   const [loading, setLoading] = useState(false)
-  const [amountToWithdraw, setAmountToWithdraw] = useState(0)
   const { account } = useWalletAugmented()
-  const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
   const { loading: loadingStaked, staked } = useUniStaked(account)
-  const { loadingSupply, supply } = useUniTotalSupply()
-  const rate = useTokenUsdRate('ANT')
-
-  useEffect(() => {
-    if (!tokenInfo || loadingInfo || loadingStaked || loadingSupply || !rate) {
-      console.log(
-        'meh',
-        loadingSupply,
-        rate,
-        loadingInfo,
-        loadingStaked,
-        tokenInfo
-      )
-      return
-    }
-    setLoading(true)
-    console.log('yay')
-    console.log(rate)
-    const userUni = Number(TokenAmount.format(staked, 18))
-    const totalUni = Number(TokenAmount.format(supply, 18))
-    const poolSizeAnt = Number(tokenInfo.reserve0)
-    const poolSizeUsd = poolSizeAnt * rate.USD
-    console.log(poolSizeUsd, totalUni, userUni)
-    const totalAmountToWithdraw = (userUni * poolSizeUsd) / totalUni
-    setAmountToWithdraw(totalAmountToWithdraw || 0)
-    setLoading(false)
-  }, [
-    loadingInfo,
-    loadingStaked,
-    loadingSupply,
-    rate,
-    supply,
-    staked,
-    tokenInfo,
-  ])
 
   return (
     <div
@@ -371,7 +336,9 @@ function WithdrawSection({ isCompact }) {
             font-size: 24px;
           `}
         >
-          $ {loading ? 'Loading...' : amountToWithdraw.toFixed(2)}
+          {loading
+            ? 'Loading...'
+            : TokenAmount.format(staked, 18, { symbol: 'UNI', digits: 9 })}
         </span>
       </Card>
     </div>

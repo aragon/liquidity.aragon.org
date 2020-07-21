@@ -57,7 +57,7 @@ export default function StatsRow({ balanceUni, decimalsUni, mode, isCompact }) {
           {connected
             ? `${TokenAmount.format(balanceUni.toString(), decimalsUni, {
                 symbol: mode === 'uni' ? 'UNI' : 'ANT',
-                digits: 4,
+                digits: 9,
               })}`
             : '0.00 (Not connected)'}
         </span>

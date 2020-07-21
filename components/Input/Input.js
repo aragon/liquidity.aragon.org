@@ -97,44 +97,10 @@ function Input({
           disabled={disabled}
           ref={buttonRef}
           mode={mode}
-          onModeChange={onModeChange}
           onClick={handleButtonClick}
           opened={opened}
         />
       </div>
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={disabled ? noop : onModeChange}
-        css={`
-          position: relative;
-          height: 69px;
-          width: 69px;
-          margin: 16px 0 20px 8px;
-          background: #fff;
-          border: 1px solid #dde4e9;
-          border-radius: 8px;
-          box-shadow: inset 0px 4px 8px rgba(139, 166, 194, 0.35);
-          cursor: ${disabled ? 'normal' : 'pointer'};
-          text-align: center;
-          &:active {
-            top: ${disabled ? '0px' : '1px'};
-          }
-        `}
-      >
-        <div
-          css={`
-            width: 100%;
-            height: 100%;
-            padding: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          `}
-        >
-          <img src={swapSvg} alt="Swap action" width={64} />
-        </div>
-      </button>
     </div>
   )
 }
