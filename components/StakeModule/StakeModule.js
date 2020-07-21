@@ -219,7 +219,8 @@ export default function StakeModule() {
 
 function StakeSection() {
   const { account } = useWalletAugmented()
-  const { loading, staked } = useUniStaked()
+  const { loading, staked } = useUniStaked(account)
+
   return (
     <Card
       css={`
@@ -265,14 +266,13 @@ function WithdrawSection({ isCompact }) {
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
   const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
-  const { loading: loadingStaked, staked } = useUniStaked()
+  const { loading: loadingStaked, staked } = useUniStaked(account)
 
   useEffect(() => {
     if (!tokenInfo || loadingInfo || loadingStaked) {
       return
     }
     const userUni = Number(TokenAmount.format(staked, 18))
-    console.log(tokenInfo.tokenLiquidity)
     const poolSizeUSD = Number(tokenInfo.combinedBalanceInUSD)
     const totalUni = Number(tokenInfo.totalUniToken)
     const totalAmountToWithdraw = (userUni * poolSizeUSD) / totalUni
