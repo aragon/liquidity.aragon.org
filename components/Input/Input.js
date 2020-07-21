@@ -1,14 +1,18 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import antSvg from 'components/Logo/logo-ant.svg'
+import swapSvg from 'components/assets/swap.svg'
 import uniswapSvg from './assets/uniswap.svg'
 
 const noop = () => {}
 
 function Input({
   disabled,
+  mode,
   inputValue,
   onBlur = noop,
   onChange = noop,
   onFocus = noop,
+  onModeChange = noop,
   onSelect = noop,
   placeholder = 'Enter amount',
 }) {
@@ -30,69 +34,113 @@ function Input({
   return (
     <div
       css={`
-        position: relative;
-        z-index: 1;
         width: 100%;
-        height: 50px;
-        margin: 16px 0 20px 0;
-        background: #ffffff;
         display: flex;
-        padding: 0;
-        opacity: ${disabled ? '0.5' : '1'};
+        justify-content: flex-end;
       `}
     >
-      <input
-        disabled={disabled}
-        ref={inputRef}
-        onBlur={onBlur}
-        onChange={onChange}
-        onFocus={onFocus}
-        placeholder={placeholder}
-        value={!disabled ? inputValue : ''}
+      <div
         css={`
-          position: absolute;
+          position: relative;
           z-index: 1;
           width: 100%;
-          height: 69px;
-          padding: 6px 12px 0;
+          height: 50px;
+          margin: 16px 0 20px 0;
           background: #ffffff;
+          display: flex;
+          padding: 0;
+          opacity: ${disabled ? '0.5' : '1'};
+        `}
+      >
+        <input
+          disabled={disabled}
+          ref={inputRef}
+          onBlur={onBlur}
+          onChange={onChange}
+          onFocus={onFocus}
+          placeholder={placeholder}
+          value={!disabled ? inputValue : ''}
+          css={`
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            height: 69px;
+            padding: 6px 12px 0;
+            background: #ffffff;
+            border: 1px solid #dde4e9;
+            color: #212b36;
+            box-sizing: border-box;
+            box-shadow: inset 0px 4px 8px rgba(139, 166, 194, 0.35);
+            border-radius: 8px;
+            appearance: none;
+            font-size: 20px;
+            font-weight: 400;
+            &::-webkit-inner-spin-button,
+            &::-webkit-outer-spin-button {
+              -webkit-appearance: none;
+            }
+            -moz-appearance: textfield;
+            &:focus {
+              outline: none;
+              border-color: #08bee5;
+            }
+            &::placeholder {
+              color: #8fa4b5;
+              opacity: 1;
+            }
+            &:invalid {
+              box-shadow: none;
+            }
+          `}
+        />
+        <DropdownButton
+          disabled={disabled}
+          ref={buttonRef}
+          mode={mode}
+          onModeChange={onModeChange}
+          onClick={handleButtonClick}
+          opened={opened}
+        />
+      </div>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={disabled ? noop : onModeChange}
+        css={`
+          position: relative;
+          height: 69px;
+          width: 69px;
+          margin: 16px 0 20px 8px;
+          background: #fff;
           border: 1px solid #dde4e9;
-          color: #212b36;
-          box-sizing: border-box;
-          box-shadow: inset 0px 4px 8px rgba(139, 166, 194, 0.35);
           border-radius: 8px;
-          appearance: none;
-          font-size: 20px;
-          font-weight: 400;
-          &::-webkit-inner-spin-button,
-          &::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-          }
-          -moz-appearance: textfield;
-          &:focus {
-            outline: none;
-            border-color: #08bee5;
-          }
-          &::placeholder {
-            color: #8fa4b5;
-            opacity: 1;
-          }
-          &:invalid {
-            box-shadow: none;
+          box-shadow: inset 0px 4px 8px rgba(139, 166, 194, 0.35);
+          cursor: pointer;
+          text-align: center;
+          &:active {
+            top: 1px;
           }
         `}
-      />
-      <DropdownButton
-        ref={buttonRef}
-        onClick={handleButtonClick}
-        opened={opened}
-      />
+      >
+        <div
+          css={`
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
+        >
+          <img src={swapSvg} alt="Swap action" width={64} />
+        </div>
+      </button>
     </div>
   )
 }
 
 const DropdownButton = React.forwardRef(function DropdownButton(
-  { onClick, label, opened },
+  { disabled, mode, onClick, onModeChange, label, opened },
   ref
 ) {
   return (
@@ -128,18 +176,22 @@ const DropdownButton = React.forwardRef(function DropdownButton(
         }
       `}
     >
-      <div>
-        <UniswapAdornment />
+      <div onClick={disabled ? undefined : onModeChange}>
+        <Adornment mode={mode} />
       </div>
     </button>
   )
 })
 
-function UniswapAdornment() {
+function Adornment({ mode }) {
   return (
     <div>
-      <img src={uniswapSvg} alt="Pink Unicorn by Uniswap" />
-      <span>UNI</span>
+      <img
+        src={mode === 'uni' ? uniswapSvg : antSvg}
+        alt="Token Logo"
+        width={36}
+      />
+      <span>{mode === 'uni' ? 'UNI' : 'ANT'}</span>
     </div>
   )
 }

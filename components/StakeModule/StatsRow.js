@@ -3,7 +3,7 @@ import TokenAmount from 'token-amount'
 import styled from 'styled-components'
 import { useWalletAugmented } from 'lib/wallet'
 
-export default function StatsRow({ balanceUni, decimalsUni, isCompact }) {
+export default function StatsRow({ balanceUni, decimalsUni, mode, isCompact }) {
   const { connected } = useWalletAugmented()
 
   return (
@@ -56,7 +56,7 @@ export default function StatsRow({ balanceUni, decimalsUni, isCompact }) {
           {' '}
           {connected
             ? `${TokenAmount.format(balanceUni.toString(), decimalsUni, {
-                symbol: 'UNI',
+                symbol: mode === 'uni' ? 'UNI' : 'ANT',
                 digits: 4,
               })}`
             : '0.00 (Not connected)'}

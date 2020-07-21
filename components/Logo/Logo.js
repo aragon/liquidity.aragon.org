@@ -37,6 +37,11 @@ function Logo({
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
+    config: {
+      mass: 0.1,
+      tension: 120,
+      friction: 14,
+    },
   })
 
   return (

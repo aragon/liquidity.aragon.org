@@ -7,10 +7,12 @@ import Logo from 'components/Logo/Logo'
 import Input from 'components/Input/Input'
 import StatsRow from './StatsRow'
 import Info from 'components/Info/Info'
+import { getKnownContract } from 'lib/known-contracts'
 import { bigNum } from 'lib/utils'
 import { useWalletAugmented } from 'lib/wallet'
 import {
   useClaim,
+  useProvideLiquidity,
   useRewardsPaid,
   useStake,
   useTokenBalance,
@@ -75,23 +77,27 @@ function useConvertInputs() {
 export default function StakeModule() {
   const [activeKey, setActiveKey] = useState(0)
   const [disabled, setDisabled] = useState(false)
+  const [mode, setMode] = useState('uni')
 
   const {
     inputValue,
     handleSetInputValue,
-    amountUni,
+    amountUni: amount,
     resetInputs,
   } = useConvertInputs()
   const { connected } = useWalletAugmented()
-  const balanceUni = useTokenBalance('UNI')
+  const selectedTokenBalance = useTokenBalance(mode.toUpperCase())
   const decimalsUni = useTokenDecimals('UNI')
   const claim = useClaim()
+  const provideLiquidity = useProvideLiquidity()
   const stake = useStake()
   const withdraw = useWithdraw()
   const { below } = useViewport()
   // Super ugly Next.js workaround to let us have differences between SSR & client
   const [isCompact, setIsCompact] = useState(false)
+
   const smallLayout = below(415)
+
   useEffect(() => {
     setTimeout(() => {
       setIsCompact(smallLayout)
@@ -101,17 +107,21 @@ export default function StakeModule() {
   // Reset all values on connection change
   useEffect(() => {
     resetInputs()
-  }, [activeKey, connected, resetInputs])
+  }, [activeKey, connected, mode, resetInputs])
 
+  const handleChangeMode = useCallback(
+    () => setMode(mode === 'uni' ? 'ant' : 'uni'),
+    [mode]
+  )
   const handleSubmit = useCallback(async () => {
     try {
       setDisabled(true)
       if (SECTIONS[activeKey].id === 'stake') {
-        await stake(amountUni)
+        mode === 'uni' ? await stake(amount) : await provideLiquidity(amount)
       }
 
       if (SECTIONS[activeKey].id === 'withdraw') {
-        await withdraw(amountUni)
+        await withdraw()
       }
 
       if (SECTIONS[activeKey].id === 'claim') {
@@ -122,7 +132,7 @@ export default function StakeModule() {
     } finally {
       setDisabled(false)
     }
-  }, [activeKey, amountUni, claim, stake, withdraw])
+  }, [activeKey, amount, claim, mode, provideLiquidity, stake, withdraw])
 
   return (
     <div
@@ -167,19 +177,22 @@ export default function StakeModule() {
         )}
         {SECTIONS[activeKey].id !== 'claim' && (
           <StatsRow
-            balanceUni={balanceUni}
+            balanceUni={selectedTokenBalance}
             decimalsUni={decimalsUni}
+            mode={mode}
             isCompact={isCompact}
           />
         )}
         {SECTIONS[activeKey].id === 'stake' && (
           <Input
             disabled={!connected || disabled}
+            mode={mode}
             inputValue={inputValue}
             onChange={handleSetInputValue}
+            onModeChange={handleChangeMode}
           />
         )}
-        {SECTIONS[activeKey].id === 'stake' && <StakeSection />}
+        {SECTIONS[activeKey].id === 'stake' && <StakeSection mode={mode} />}
         {SECTIONS[activeKey].id === 'withdraw' && (
           <WithdrawSection isCompact={isCompact} />
         )}
@@ -217,9 +230,11 @@ export default function StakeModule() {
   )
 }
 
-function StakeSection() {
+function StakeSection({ mode }) {
   const { account } = useWalletAugmented()
   const { loading, staked } = useUniStaked(account)
+  const [unipoolAddress] = getKnownContract('UNIPOOL')
+  const unipoolAntBalance = useTokenBalance('ANT', unipoolAddress)
 
   return (
     <Card
@@ -229,7 +244,7 @@ function StakeSection() {
         margin-top: 20px;
       `}
     >
-      <Logo mode="uni" />
+      <Logo mode={mode} />
       <div
         css={`
           display: flex;
@@ -245,7 +260,9 @@ function StakeSection() {
             margin-bottom: 12px;
           `}
         >
-          Amount of UNI staked
+          {mode === 'uni'
+            ? 'Amount of UNI staked'
+            : 'Total amount of ANT up for rewards'}
         </span>
         <span
           css={`
@@ -254,7 +271,11 @@ function StakeSection() {
         >
           {loading
             ? 'loading...'
-            : TokenAmount.format(staked, 18, { symbol: 'UNI' })}
+            : TokenAmount.format(
+                mode === 'uni' ? staked : unipoolAntBalance,
+                18,
+                { symbol: mode === 'uni' ? 'UNI' : 'ANT' }
+              )}
         </span>
       </div>
     </Card>
@@ -291,7 +312,7 @@ function WithdrawSection({ isCompact }) {
     const poolSizeUsd = poolSizeAnt * rate.USD
     console.log(poolSizeUsd, totalUni, userUni)
     const totalAmountToWithdraw = (userUni * poolSizeUsd) / totalUni
-    setAmountToWithdraw(totalAmountToWithdraw)
+    setAmountToWithdraw(totalAmountToWithdraw || 0)
     setLoading(false)
   }, [
     loadingInfo,
