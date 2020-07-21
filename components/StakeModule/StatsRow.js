@@ -30,14 +30,12 @@ export default function StatsRow({ balanceUni, decimalsUni, isCompact }) {
             `}
         `}
       >
-        APY:{' '}
         <span
           css={`
             color: black;
           `}
         >
           {' '}
-          0.00%
         </span>
       </div>
       <div
