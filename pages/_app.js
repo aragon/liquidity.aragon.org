@@ -28,7 +28,6 @@ const GlobalStyles = createGlobalStyle`
   html {
     margin: 0;
     padding: 0;
-    overflow-y: hidden;
     font-size: 16px;
   }
 `
@@ -43,7 +42,7 @@ export default function App({ Component, pageProps }) {
     <ViewportProvider>
       <animated.div style={revealProps}>
         <NextHead>
-          <title>Aragon Converter</title>
+          <title>Aragon Liquidity Program</title>
         </NextHead>
         <GlobalStyles />
         <WalletProvider>

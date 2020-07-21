@@ -20,6 +20,7 @@ function Logo({
   label = 'Aragon Bonding Curve Converter',
   onClick = () => {},
   mode = 'normal',
+  mini = false,
 }) {
   // Don’t animate initially
   const animate = useRef(false)
@@ -54,6 +55,11 @@ function Logo({
         &:active {
           transform: translateY(1px);
         }
+        ${mini &&
+          `
+          width: 32px;
+          height: 32px;
+        `}
       `}
     >
       {modeTransition.map(({ item: mode, key, props: { opacity } }) => (
