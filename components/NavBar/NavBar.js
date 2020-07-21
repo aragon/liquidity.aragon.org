@@ -2,12 +2,36 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import AccountModule from 'components/AccountModule/AccountModule'
 import Logo from 'components/Logo/Logo'
+import { useKnownContract } from 'lib/web3-contracts'
+import { getKnownContract } from 'lib/known-contracts'
+
+const ONE_HUNDRED_ANT = '100000000000000000000'
+
+function useApprove() {
+  const antContract = useKnownContract('TOKEN_ANT')
+  const [unipoolAddress] = getKnownContract('UNIPOOL')
+  return amount => {
+    console.log(antContract, unipoolAddress)
+    if (!antContract || !unipoolAddress) {
+      console.log('no antcontract or unipool addr')
+      return false
+    }
+
+    return antContract.approveAndCall(unipoolAddress, ONE_HUNDRED_ANT, '0x00', {
+      gasLimit: 1000000,
+    })
+  }
+}
 
 function NavBar({ logoMode }) {
+  const approveTokens = useApprove()
+
   return (
     <div
       css={`
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
         z-index: 5;
         width: 100vw;
         display: flex;
@@ -17,7 +41,7 @@ function NavBar({ logoMode }) {
         padding: 16px 40px 0 40px;
       `}
     >
-      <Logo mode={logoMode} />
+      <Logo mode={logoMode} onClick={approveTokens} />
       <AccountModule />
     </div>
   )
