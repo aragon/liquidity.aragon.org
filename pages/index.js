@@ -73,13 +73,31 @@ export default () => {
           `}
         >
           <li>
-            <Anchor href="aragon.org/">About</Anchor>
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://aragon.org/"
+            >
+              About
+            </a>
           </li>
           <li>
-            <Anchor href="aragon.org/token/ant">ANT</Anchor>
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://aragon.org/token/ant"
+            >
+              ANT
+            </a>
           </li>
           <li>
-            <Anchor href="wiki.aragon.org/">Wiki</Anchor>
+            <a
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://wiki.aragon.org/"
+            >
+              Wiki
+            </a>
           </li>
         </ul>
         <div

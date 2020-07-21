@@ -59,7 +59,7 @@ export default function StatsRow({ balanceUni, decimalsUni, mode, isCompact }) {
                 symbol: mode === 'uni' ? 'UNI' : 'ANT',
                 digits: 9,
               })}`
-            : '0.00 (Not connected)'}
+            : '0 (Not connected)'}
         </span>
       </div>
     </div>
