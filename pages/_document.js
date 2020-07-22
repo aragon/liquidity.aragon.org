@@ -7,7 +7,7 @@ const ANALYTICS_CODE = `
   var Countly = Countly || {};
   Countly.q = Countly.q || [];
   //provide countly initialization parameters
-  Countly.app_key = 'a7fe75391dc47a886ddb981e06f2fa8b9a7f1a7b';
+  Countly.app_key = 'ddabbc3c7ccc61575c7014e8b5d481561c7ee770';
   Countly.url = 'https://analytics.aragon.org/';
   Countly.inactivity_time = 10;
   Countly.q.push(['track_sessions']);
