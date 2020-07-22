@@ -3,23 +3,23 @@ import { utils as EthersUtils } from 'ethers'
 import styled from 'styled-components'
 import TokenAmount from 'token-amount'
 import { useViewport } from 'use-viewport'
+import * as Sentry from '@sentry/browser'
 import ButtonGroup from 'components/ButtonGroup/ButtonGroup'
 import Logo from 'components/Logo/Logo'
 import Input from 'components/Input/Input'
 import StatsRow from './StatsRow'
 import Info from 'components/Info/Info'
-import { getKnownContract } from 'lib/known-contracts'
 import { bigNum } from 'lib/utils'
+import env from 'lib/environment'
+import { getKnownContract } from 'lib/known-contracts'
 import { useWalletAugmented } from 'lib/wallet'
 import {
   useClaim,
-  useProvideLiquidity,
   useRewardsPaid,
   useStake,
-  useTokenBalance,
+  useBalanceOf,
   useTokenDecimals,
   useTokenUniswapInfo,
-  useUniStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
 import { parseUnits } from 'lib/web3-utils'
@@ -29,6 +29,8 @@ const SECTIONS = [
   { id: 'withdraw', copy: 'Withdraw', copyCompact: 'Withdraw' },
   { id: 'claim', copy: 'Claim rewards', copyCompact: 'Claim' },
 ]
+
+const BALANCE_LOADING = bigNum(-1)
 
 // Filters and parse the input value of a token amount.
 // Returns a BN.js instance and the filtered value.
@@ -91,7 +93,6 @@ function useConvertInputs() {
 export default function StakeModule() {
   const [activeKey, setActiveKey] = useState(0)
   const [disabled, setDisabled] = useState(false)
-  const [mode, setMode] = useState('uni')
 
   const {
     inputValue,
@@ -102,10 +103,11 @@ export default function StakeModule() {
     setInputValue,
   } = useConvertInputs()
   const { connected } = useWalletAugmented()
-  const selectedTokenBalance = useTokenBalance(mode.toUpperCase())
+  const selectedTokenBalance = useBalanceOf('TOKEN_UNI')
+  const [unipoolAddress] = getKnownContract('UNIPOOL')
+  const staked = useBalanceOf('TOKEN_UNI', unipoolAddress)
   const decimalsUni = useTokenDecimals('UNI')
   const claim = useClaim()
-  const provideLiquidity = useProvideLiquidity()
   const stake = useStake()
   const withdraw = useWithdraw()
   const { below } = useViewport()
@@ -123,12 +125,7 @@ export default function StakeModule() {
   // Reset all values on connection change
   useEffect(() => {
     resetInputs()
-  }, [activeKey, connected, mode, resetInputs])
-
-  const inputError = useMemo(() => amount.gt(selectedTokenBalance), [
-    amount,
-    selectedTokenBalance,
-  ])
+  }, [activeKey, connected, resetInputs])
 
   const handleMax = useCallback(() => {
     const newInputValue = EthersUtils.formatEther(
@@ -140,10 +137,9 @@ export default function StakeModule() {
 
   const handleSubmit = useCallback(async () => {
     try {
-      handleMax()
       setDisabled(true)
       if (SECTIONS[activeKey].id === 'stake') {
-        mode === 'uni' ? await stake(amount) : await provideLiquidity(amount)
+        await stake(amount)
       }
 
       if (SECTIONS[activeKey].id === 'withdraw') {
@@ -154,20 +150,22 @@ export default function StakeModule() {
         await claim()
       }
     } catch (err) {
-      console.log(err)
+      if (env('NODE_ENV') !== 'production') {
+        Sentry.captureException(err)
+      }
     } finally {
       setDisabled(false)
+      resetInputs()
     }
-  }, [
-    activeKey,
-    amount,
-    claim,
-    mode,
-    provideLiquidity,
-    stake,
-    withdraw,
-    handleMax,
-  ])
+  }, [activeKey, amount, claim, resetInputs, stake, withdraw])
+
+  const inputError = useMemo(
+    () =>
+      amount.gt(selectedTokenBalance) ||
+      (amount.eq(bigNum(0)) && SECTIONS[activeKey].id === 'stake') ||
+      disabled,
+    [activeKey, amount, disabled, selectedTokenBalance]
+  )
 
   return (
     <div
@@ -232,22 +230,22 @@ export default function StakeModule() {
           <StatsRow
             balanceUni={selectedTokenBalance}
             decimalsUni={decimalsUni}
-            mode={mode}
             isCompact={isCompact}
           />
         )}
         {SECTIONS[activeKey].id === 'stake' && (
           <Input
             disabled={!connected || disabled}
-            mode={mode}
             inputValue={inputValue}
             onChange={handleSetInputValue}
             onMax={handleMax}
           />
         )}
-        {SECTIONS[activeKey].id === 'stake' && <StakeSection mode={mode} />}
+        {SECTIONS[activeKey].id === 'stake' && (
+          <StakeSection isCompact={isCompact} staked={staked} />
+        )}
         {SECTIONS[activeKey].id === 'withdraw' && (
-          <WithdrawSection isCompact={isCompact} />
+          <WithdrawSection isCompact={isCompact} staked={staked} />
         )}
         {SECTIONS[activeKey].id === 'claim' && (
           <ClaimSection isCompact={isCompact} />
@@ -284,11 +282,8 @@ export default function StakeModule() {
   )
 }
 
-function StakeSection({ mode }) {
-  const { account } = useWalletAugmented()
-  const { loading, staked } = useUniStaked(account)
-  const [unipoolAddress] = getKnownContract('UNIPOOL')
-  const unipoolAntBalance = useTokenBalance('ANT', unipoolAddress)
+function StakeSection({ staked }) {
+  const { connected } = useWalletAugmented()
 
   return (
     <Card
@@ -298,7 +293,7 @@ function StakeSection({ mode }) {
         margin-top: 20px;
       `}
     >
-      <Logo mode={mode} />
+      <Logo mode={'uni'} />
       <div
         css={`
           display: flex;
@@ -314,32 +309,29 @@ function StakeSection({ mode }) {
             margin-bottom: 12px;
           `}
         >
-          {mode === 'uni'
-            ? 'Amount of UNI staked'
-            : 'Total amount of ANT up for rewards'}
+          Amount of UNI staked
         </span>
         <span
           css={`
             display: block;
           `}
         >
-          {loading
+          {!connected
+            ? '0'
+            : staked.eq(BALANCE_LOADING)
             ? 'loading...'
-            : TokenAmount.format(
-                mode === 'uni' ? staked : unipoolAntBalance,
-                18,
-                { symbol: mode === 'uni' ? 'UNI' : 'ANT', digits: 9 }
-              )}
+            : TokenAmount.format(staked, 18, {
+                symbol: 'UNI',
+                digits: 9,
+              })}
         </span>
       </div>
     </Card>
   )
 }
 
-function WithdrawSection({ isCompact }) {
-  const [loading, setLoading] = useState(false)
-  const { account } = useWalletAugmented()
-  const { loading: loadingStaked, staked } = useUniStaked(account)
+function WithdrawSection({ isCompact, staked }) {
+  const { connected } = useWalletAugmented()
 
   return (
     <div
@@ -378,7 +370,9 @@ function WithdrawSection({ isCompact }) {
             font-size: 24px;
           `}
         >
-          {loading
+          {!connected
+            ? '0'
+            : staked.eq(BALANCE_LOADING)
             ? 'Loading...'
             : TokenAmount.format(staked, 18, { symbol: 'UNI', digits: 9 })}
         </span>
@@ -427,9 +421,9 @@ function ClaimSection() {
           >
             {loadingInfo || !tokenInfo
               ? 'loading...'
-              : Number(tokenInfo?.token0?.totalLiquidity).toLocaleString(
+              : Number(tokenInfo?.token0?.totalLiquidity)?.toLocaleString(
                   'en-US'
-                )}
+                ) ?? '0'}
           </span>
         </div>
       </Card>
