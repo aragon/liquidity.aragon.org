@@ -11,7 +11,6 @@ import StatsRow from './StatsRow'
 import Info from 'components/Info/Info'
 import { bigNum } from 'lib/utils'
 import env from 'lib/environment'
-import { getKnownContract } from 'lib/known-contracts'
 import { useWalletAugmented } from 'lib/wallet'
 import {
   useClaim,
@@ -20,6 +19,7 @@ import {
   useBalanceOf,
   useTokenDecimals,
   useTokenUniswapInfo,
+  useUniStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
 import { parseUnits } from 'lib/web3-utils'
@@ -29,8 +29,6 @@ const SECTIONS = [
   { id: 'withdraw', copy: 'Withdraw', copyCompact: 'Withdraw' },
   { id: 'claim', copy: 'Claim rewards', copyCompact: 'Claim' },
 ]
-
-const BALANCE_LOADING = bigNum(-1)
 
 // Filters and parse the input value of a token amount.
 // Returns a BN.js instance and the filtered value.
@@ -102,10 +100,9 @@ export default function StakeModule() {
     setAmountUni,
     setInputValue,
   } = useConvertInputs()
-  const { connected } = useWalletAugmented()
+  const {account, connected } = useWalletAugmented()
   const selectedTokenBalance = useBalanceOf('TOKEN_UNI')
-  const [unipoolAddress] = getKnownContract('UNIPOOL')
-  const staked = useBalanceOf('TOKEN_UNI', unipoolAddress)
+  const { loading: loadingStaked, staked } = useUniStaked(account)
   const decimalsUni = useTokenDecimals('UNI')
   const claim = useClaim()
   const stake = useStake()
@@ -113,7 +110,7 @@ export default function StakeModule() {
   const { below } = useViewport()
   // Super ugly Next.js workaround to let us have differences between SSR & client
   const [isCompact, setIsCompact] = useState(false)
-
+  console.log(loadingStaked, staked)
   const smallLayout = below(415)
 
   useEffect(() => {
@@ -242,10 +239,18 @@ export default function StakeModule() {
           />
         )}
         {SECTIONS[activeKey].id === 'stake' && (
-          <StakeSection isCompact={isCompact} staked={staked} />
+          <StakeSection
+            loading={loadingStaked}
+            isCompact={isCompact}
+            staked={staked}
+          />
         )}
         {SECTIONS[activeKey].id === 'withdraw' && (
-          <WithdrawSection isCompact={isCompact} staked={staked} />
+          <WithdrawSection
+            loading={loadingStaked}
+            isCompact={isCompact}
+            staked={staked}
+          />
         )}
         {SECTIONS[activeKey].id === 'claim' && (
           <ClaimSection isCompact={isCompact} />
@@ -282,7 +287,7 @@ export default function StakeModule() {
   )
 }
 
-function StakeSection({ staked }) {
+function StakeSection({ loading, staked }) {
   const { connected } = useWalletAugmented()
 
   return (
@@ -318,7 +323,7 @@ function StakeSection({ staked }) {
         >
           {!connected
             ? '0'
-            : staked.eq(BALANCE_LOADING)
+            : loading
             ? 'loading...'
             : TokenAmount.format(staked, 18, {
                 symbol: 'UNI',
@@ -330,7 +335,7 @@ function StakeSection({ staked }) {
   )
 }
 
-function WithdrawSection({ isCompact, staked }) {
+function WithdrawSection({ loading, isCompact, staked }) {
   const { connected } = useWalletAugmented()
 
   return (
@@ -372,7 +377,7 @@ function WithdrawSection({ isCompact, staked }) {
         >
           {!connected
             ? '0'
-            : staked.eq(BALANCE_LOADING)
+            : loading
             ? 'Loading...'
             : TokenAmount.format(staked, 18, { symbol: 'UNI', digits: 9 })}
         </span>
