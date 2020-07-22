@@ -11,7 +11,7 @@ if (env('SENTRY_DSN')) {
   Sentry.init({
     dsn: env('SENTRY_DSN'),
     environment: env('NODE_ENV'),
-    release: 'convert.aragon.org@' + env('BUILD'),
+    release: 'liquidity.aragon.org@' + env('BUILD'),
   })
 }
 

@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import antSvg from 'components/Logo/logo-ant.svg'
-import swapSvg from 'components/assets/swap.svg'
 import uniswapSvg from './assets/uniswap.svg'
 
 const noop = () => {}
 
 function Input({
   disabled,
-  mode,
   inputValue,
   onBlur = noop,
   onChange = noop,
   onFocus = noop,
   onMax = noop,
-  onSelect = noop,
   placeholder = 'Enter amount',
 }) {
   const [opened, setOpened] = useState(false)
@@ -96,7 +92,6 @@ function Input({
         <DropdownButton
           disabled={disabled}
           ref={buttonRef}
-          mode={mode}
           onClick={handleButtonClick}
           onMax={onMax}
           opened={opened}
@@ -107,7 +102,7 @@ function Input({
 }
 
 const DropdownButton = React.forwardRef(function DropdownButton(
-  { disabled, onMax, onClick, onModeChange, label, opened },
+  { disabled, onMax, onClick },
   ref
 ) {
   return (
@@ -152,20 +147,16 @@ const DropdownButton = React.forwardRef(function DropdownButton(
           }
         `}
       >
-        <Adornment mode="uni" />
+        <Adornment />
       </div>
     </button>
   )
 })
 
-function Adornment({ mode }) {
+function Adornment() {
   return (
     <div>
-      <img
-        src={mode === 'uni' ? uniswapSvg : antSvg}
-        alt="Token Logo"
-        width={36}
-      />
+      <img src={uniswapSvg} alt="Token Logo" width={36} />
       <span>MAX</span>
     </div>
   )
