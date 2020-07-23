@@ -18,7 +18,7 @@ import {
   useStake,
   useBalanceOf,
   useTokenDecimals,
-  useTokenUniswapInfo,
+  useTotalUniStaked,
   useUniStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
@@ -100,7 +100,7 @@ export default function StakeModule() {
     setAmountUni,
     setInputValue,
   } = useConvertInputs()
-  const {account, connected } = useWalletAugmented()
+  const { account, connected } = useWalletAugmented()
   const selectedTokenBalance = useBalanceOf('TOKEN_UNI')
   const { loading: loadingStaked, staked } = useUniStaked(account)
   const decimalsUni = useTokenDecimals('UNI')
@@ -366,7 +366,7 @@ function WithdrawSection({ loading, isCompact, staked }) {
             font-weight: 300;
           `}
         >
-          Amount to withdraw
+          Amount available to withdraw
         </span>
         <span
           css={`
@@ -388,7 +388,7 @@ function WithdrawSection({ loading, isCompact, staked }) {
 function ClaimSection() {
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
-  const [tokenInfo, loadingInfo] = useTokenUniswapInfo('ANT')
+  const { loading: loadingTotalUniStaked, totalUniStaked } = useTotalUniStaked()
 
   return (
     <div>
@@ -399,7 +399,7 @@ function ClaimSection() {
           margin-top: 20px;
         `}
       >
-        <Logo mode="ant" />
+        <Logo mode="uni" />
         <div
           css={`
             display: flex;
@@ -415,7 +415,7 @@ function ClaimSection() {
               margin-bottom: 12px;
             `}
           >
-            Total ANT Staked
+            Total UNI staked
           </span>
           <span
             css={`
@@ -423,11 +423,9 @@ function ClaimSection() {
               font-size: 22px;
             `}
           >
-            {loadingInfo || !tokenInfo
+            {loadingTotalUniStaked || !totalUniStaked
               ? 'loading...'
-              : Number(tokenInfo?.token0?.totalLiquidity)?.toLocaleString(
-                  'en-US'
-                ) ?? '0'}
+              : TokenAmount.format(totalUniStaked, 18, { symbol: 'UNI' })}
           </span>
         </div>
       </Card>
@@ -454,7 +452,7 @@ function ClaimSection() {
               margin-bottom: 12px;
             `}
           >
-            Total rewards generated
+            Rewards available to withdraw
           </span>
           <span
             css={`

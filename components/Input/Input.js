@@ -4,7 +4,7 @@ import uniswapSvg from './assets/uniswap.svg'
 const noop = () => {}
 
 function Input({
-  disabled,
+  disabled = true,
   inputValue,
   onBlur = noop,
   onChange = noop,
@@ -127,6 +127,10 @@ const DropdownButton = React.forwardRef(function DropdownButton(
         outline: 0;
         transition: none;
         cursor: pointer;
+        ${disabled &&
+          `
+          cursor: auto;
+        `}
         &::-moz-focus-inner {
           border: 0;
         }
@@ -143,7 +147,7 @@ const DropdownButton = React.forwardRef(function DropdownButton(
         css={`
           position: relative;
           &:active {
-            top: 1px;
+            ${disabled ? 'top: 0px' : 'top: 1px'};
           }
         `}
       >
