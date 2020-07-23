@@ -4,7 +4,7 @@ import uniswapSvg from './assets/uniswap.svg'
 const noop = () => {}
 
 function Input({
-  disabled,
+  disabled = true,
   inputValue,
   onBlur = noop,
   onChange = noop,
