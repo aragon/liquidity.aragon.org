@@ -110,7 +110,6 @@ export default function StakeModule() {
   const { below } = useViewport()
   // Super ugly Next.js workaround to let us have differences between SSR & client
   const [isCompact, setIsCompact] = useState(false)
-  console.log(loadingStaked, staked)
   const smallLayout = below(415)
 
   useEffect(() => {

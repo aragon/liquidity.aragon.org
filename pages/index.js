@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useViewport } from 'use-viewport'
-import Anchor from 'components/Anchor/Anchor'
 import NavBar from 'components/NavBar/NavBar'
 import logoAnt from 'components/Logo/logo-ant.svg'
 import StakeModule from 'components/StakeModule/StakeModule'
