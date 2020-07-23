@@ -207,7 +207,7 @@ export default function StakeModule() {
               href="https://aragon.org/blog/liquidity-rewards"
             >
               {' '}
-              Learn how to participate in the rewards program
+              Learn how to obtain UNI to participate in the rewards program
             </a>
             .
           </Info>
