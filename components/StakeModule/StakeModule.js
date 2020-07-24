@@ -18,6 +18,7 @@ import {
   useStake,
   useBalanceOf,
   useTokenDecimals,
+  useTokenUniswapInfo,
   useTotalUniStaked,
   useUniStaked,
   useWithdraw,
@@ -388,7 +389,7 @@ function WithdrawSection({ loading, isCompact, staked }) {
 function ClaimSection() {
   const { account } = useWalletAugmented()
   const { loading, paid } = useRewardsPaid(account)
-  const { loading: loadingTotalUniStaked, totalUniStaked } = useTotalUniStaked()
+  const [loadingUniswapInfo, uniswapInfo] = useTokenUniswapInfo('ANT')
 
   return (
     <div>
@@ -399,7 +400,7 @@ function ClaimSection() {
           margin-top: 20px;
         `}
       >
-        <Logo mode="uni" />
+        <Logo mode="ant" />
         <div
           css={`
             display: flex;
@@ -415,7 +416,7 @@ function ClaimSection() {
               margin-bottom: 12px;
             `}
           >
-            Total UNI staked
+            Total ANT in the Uniswap liquidity pool
           </span>
           <span
             css={`
@@ -423,9 +424,11 @@ function ClaimSection() {
               font-size: 22px;
             `}
           >
-            {loadingTotalUniStaked || !totalUniStaked
+            {loadingUniswapInfo || !uniswapInfo
               ? 'loading...'
-              : TokenAmount.format(totalUniStaked, 18, { symbol: 'UNI' })}
+              : Number(uniswapInfo?.token0?.totalLiquidity)?.toLocaleString(
+                  'en-US'
+                ) ?? '0'}{' '}
           </span>
         </div>
       </Card>
