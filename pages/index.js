@@ -4,10 +4,12 @@ import NavBar from 'components/NavBar/NavBar'
 import logoAnt from 'components/Logo/logo-ant.svg'
 import StakeModule from 'components/StakeModule/StakeModule'
 
+const SMALL_BREAKPOINT = 415
+
 export default () => {
   const { below } = useViewport()
   const [isCompact, setIsCompact] = useState(false)
-  const smallLayout = below(415)
+  const smallLayout = below(SMALL_BREAKPOINT)
   useEffect(() => {
     setTimeout(() => {
       setIsCompact(smallLayout)
@@ -26,6 +28,7 @@ export default () => {
         justify-content: center;
       `}
     >
+      <Banner />
       <NavBar logoMode={'ant'} />
       <StakeModule />
       <div
@@ -107,6 +110,56 @@ export default () => {
           Powered By <img src={logoAnt} alt="ANT Logo" width="30" />
         </div>
       </div>
+    </div>
+  )
+}
+
+function Banner() {
+  const { below } = useViewport()
+  const [isCompact, setIsCompact] = useState(false)
+  const smallLayout = below(SMALL_BREAKPOINT)
+  useEffect(() => {
+    setTimeout(() => {
+      setIsCompact(smallLayout)
+    }, 0)
+  }, [smallLayout])
+
+  return (
+    <div
+      css={`
+        position: absolute;
+        width: 100%;
+        height: 48px;
+        left: 0px;
+        top: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          204.88deg,
+          #32fff5 -103.98%,
+          #01bfe3 80.13%
+        );
+        color: white;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.25);
+        font-weight: 600;
+        font-size: ${isCompact ? '14px' : 'auto'};
+      `}
+    >
+      {isCompact
+        ? 'The ANT liquidity program ends this Friday.'
+        : 'The ANT Liquidity Rewards program ends on Friday, August 21.'}
+      <a
+        rel="noopener noreferrer"
+        target="_blank"
+        href="https://aragon.org/blog/liquidity-rewards"
+        css={`
+          color: white;
+          text-decoration: underline;
+        `}
+      >
+        &nbsp;Read more&nbsp;
+      </a>
     </div>
   )
 }
