@@ -167,7 +167,7 @@ export default function StakeModule() {
   return (
     <div
       css={`
-        margin-top: 96px;
+        margin-top: 144px;
       `}
     >
       <main
