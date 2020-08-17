@@ -1,1 +1,1 @@
-# Aragon ANT Liquidity Rewards frontend
+# Ultra UOS Liquidity Rewards frontend
