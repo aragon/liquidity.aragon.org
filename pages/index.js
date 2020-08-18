@@ -146,20 +146,32 @@ function Banner() {
         font-size: ${isCompact ? '14px' : 'auto'};
       `}
     >
-      {isCompact
-        ? 'The ANT liquidity program ends this Friday.'
-        : 'The ANT Liquidity Rewards program ends on Friday, August 21.'}
-      <a
-        rel="noopener noreferrer"
-        target="_blank"
-        href="https://aragon.org/blog/liquidity-rewards"
+      <p
         css={`
-          color: white;
-          text-decoration: underline;
+          text-align: ${isCompact ? 'center' : 'auto'};
+          display: inline-block;
+          align-self: center;
+          margin-top: 0px;
+          margin-bottom: 0px;
         `}
       >
-        &nbsp;Read more&nbsp;
-      </a>
+        {' '}
+        {isCompact
+          ? 'The first ANT liquidity program ends this Friday.'
+          : 'The first ANT Liquidity Rewards program ends on Friday, August 21.'}
+        {isCompact && <br />}&nbsp;
+        <a
+          rel="noopener noreferrer"
+          target="_blank"
+          href="https://aragon.org/blog/liquidity-rewards"
+          css={`
+            color: white;
+            text-decoration: underline;
+          `}
+        >
+          Read more
+        </a>
+      </p>
     </div>
   )
 }
