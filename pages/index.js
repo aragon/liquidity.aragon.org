@@ -151,6 +151,8 @@ function Banner() {
           text-align: ${isCompact ? 'center' : 'auto'};
           display: inline-block;
           align-self: center;
+          margin-top: 0px;
+          margin-bottom: 0px;
         `}
       >
         {' '}
