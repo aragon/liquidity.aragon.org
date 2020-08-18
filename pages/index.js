@@ -147,8 +147,8 @@ function Banner() {
       `}
     >
       {isCompact
-        ? 'The ANT liquidity program ends this Friday.'
-        : 'The ANT Liquidity Rewards program ends on Friday, August 21.'}
+        ? 'The first ANT liquidity program ends this Friday.'
+        : 'The first ANT Liquidity Rewards program ends on Friday, August 21.'}
       <a
         rel="noopener noreferrer"
         target="_blank"
