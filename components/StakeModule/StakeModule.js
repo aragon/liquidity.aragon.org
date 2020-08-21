@@ -194,7 +194,6 @@ export default function StakeModule() {
       >
         <ButtonGroup
           activeKey={activeKey}
-          disabled
           elements={SECTIONS}
           isCompact={isCompact}
           onSetActiveKey={setActiveKey}
