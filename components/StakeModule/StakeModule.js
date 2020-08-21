@@ -214,7 +214,7 @@ export default function StakeModule() {
         )}
         {SECTIONS[activeKey].id === 'withdraw' && (
           <Info mode="info" padding="16" Compact={isCompact}>
-            Withdraw all of your staked UNI.
+            Withdraw all of your staked UNI and claim any pending rewards.
           </Info>
         )}
         {SECTIONS[activeKey].id === 'claim' && (
