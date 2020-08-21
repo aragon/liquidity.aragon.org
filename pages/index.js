@@ -157,19 +157,19 @@ function Banner() {
       >
         {' '}
         {isCompact
-          ? 'The first ANT liquidity program ends this Friday.'
-          : 'The first ANT Liquidity Rewards program ends on Friday, August 21.'}
+          ? 'The first ANT liquidity program has ended.'
+          : 'The first ANT Liquidity Rewards program has ended.'}
         {isCompact && <br />}&nbsp;
         <a
           rel="noopener noreferrer"
           target="_blank"
-          href="https://aragon.org/blog/liquidity-rewards"
+          href="https://aragon.org/blog/ant-liquidity-rewards-now-on-balancer"
           css={`
             color: white;
             text-decoration: underline;
           `}
         >
-          Read more
+          Learn about the new ANT Liquidity program on Balancer
         </a>
       </p>
     </div>

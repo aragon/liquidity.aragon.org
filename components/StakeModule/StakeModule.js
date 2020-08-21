@@ -90,7 +90,7 @@ function useConvertInputs() {
 }
 
 export default function StakeModule() {
-  const [activeKey, setActiveKey] = useState(0)
+  const [activeKey, setActiveKey] = useState(1)
   const [disabled, setDisabled] = useState(false)
 
   const {
@@ -194,7 +194,6 @@ export default function StakeModule() {
       >
         <ButtonGroup
           activeKey={activeKey}
-          disabled={disabled}
           elements={SECTIONS}
           isCompact={isCompact}
           onSetActiveKey={setActiveKey}
@@ -215,7 +214,7 @@ export default function StakeModule() {
         )}
         {SECTIONS[activeKey].id === 'withdraw' && (
           <Info mode="info" padding="16" Compact={isCompact}>
-            Withdraw all of your staked UNI.
+            Withdraw all of your staked UNI and claim any pending rewards.
           </Info>
         )}
         {SECTIONS[activeKey].id === 'claim' && (
