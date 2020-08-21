@@ -157,8 +157,8 @@ function Banner() {
       >
         {' '}
         {isCompact
-          ? 'The first ANT liquidity program ends this Friday.'
-          : 'The first ANT Liquidity Rewards program ends on Friday, August 21.'}
+          ? 'The first ANT liquidity program has ended.'
+          : 'The first ANT Liquidity Rewards program has ended.'}
         {isCompact && <br />}&nbsp;
         <a
           rel="noopener noreferrer"
@@ -169,7 +169,7 @@ function Banner() {
             text-decoration: underline;
           `}
         >
-          Read more
+          Learn about the new ANT Rewards program on Balancer
         </a>
       </p>
     </div>
