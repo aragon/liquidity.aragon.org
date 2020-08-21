@@ -87,6 +87,10 @@ const ButtonBase = styled.button`
     cursor: 'normal';
     pointer-events: none;
   }
+  &:focus {
+    outline: none;
+    border 2px solid #005fcc;
+  }
   &:active {
     top: 1px;
     border: 2px solid #00c2ff;
