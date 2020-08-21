@@ -169,7 +169,7 @@ function Banner() {
             text-decoration: underline;
           `}
         >
-          Learn about the new ANT Rewards program on Balancer
+          Learn about the new ANT Liquidity program on Balancer
         </a>
       </p>
     </div>
