@@ -1,7 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
-
-const WITHDRAW_KEY = 1
 
 export default function ButtonGroup({
   activeKey,
@@ -27,7 +25,6 @@ export default function ButtonGroup({
     >
       {elements.map((el, idx) => (
         <Button
-          disabled={idx !== WITHDRAW_KEY}
           activeKey={activeKey}
           key={el.id}
           lastChild={elements.length - 1 === idx}

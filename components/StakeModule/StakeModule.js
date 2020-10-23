@@ -20,7 +20,7 @@ import {
   useTokenDecimals,
   useTokenUniswapInfo,
   useTotalUniStaked,
-  useUniStaked,
+  useAntStaked,
   useWithdraw,
 } from 'lib/web3-contracts'
 import { parseUnits } from 'lib/web3-utils'
@@ -102,9 +102,9 @@ export default function StakeModule() {
     setInputValue,
   } = useConvertInputs()
   const { account, connected } = useWalletAugmented()
-  const selectedTokenBalance = useBalanceOf('TOKEN_UNI')
-  const { loading: loadingStaked, staked } = useUniStaked(account)
-  const decimalsUni = useTokenDecimals('UNI')
+  const selectedTokenBalance = useBalanceOf('TOKEN_ANT')
+  const { loading: loadingStaked, staked } = useAntStaked(account)
+  const decimalsUni = useTokenDecimals('ANT')
   const claim = useClaim()
   const stake = useStake()
   const withdraw = useWithdraw()
@@ -297,7 +297,7 @@ function StakeSection({ loading, staked }) {
         margin-top: 20px;
       `}
     >
-      <Logo mode={'uni'} />
+      <Logo mode={'ant'} />
       <div
         css={`
           display: flex;
@@ -313,7 +313,7 @@ function StakeSection({ loading, staked }) {
             margin-bottom: 12px;
           `}
         >
-          Amount of UNI staked
+          Amount of ANT staked
         </span>
         <span
           css={`
@@ -325,7 +325,7 @@ function StakeSection({ loading, staked }) {
             : loading
             ? 'loading...'
             : TokenAmount.format(staked, 18, {
-                symbol: 'UNI',
+                symbol: 'ANT',
                 digits: 9,
               })}
         </span>
@@ -378,7 +378,7 @@ function WithdrawSection({ loading, isCompact, staked }) {
             ? '0'
             : loading
             ? 'Loading...'
-            : TokenAmount.format(staked, 18, { symbol: 'UNI', digits: 9 })}
+            : TokenAmount.format(staked, 18, { symbol: 'ANT', digits: 9 })}
         </span>
       </Card>
     </div>
