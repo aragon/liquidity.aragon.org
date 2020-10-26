@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import uniswapSvg from './assets/uniswap.svg'
+import antSvg from '../Logo/logo-ant.svg'
 
 const noop = () => {}
 
@@ -160,7 +160,7 @@ const DropdownButton = React.forwardRef(function DropdownButton(
 function Adornment() {
   return (
     <div>
-      <img src={uniswapSvg} alt="Token Logo" width={36} />
+      <img src={antSvg} alt="Token Logo" width={36} />
       <span>MAX</span>
     </div>
   )
