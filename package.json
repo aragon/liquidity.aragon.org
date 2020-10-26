@@ -20,6 +20,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@aragon/ui": "^1.7.0",
     "@sentry/browser": "^5.11.1",
     "@uniswap/sdk": "^1.0.0-beta.4",
     "@zeit/next-css": "^1.0.1",
@@ -42,6 +43,7 @@
     "react-spring": "^8.0.27",
     "styled-components": "^5.0.1",
     "token-amount": "^0.1.0",
+    "use-token": "^0.2.0",
     "use-viewport": "^0.2.0",
     "use-wallet": "^0.5.0",
     "web3-eth-contract": "^1.2.4",
