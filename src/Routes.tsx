@@ -1,22 +1,13 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
-import Disclaimer from './components/Disclaimer/Disclaimer'
-import GetStarted from './components/GetStarted/GetStarted'
-import Migrate from './components/Migrate/Migrate'
-
-export const CONVERTER_PATH = '/converter'
-export const DISCLAIMER_PATH = '/disclaimer'
+import Home from './components/Home/Home'
+import Staking from './components/Staking/Staking'
 
 export default function Routes(): JSX.Element {
   return (
     <Switch>
-      <Route exact path="/" component={GetStarted} />
-      <Route exact path={DISCLAIMER_PATH} component={Disclaimer} />
-      <Route
-        exact
-        path={CONVERTER_PATH}
-        render={() => <Migrate conversionType="ANT" />}
-      />
+      <Route exact path="/" component={Home} />
+      <Route exact path={'/staking'} render={() => <Staking />} />
       <Redirect to="/" />
     </Switch>
   )

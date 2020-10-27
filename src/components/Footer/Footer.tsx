@@ -1,29 +1,19 @@
-import React, { ReactNode, useCallback } from 'react'
+import React, { ReactNode } from 'react'
 // @ts-ignore
 import { GU, Link, useTheme, useLayout } from '@aragon/ui'
 import FooterLogo from './FooterLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
 import LayoutLimiter from '../Layout/LayoutLimiter'
-import { useHistory, useLocation } from 'react-router-dom'
-import { DISCLAIMER_PATH } from '../../Routes'
 
-const DOCS_URL = 'https://docs.aragon.org/ant/'
-const COMMUNITY_URL = 'https://discord.com/invite/aragon'
+const ANT_URL = 'https://aragon.org/token/ant'
+const WIKI_URL = 'https://wiki.aragon.org/'
 
 const ARAGON_WEBSITE_URL = 'https://aragon.org'
 
 function Footer(): JSX.Element {
-  const location = useLocation()
-  const history = useHistory()
   const theme = useTheme()
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
-
-  const handleDisclaimerClick = useCallback(() => {
-    if (location.pathname !== DISCLAIMER_PATH) {
-      history.push(DISCLAIMER_PATH)
-    }
-  }, [location.pathname, history])
 
   return (
     <footer>
@@ -49,11 +39,9 @@ function Footer(): JSX.Element {
                 margin-bottom: ${compactMode ? 2 * GU : `0`}px;
               `}
             >
-              <FooterLink href={DOCS_URL}>Documentation</FooterLink>
-              <FooterLink onClick={handleDisclaimerClick}>
-                Disclaimer
-              </FooterLink>
-              <FooterLink href={COMMUNITY_URL}>Community</FooterLink>
+              <FooterLink href={ARAGON_WEBSITE_URL}>About</FooterLink>
+              <FooterLink href={ANT_URL}>ANT</FooterLink>
+              <FooterLink href={WIKI_URL}>Wiki</FooterLink>
             </div>
             <Link href={ARAGON_WEBSITE_URL}>
               <FooterLogo />

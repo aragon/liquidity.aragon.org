@@ -1,9 +1,4 @@
 import { BigNumber } from 'ethers'
-import {
-  StepHandleSignProps,
-  StepItem,
-  StepItems,
-} from './components/Stepper/types'
 import { parseUnits } from './utils/math-utils'
 
 export const MOCK_HASH =
@@ -36,28 +31,3 @@ export const MOCK_LP_BALANCES: [
   ['uniswap', parseUnits('234.342423', 18)],
   ['incentive', parseUnits('8532', 18)],
 ]
-
-const mockStepItem: StepItem = {
-  title: 'Initiate upgrade',
-  handleSign: async ({
-    setSuccess,
-    setWorking,
-    setError,
-    setHash,
-  }: StepHandleSignProps): Promise<void> => {
-    try {
-      setWorking()
-      await mockPromiseLatency(3000)
-
-      setHash(MOCK_HASH)
-      setSuccess()
-    } catch (err) {
-      console.error(err)
-      setError()
-    }
-  },
-}
-
-export function getMockSteps(count = 1): StepItems {
-  return Array(count).fill(mockStepItem)
-}
