@@ -21,6 +21,14 @@ function PoolControls(): JSX.Element {
         onWithdrawClick={() => setActiveTab('withdraw')}
         onClaimClick={() => setActiveTab('claim')}
       />
+      <div
+        css={`
+          display: flex;
+          justify-content: flex-end;
+        `}
+      >
+        Account balance: 243234234 UNI
+      </div>
       {activeTab === 'stake' && <Stake />}
       {activeTab === 'withdraw' && <Withdraw />}
       {activeTab === 'claim' && <Claim />}
@@ -35,13 +43,19 @@ type TabsProps = {
   onClaimClick: () => void
 }
 
+type TabItem = {
+  key: TabName
+  label: string
+  onClick: () => void
+}
+
 function Tabs({
   activeTab,
   onStakeClick,
   onWithdrawClick,
   onClaimClick,
 }: TabsProps): JSX.Element {
-  const items = useMemo(() => {
+  const items = useMemo((): TabItem[] => {
     return [
       {
         key: 'stake',
