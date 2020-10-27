@@ -1,18 +1,26 @@
 import React, { useMemo, useState } from 'react'
+// @ts-ignore
+import { useTheme } from '@aragon/ui'
+import BrandButton from '../../BrandButton/BrandButton'
 import Claim from './Claim'
 import Stake from './Stake'
 import Withdraw from './Withdraw'
+import { radius } from '../../../style/radius'
+import { shadowDepth } from '../../../style/shadow'
 
 type TabName = 'stake' | 'withdraw' | 'claim'
 
 function PoolControls(): JSX.Element {
+  const theme = useTheme()
   const [activeTab, setActiveTab] = useState<TabName>('withdraw')
 
   return (
     <div
       css={`
         padding: 50px;
-        background-color: whiteSmoke;
+        background-color: ${theme.surface};
+        border-radius: ${radius.high};
+        box-shadow: ${shadowDepth.high};
       `}
     >
       <Tabs
@@ -29,6 +37,7 @@ function PoolControls(): JSX.Element {
       >
         Account balance: 243234234 UNI
       </div>
+
       {activeTab === 'stake' && <Stake />}
       {activeTab === 'withdraw' && <Withdraw />}
       {activeTab === 'claim' && <Claim />}
@@ -80,24 +89,23 @@ function Tabs({
       css={`
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 20px;
+        grid-gap: 10px;
       `}
     >
       {items.map(({ key, label, onClick }) => {
         const isActiveTab = key === activeTab
         return (
-          <div
+          <BrandButton
             key={key}
+            wide
+            size="large"
             onClick={onClick}
             css={`
-              text-align: center;
-              opacity: ${isActiveTab ? 1 : 0.3};
-
-              background-color: green;
+              opacity: ${isActiveTab ? 1 : 0.5};
             `}
           >
             {label}
-          </div>
+          </BrandButton>
         )
       })}
     </div>

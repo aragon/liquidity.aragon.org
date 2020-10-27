@@ -15,15 +15,17 @@ function Pool(): JSX.Element {
 
   return (
     <LayoutGutter>
-      <LayoutLimiter size="small">
-        <Link
-          onClick={handleNavigateHome}
+      <LayoutLimiter size="extraSmall">
+        <div
           css={`
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 20px;
           `}
         >
-          Go back home
-        </Link>
+          <Link onClick={handleNavigateHome}>Go back home</Link>
+          <Link>Add liquidity</Link>
+        </div>
         <PoolControls />
       </LayoutLimiter>
     </LayoutGutter>
