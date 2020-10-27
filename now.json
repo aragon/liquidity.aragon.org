@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "public": true,
+  "scope": "aragon",
+  "github": {
+    "silent": true
+  },
+  "build": {
+    "env": {
+      "NETWORK_ENVIRONMENT": "rinkeby"
+    }
+  }
+}
