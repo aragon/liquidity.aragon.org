@@ -85,7 +85,7 @@ function LiquidityPoolName({
             font-size: ${3 * GU}px;
           `}
         >
-          {title} Pool
+          {title}
         </span>
       </Link>
     </div>
