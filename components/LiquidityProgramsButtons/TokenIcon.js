@@ -1,20 +1,7 @@
 import React from 'react'
-import {
-  GU,
-  useTheme,
-  useImageExists,
-} from '@aragon/ui'
-import { useToken } from 'use-token'
+import { GU, useTheme, useImageExists } from '@aragon/ui'
 
-//TODO: Update chain id
-const chainId  = 1
-
-
-function TokenIcon({
-  address,
-  size = 3 * GU,
-  ...props
-}) {
+function TokenIcon({ logo, size = 4.5 * GU, ...props }) {
   const theme = useTheme()
   return (
     <div
@@ -25,29 +12,18 @@ function TokenIcon({
         border-radius: 100%;
         overflow: hidden;
         background-color: ${theme.surface};
-        box-shadow: 0px 5px 10px rgba(26,	66,	75, 0.12), 0px 15px 50px rgba(26,	66,	75, 0.08);
+        box-shadow: 0px 5px 10px rgba(26, 66, 75, 0.12),
+          0px 15px 50px rgba(26, 66, 75, 0.08);
       `}
       {...props}
     >
-      {chainId === 1 ? (
-        <TokenGraphic address={address} />
-      ) : (
-        <TokenPlaceholder />
-      )}
+      <TokenGraphic logo={logo} />
     </div>
   )
 }
 
-function TokenGraphic({ address }){
-  const { iconUrl } = useToken(address)
-
-  const { exists } = useImageExists(iconUrl)
-
-  return exists ? (
-    <img alt="" width="100%" src={iconUrl} />
-  ) : (
-    <TokenPlaceholder />
-  )
+function TokenGraphic({ logo }) {
+  return logo ? <img alt="" width="100%" src={logo} /> : <TokenPlaceholder />
 }
 
 function TokenPlaceholder() {

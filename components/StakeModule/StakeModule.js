@@ -9,6 +9,7 @@ import Logo from 'components/Logo/Logo'
 import Input from 'components/Input/Input'
 import StatsRow from './StatsRow'
 import Info from 'components/Info/Info'
+import LiquidityPoolButton from '../LiquidityProgramsButtons/LiquidityPoolButton'
 import LiquidityPoolName from '../LiquidityProgramsButtons/LiquidityPoolName'
 import { bigNum } from 'lib/utils'
 import env from 'lib/environment'
@@ -171,9 +172,6 @@ export default function StakeModule() {
         margin-top: 144px;
       `}
     >
-      <LiquidityPoolName liquidityPool='uniswapV1' />
-      <LiquidityPoolName liquidityPool='balancer' />
-      <LiquidityPoolName liquidityPool='uniswapV2' />
       <main
         css={`
           display: flex;
