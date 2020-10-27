@@ -12,6 +12,12 @@ export interface EnvVariables {
   ANALYTICS_ENABLED(): string
 }
 
+interface PoolContracts {
+  lpToken: string
+  rewardToken: string
+  poolContract: string
+}
+
 export interface EnvNetworkConfig {
   chainId: ChainId
   legacyNetworkType: LegacyNetworkType
@@ -20,11 +26,8 @@ export interface EnvNetworkConfig {
   }
   ipfsGateway: string
   contracts: {
-    tokenAntV1: string
-    tokenAntV2: string
-    migrator: string
-    antEthUniswapPool?: string
-    antUniIncentivePool?: string
-    antEthBalancerPool?: string
+    uniswapV1: PoolContracts
+    uniswapV2: PoolContracts
+    balancer: PoolContracts
   }
 }

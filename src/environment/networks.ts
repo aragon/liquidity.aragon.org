@@ -11,12 +11,21 @@ const networks = new Map<EnvNetworkName, EnvNetworkConfig>([
       },
       ipfsGateway: 'https://ipfs.eth.aragon.network/ipfs',
       contracts: {
-        tokenAntV1: '0x960b236A07cf122663c4303350609A66A7B288C0',
-        tokenAntV2: '0xa117000000f279D81A1D3cc75430fAA017FA5A2e',
-        migrator: '0x078BEbC744B819657e1927bF41aB8C74cBBF912D',
-        antEthUniswapPool: '0xfa19de406e8f5b9100e4dd5cad8a503a6d686efe',
-        antUniIncentivePool: '0xea4d68cf86bce59bf2bfa039b97794ce2c43debc',
-        antEthBalancerPool: '0x2cf9106faf2c5c8713035d40df655fb1b9b0f9b9',
+        uniswapV1: {
+          lpToken: '',
+          rewardToken: '',
+          poolContract: '',
+        },
+        uniswapV2: {
+          lpToken: '',
+          rewardToken: '',
+          poolContract: '',
+        },
+        balancer: {
+          lpToken: '',
+          rewardToken: '',
+          poolContract: '',
+        },
       },
     },
   ],
@@ -30,9 +39,21 @@ const networks = new Map<EnvNetworkName, EnvNetworkConfig>([
       },
       ipfsGateway: 'https://ipfs.eth.aragon.network/ipfs',
       contracts: {
-        tokenAntV1: '0x7278e85BfFCE26A1C9f21b879595BD63F6289297',
-        tokenAntV2: '0xa117000000f279D81A1D3cc75430fAA017FA5A2e',
-        migrator: '0x078BEbC744B819657e1927bF41aB8C74cBBF912D',
+        uniswapV1: {
+          lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
+          rewardToken: '',
+          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
+        },
+        uniswapV2: {
+          lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
+          rewardToken: '',
+          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
+        },
+        balancer: {
+          lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
+          rewardToken: '',
+          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
+        },
       },
     },
   ],

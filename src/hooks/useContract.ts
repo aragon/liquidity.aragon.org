@@ -7,22 +7,16 @@ import {
 import { Provider } from '@ethersproject/providers'
 import { useWallet } from '../providers/Wallet'
 import { networkEnvironment } from '../environment'
-import tokenAntV1Abi from '../abi/token-ant-v1.json'
-import tokenAntV2Abi from '../abi/token-ant-v1.json'
-import migratorAbi from '../abi/migrator.json'
-import uniswapPoolAbi from '../abi/uniswap-pool.json'
-import incentivePoolAbi from '../abi/incentive-pool.json'
-import balancerPoolAbi from '../abi/balancer-pool.json'
-import { TokenAntV1 } from '../abi/types/TokenAntV1'
-import { TokenAntV2 } from '../abi/types/TokenAntV2'
-import { Migrator } from '../abi/types/Migrator'
-import { UniswapPool } from '../abi/types/UniswapPool'
-import { IncentivePool } from '../abi/types/IncentivePool'
-import { BalancerPool } from '../abi/types/BalancerPool'
+import liquidityPoolAbi from '../abi/liquidity-pool.json'
+import liquidityPoolTokenAbi from '../abi/liquidity-pool-token.json'
+import { LiquidityPool } from '../abi/types/LiquidityPool'
+import { LiquidityPoolToken } from '../abi/types/LiquidityPoolToken'
 
 const { endpoints, contracts } = networkEnvironment
 
 const DEFAULT_PROVIDER = new Providers.JsonRpcProvider(endpoints.ethereum)
+
+type ContractGroup = 'uniswapV1' | 'uniswapV2' | 'balancer'
 
 type UseContractProps = {
   address?: string
@@ -68,66 +62,28 @@ function useContract<T>({
   }, [abi, account, address, ethers, signer, readOnly])
 }
 
-export function useMigratorContract(readOnly?: boolean): Migrator | null {
-  const { migrator } = contracts
-
-  return useContract<Migrator>({
-    address: migrator,
-    abi: migratorAbi,
-    readOnly,
-  })
-}
-
-export function useAntTokenV1Contract(readOnly?: boolean): TokenAntV1 | null {
-  const { tokenAntV1 } = contracts
-
-  return useContract<TokenAntV1>({
-    address: tokenAntV1,
-    abi: tokenAntV1Abi,
-    readOnly,
-  })
-}
-
-export function useAntTokenV2Contract(readOnly?: boolean): TokenAntV2 | null {
-  const { tokenAntV2 } = contracts
-
-  return useContract<TokenAntV2>({
-    address: tokenAntV2,
-    abi: tokenAntV2Abi,
-    readOnly,
-  })
-}
-
-export function useUniswapPoolContract(readOnly?: boolean): UniswapPool | null {
-  const { antEthUniswapPool } = contracts
-
-  return useContract<UniswapPool>({
-    address: antEthUniswapPool,
-    abi: uniswapPoolAbi,
-    readOnly,
-  })
-}
-
-export function useIncentivePoolContract(
+export function useLiquidityPoolContract(
+  contractGroup: ContractGroup,
   readOnly?: boolean
-): IncentivePool | null {
-  const { antUniIncentivePool } = contracts
+): LiquidityPool | null {
+  const { poolContract } = contracts[contractGroup]
 
-  return useContract<IncentivePool>({
-    address: antUniIncentivePool,
-    abi: incentivePoolAbi,
+  return useContract<LiquidityPool>({
+    address: poolContract,
+    abi: liquidityPoolAbi,
     readOnly,
   })
 }
 
-export function useBalancerPoolContract(
+export function useLiquidityPoolTokenContract(
+  contractGroup: ContractGroup,
   readOnly?: boolean
-): BalancerPool | null {
-  const { antEthBalancerPool } = contracts
+): LiquidityPoolToken | null {
+  const { lpToken } = contracts[contractGroup]
 
-  return useContract<BalancerPool>({
-    address: antEthBalancerPool,
-    abi: balancerPoolAbi,
+  return useContract<LiquidityPoolToken>({
+    address: lpToken,
+    abi: liquidityPoolTokenAbi,
     readOnly,
   })
 }

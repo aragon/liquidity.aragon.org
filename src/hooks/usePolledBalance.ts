@@ -1,301 +1,303 @@
-import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { networkEnvironment } from '../environment'
-import {
-  MOCK_BALANCER_POOL_ACCOUNT,
-  MOCK_INCENTIVE_POOL_ACCOUNT,
-  MOCK_UNISWAP_POOL_ACCOUNT,
-} from '../mock'
-import { useWallet } from '../providers/Wallet'
-import { captureErrorWithSentry } from '../sentry'
-import {
-  useAntTokenV1Contract,
-  useAntTokenV2Contract,
-  useBalancerPoolContract,
-  useIncentivePoolContract,
-  useUniswapPoolContract,
-} from './useContract'
-import { useInterval } from './useInterval'
-import { useMounted } from './useMounted'
+export {}
 
-const POLL_INTERVAL = 5000
+// import { BigNumber } from 'ethers'
+// import { useCallback, useEffect, useMemo, useState } from 'react'
+// import { networkEnvironment } from '../environment'
+// import {
+//   MOCK_BALANCER_POOL_ACCOUNT,
+//   MOCK_INCENTIVE_POOL_ACCOUNT,
+//   MOCK_UNISWAP_POOL_ACCOUNT,
+// } from '../mock'
+// import { useWallet } from '../providers/Wallet'
+// import { captureErrorWithSentry } from '../sentry'
+// import {
+//   useAntTokenV1Contract,
+//   useAntTokenV2Contract,
+//   useBalancerPoolContract,
+//   useIncentivePoolContract,
+//   useUniswapPoolContract,
+// } from './useContract'
+// import { useInterval } from './useInterval'
+// import { useMounted } from './useMounted'
 
-export function useIncentiveStakedBalance(
-  mockedAccount?: boolean
-): BigNumber | null {
-  const wallet = useWallet()
-  const mounted = useMounted()
-  const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
-    null
-  )
+// const POLL_INTERVAL = 5000
 
-  const account = mockedAccount ? MOCK_INCENTIVE_POOL_ACCOUNT : wallet.account
-  const incentivePoolContract = useIncentivePoolContract()
-  const uniswapPoolContract = useUniswapPoolContract()
+// export function useIncentiveStakedBalance(
+//   mockedAccount?: boolean
+// ): BigNumber | null {
+//   const wallet = useWallet()
+//   const mounted = useMounted()
+//   const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
+//     null
+//   )
 
-  const getStakedBalance = useCallback(
-    async (clear) => {
-      if (!incentivePoolContract || !uniswapPoolContract || !account) {
-        // Clear any residual value
-        if (mounted()) {
-          setLastStakedBalance(null)
-        }
-        return
-      }
+//   const account = mockedAccount ? MOCK_INCENTIVE_POOL_ACCOUNT : wallet.account
+//   const incentivePoolContract = useIncentivePoolContract()
+//   const uniswapPoolContract = useUniswapPoolContract()
 
-      try {
-        const { balanceOf } = incentivePoolContract.functions
+//   const getStakedBalance = useCallback(
+//     async (clear) => {
+//       if (!incentivePoolContract || !uniswapPoolContract || !account) {
+//         // Clear any residual value
+//         if (mounted()) {
+//           setLastStakedBalance(null)
+//         }
+//         return
+//       }
 
-        const {
-          totalSupply: getTotalSupply,
-          getReserves,
-        } = uniswapPoolContract.functions
+//       try {
+//         const { balanceOf } = incentivePoolContract.functions
 
-        const [
-          { 0: userBalance },
-          { 0: totalSupply },
-          { 0: antReserve },
-        ] = await Promise.all([
-          balanceOf(account),
-          getTotalSupply(),
-          getReserves(),
-        ])
+//         const {
+//           totalSupply: getTotalSupply,
+//           getReserves,
+//         } = uniswapPoolContract.functions
 
-        const stakedBalance = userBalance.mul(antReserve).div(totalSupply)
+//         const [
+//           { 0: userBalance },
+//           { 0: totalSupply },
+//           { 0: antReserve },
+//         ] = await Promise.all([
+//           balanceOf(account),
+//           getTotalSupply(),
+//           getReserves(),
+//         ])
 
-        // Avoid unnessesary re-renders by only updating value when it has actually changed
-        if (
-          mounted() &&
-          (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
-        ) {
-          setLastStakedBalance(stakedBalance)
-        }
-      } catch (err) {
-        captureErrorWithSentry(err)
-        clear()
-      }
-    },
-    [
-      account,
-      mounted,
-      incentivePoolContract,
-      lastStakedBalance,
-      uniswapPoolContract,
-    ]
-  )
+//         const stakedBalance = userBalance.mul(antReserve).div(totalSupply)
 
-  useInterval(getStakedBalance, POLL_INTERVAL)
+//         // Avoid unnessesary re-renders by only updating value when it has actually changed
+//         if (
+//           mounted() &&
+//           (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
+//         ) {
+//           setLastStakedBalance(stakedBalance)
+//         }
+//       } catch (err) {
+//         captureErrorWithSentry(err)
+//         clear()
+//       }
+//     },
+//     [
+//       account,
+//       mounted,
+//       incentivePoolContract,
+//       lastStakedBalance,
+//       uniswapPoolContract,
+//     ]
+//   )
 
-  return lastStakedBalance
-}
+//   useInterval(getStakedBalance, POLL_INTERVAL)
 
-export function useUniswapStakedBalance(
-  mockedAccount?: boolean
-): BigNumber | null {
-  const wallet = useWallet()
-  const mounted = useMounted()
-  const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
-    null
-  )
+//   return lastStakedBalance
+// }
 
-  const account = mockedAccount ? MOCK_UNISWAP_POOL_ACCOUNT : wallet.account
-  const uniswapPoolContract = useUniswapPoolContract()
+// export function useUniswapStakedBalance(
+//   mockedAccount?: boolean
+// ): BigNumber | null {
+//   const wallet = useWallet()
+//   const mounted = useMounted()
+//   const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
+//     null
+//   )
 
-  const getStakedBalance = useCallback(
-    async (clear) => {
-      if (!uniswapPoolContract || !account) {
-        // Clear any residual value
-        if (mounted()) {
-          setLastStakedBalance(null)
-        }
-        return
-      }
+//   const account = mockedAccount ? MOCK_UNISWAP_POOL_ACCOUNT : wallet.account
+//   const uniswapPoolContract = useUniswapPoolContract()
 
-      try {
-        const {
-          balanceOf,
-          totalSupply: getTotalSupply,
-          getReserves,
-        } = uniswapPoolContract.functions
+//   const getStakedBalance = useCallback(
+//     async (clear) => {
+//       if (!uniswapPoolContract || !account) {
+//         // Clear any residual value
+//         if (mounted()) {
+//           setLastStakedBalance(null)
+//         }
+//         return
+//       }
 
-        const [
-          { 0: userBalance },
-          { 0: totalSupply },
-          { 0: antReserve },
-        ] = await Promise.all([
-          balanceOf(account),
-          getTotalSupply(),
-          getReserves(),
-        ])
+//       try {
+//         const {
+//           balanceOf,
+//           totalSupply: getTotalSupply,
+//           getReserves,
+//         } = uniswapPoolContract.functions
 
-        const stakedBalance = userBalance.mul(antReserve).div(totalSupply)
+//         const [
+//           { 0: userBalance },
+//           { 0: totalSupply },
+//           { 0: antReserve },
+//         ] = await Promise.all([
+//           balanceOf(account),
+//           getTotalSupply(),
+//           getReserves(),
+//         ])
 
-        // Avoid unnessesary re-renders by only updating value when it has actually changed
-        if (
-          mounted() &&
-          (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
-        ) {
-          setLastStakedBalance(stakedBalance)
-        }
-      } catch (err) {
-        captureErrorWithSentry(err)
-        clear()
-      }
-    },
-    [account, mounted, lastStakedBalance, uniswapPoolContract]
-  )
+//         const stakedBalance = userBalance.mul(antReserve).div(totalSupply)
 
-  useInterval(getStakedBalance, POLL_INTERVAL)
+//         // Avoid unnessesary re-renders by only updating value when it has actually changed
+//         if (
+//           mounted() &&
+//           (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
+//         ) {
+//           setLastStakedBalance(stakedBalance)
+//         }
+//       } catch (err) {
+//         captureErrorWithSentry(err)
+//         clear()
+//       }
+//     },
+//     [account, mounted, lastStakedBalance, uniswapPoolContract]
+//   )
 
-  return lastStakedBalance
-}
+//   useInterval(getStakedBalance, POLL_INTERVAL)
 
-export function useBalancerStakedBalance(
-  mockedAccount?: boolean
-): BigNumber | null {
-  const wallet = useWallet()
-  const mounted = useMounted()
-  const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
-    null
-  )
+//   return lastStakedBalance
+// }
 
-  const account = mockedAccount ? MOCK_BALANCER_POOL_ACCOUNT : wallet.account
-  const balancerPoolContract = useBalancerPoolContract()
+// export function useBalancerStakedBalance(
+//   mockedAccount?: boolean
+// ): BigNumber | null {
+//   const wallet = useWallet()
+//   const mounted = useMounted()
+//   const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
+//     null
+//   )
 
-  const getStakedBalance = useCallback(
-    async (clear) => {
-      if (!balancerPoolContract || !account) {
-        // Clear any residual value
-        if (mounted()) {
-          setLastStakedBalance(null)
-        }
-        return
-      }
+//   const account = mockedAccount ? MOCK_BALANCER_POOL_ACCOUNT : wallet.account
+//   const balancerPoolContract = useBalancerPoolContract()
 
-      try {
-        const {
-          balanceOf,
-          totalSupply: getTotalSupply,
-          getBalance,
-        } = balancerPoolContract.functions
+//   const getStakedBalance = useCallback(
+//     async (clear) => {
+//       if (!balancerPoolContract || !account) {
+//         // Clear any residual value
+//         if (mounted()) {
+//           setLastStakedBalance(null)
+//         }
+//         return
+//       }
 
-        const [
-          { 0: userBalance },
-          { 0: totalSupply },
-          { 0: poolAntBalance },
-        ] = await Promise.all([
-          balanceOf(account),
-          getTotalSupply(),
-          getBalance(networkEnvironment.contracts.tokenAntV1),
-        ])
+//       try {
+//         const {
+//           balanceOf,
+//           totalSupply: getTotalSupply,
+//           getBalance,
+//         } = balancerPoolContract.functions
 
-        const stakedBalance = userBalance.mul(poolAntBalance).div(totalSupply)
+//         const [
+//           { 0: userBalance },
+//           { 0: totalSupply },
+//           { 0: poolAntBalance },
+//         ] = await Promise.all([
+//           balanceOf(account),
+//           getTotalSupply(),
+//           getBalance(networkEnvironment.contracts.tokenAntV1),
+//         ])
 
-        // Avoid unnessesary re-renders by only updating value when it has actually changed
-        if (
-          mounted() &&
-          (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
-        ) {
-          setLastStakedBalance(stakedBalance)
-        }
-      } catch (err) {
-        captureErrorWithSentry(err)
-        clear()
-      }
-    },
-    [account, mounted, lastStakedBalance, balancerPoolContract]
-  )
+//         const stakedBalance = userBalance.mul(poolAntBalance).div(totalSupply)
 
-  useInterval(getStakedBalance, POLL_INTERVAL)
+//         // Avoid unnessesary re-renders by only updating value when it has actually changed
+//         if (
+//           mounted() &&
+//           (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
+//         ) {
+//           setLastStakedBalance(stakedBalance)
+//         }
+//       } catch (err) {
+//         captureErrorWithSentry(err)
+//         clear()
+//       }
+//     },
+//     [account, mounted, lastStakedBalance, balancerPoolContract]
+//   )
 
-  return lastStakedBalance
-}
+//   useInterval(getStakedBalance, POLL_INTERVAL)
 
-export function useAntTokenBalance(
-  tokenVersion: 'v1' | 'v2',
-  account: string | null,
-  readOnly?: boolean
-): BigNumber | null {
-  const antTokenV1Contract = useAntTokenV1Contract(readOnly)
-  const antTokenV2Contract = useAntTokenV2Contract(readOnly)
-  const mounted = useMounted()
-  const [tokenBalance, setTokenBalance] = useState<BigNumber | null>(null)
+//   return lastStakedBalance
+// }
 
-  const tokenContract = useMemo(() => {
-    const contracts = {
-      v1: antTokenV1Contract,
-      v2: antTokenV2Contract,
-    }
+// export function useAntTokenBalance(
+//   tokenVersion: 'v1' | 'v2',
+//   account: string | null,
+//   readOnly?: boolean
+// ): BigNumber | null {
+//   const antTokenV1Contract = useAntTokenV1Contract(readOnly)
+//   const antTokenV2Contract = useAntTokenV2Contract(readOnly)
+//   const mounted = useMounted()
+//   const [tokenBalance, setTokenBalance] = useState<BigNumber | null>(null)
 
-    return contracts[tokenVersion]
-  }, [antTokenV1Contract, antTokenV2Contract, tokenVersion])
+//   const tokenContract = useMemo(() => {
+//     const contracts = {
+//       v1: antTokenV1Contract,
+//       v2: antTokenV2Contract,
+//     }
 
-  const getBalance = useCallback(
-    async (clear) => {
-      if (!tokenContract || !account) {
-        // Clear any existing balance
-        if (mounted()) {
-          setTokenBalance(null)
-        }
-        return
-      }
+//     return contracts[tokenVersion]
+//   }, [antTokenV1Contract, antTokenV2Contract, tokenVersion])
 
-      try {
-        const { balance } = await tokenContract.functions.balanceOf(account)
+//   const getBalance = useCallback(
+//     async (clear) => {
+//       if (!tokenContract || !account) {
+//         // Clear any existing balance
+//         if (mounted()) {
+//           setTokenBalance(null)
+//         }
+//         return
+//       }
 
-        // Avoid unnessesary re-renders by only updating value when it has actually changed
-        if (mounted() && (!tokenBalance || !balance.eq(tokenBalance))) {
-          setTokenBalance(balance)
-        }
-      } catch (err) {
-        captureErrorWithSentry(err)
-        clear()
-      }
-    },
-    [account, mounted, tokenContract, tokenBalance]
-  )
+//       try {
+//         const { balance } = await tokenContract.functions.balanceOf(account)
 
-  useInterval(getBalance, POLL_INTERVAL)
+//         // Avoid unnessesary re-renders by only updating value when it has actually changed
+//         if (mounted() && (!tokenBalance || !balance.eq(tokenBalance))) {
+//           setTokenBalance(balance)
+//         }
+//       } catch (err) {
+//         captureErrorWithSentry(err)
+//         clear()
+//       }
+//     },
+//     [account, mounted, tokenContract, tokenBalance]
+//   )
 
-  return tokenBalance
-}
+//   useInterval(getBalance, POLL_INTERVAL)
 
-export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {
-  const antTokenV1Contract = useAntTokenV1Contract(true)
-  const antTokenV2Contract = useAntTokenV2Contract(true)
-  const mounted = useMounted()
-  const [totalSupply, setTotalSupply] = useState<BigNumber | null>(null)
+//   return tokenBalance
+// }
 
-  const tokenContract = useMemo(() => {
-    const contracts = {
-      v1: antTokenV1Contract,
-      v2: antTokenV2Contract,
-    }
+// export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {
+//   const antTokenV1Contract = useAntTokenV1Contract(true)
+//   const antTokenV2Contract = useAntTokenV2Contract(true)
+//   const mounted = useMounted()
+//   const [totalSupply, setTotalSupply] = useState<BigNumber | null>(null)
 
-    return contracts[tokenVersion]
-  }, [antTokenV1Contract, antTokenV2Contract, tokenVersion])
+//   const tokenContract = useMemo(() => {
+//     const contracts = {
+//       v1: antTokenV1Contract,
+//       v2: antTokenV2Contract,
+//     }
 
-  useEffect(() => {
-    const getTotalSupply = async () => {
-      if (!tokenContract) {
-        return
-      }
+//     return contracts[tokenVersion]
+//   }, [antTokenV1Contract, antTokenV2Contract, tokenVersion])
 
-      try {
-        const {
-          0: fetchedTotalsupply,
-        } = await tokenContract.functions.totalSupply()
+//   useEffect(() => {
+//     const getTotalSupply = async () => {
+//       if (!tokenContract) {
+//         return
+//       }
 
-        if (mounted()) {
-          setTotalSupply(fetchedTotalsupply)
-        }
-      } catch (err) {
-        captureErrorWithSentry(err)
-      }
-    }
+//       try {
+//         const {
+//           0: fetchedTotalsupply,
+//         } = await tokenContract.functions.totalSupply()
 
-    getTotalSupply()
-  }, [mounted, tokenContract])
+//         if (mounted()) {
+//           setTotalSupply(fetchedTotalsupply)
+//         }
+//       } catch (err) {
+//         captureErrorWithSentry(err)
+//       }
+//     }
 
-  return totalSupply
-}
+//     getTotalSupply()
+//   }, [mounted, tokenContract])
+
+//   return totalSupply
+// }
