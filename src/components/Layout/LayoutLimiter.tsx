@@ -26,6 +26,7 @@ function LayoutLimiter({
         margin-left: auto;
         margin-right: auto;
         max-width: ${width};
+        width: 100%;
       `}
       {...props}
     >

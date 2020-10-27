@@ -1,4 +1,8 @@
 import React, { ReactNode, useEffect } from 'react'
+import {
+  GU,
+  // @ts-ignore
+} from '@aragon/ui'
 import Header from './Header/Header'
 import Footer from './Footer/Footer'
 import { useLocation } from 'react-router-dom'
@@ -37,6 +41,10 @@ const MainView = React.memo(function MainView({ children }: MainViewProps) {
           display: flex;
           flex-direction: column;
           flex: 1;
+          align-items: center;
+          justify-content: center;
+          padding-top: ${6 * GU}px;
+          padding-bottom: ${6 * GU}px;
         `}
       >
         {children}

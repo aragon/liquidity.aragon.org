@@ -21,6 +21,7 @@ function LayoutGutter({
   return (
     <div
       css={`
+        width: 100%;
         padding-left: ${paddingAmount};
         padding-right: ${paddingAmount};
       `}
