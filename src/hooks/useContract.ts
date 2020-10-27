@@ -109,7 +109,7 @@ export function useAllowance(
 
       return await poolTokenContract.allowance(account, poolContractAddress)
     } catch (err) {
-      throw new Error(err.message)
+      throw new Error(err)
     }
   }, [account, poolTokenContract, poolContractAddress])
 }
@@ -143,9 +143,71 @@ export function useApprove(
         }
         return await poolTokenContract.approve(poolContractAddress, amount)
       } catch (err) {
-        throw new Error(err.messageu)
+        throw new Error(err)
       }
     },
     [getAllowance, poolContractAddress, poolTokenContract]
   )
+}
+
+export function useStake(
+  contractGroup: ContractGroup
+): (amount: BigNumber) => Promise<ContractTransaction> {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+  const getApproval = useApprove(contractGroup)
+
+  return useCallback(
+    async (amount: BigNumber) => {
+      try {
+        if (!poolContract) {
+          throw new Error(`[useStake] Pool contract not loaded!`)
+        }
+        // Get approval for the amount to stake
+        await getApproval(amount)
+        // Then, stake it!
+        return await poolContract.stake(amount, {
+          gasLimit: 150000,
+        })
+      } catch (err) {
+        throw new Error(err)
+      }
+    },
+    [getApproval, poolContract]
+  )
+}
+
+export function useWithdraw(
+  contractGroup: ContractGroup
+): () => Promise<ContractTransaction> {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+
+  return useCallback(async () => {
+    try {
+      if (!poolContract) {
+        throw new Error(`[useWithdraw] Pool contract not loaded!`)
+      }
+
+      return await poolContract.exit()
+    } catch (err) {
+      throw new Error(err)
+    }
+  }, [poolContract])
+}
+
+export function useClaim(
+  contractGroup: ContractGroup
+): () => Promise<ContractTransaction> {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+
+  return useCallback(async () => {
+    try {
+      if (!poolContract) {
+        throw new Error(`[useClaim] Pool contract not loaded!`)
+      }
+
+      return await poolContract.getReward()
+    } catch (err) {
+      throw new Error(err)
+    }
+  }, [poolContract])
 }
