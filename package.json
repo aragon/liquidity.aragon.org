@@ -1,83 +1,108 @@
 {
-  "name": "convert.aragon.org",
-  "version": "1.0.0",
+  "name": "liquidity.aragon.org",
+  "description": "Liquidity Rewards Program",
+  "version": "0.1.0",
   "private": true,
-  "main": "src/index.js",
-  "homepage": "https://github.com/aragon/convert.aragon.org",
   "license": "AGPL-3.0-or-later",
-  "scripts": {
-    "build": "next build",
-    "build:mainnet": "CHAIN_ID=1 npm run build",
-    "build:rinkeby": "CHAIN_ID=4 npm run build",
-    "deploy": "NODE_ENV=production npm run build && echo 'convert.aragon.org' > dist/CNAME && gh-pages -d dist",
-    "deploy:mainnet": "CHAIN_ID=1 npm run deploy",
-    "deploy:rinkeby": "CHAIN_ID=4 npm run deploy",
-    "lint": "eslint ./components ./lib ./pages",
-    "serve": "serve dist -p 3000",
-    "start": "next dev -p 8080",
-    "start:mainnet": "CHAIN_ID=1 npm start",
-    "start:rinkeby": "CHAIN_ID=4 npm start",
-    "test": "jest"
+  "author": "Aragon Association <legal@aragon.org>",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/aragon/liquidity.aragon.org.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aragon/liquidity.aragon.org/issues"
+  },
+  "keywords": [
+    "aragon",
+    "network",
+    "ethereum",
+    "dapp",
+    "blockchain",
+    "startups"
+  ],
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "bundlewatch": {
+    "files": [
+      {
+        "path": "build/**/*.js",
+        "maxSize": "1200kb",
+        "compression": "gzip"
+      }
+    ]
   },
   "dependencies": {
-    "@sentry/browser": "^5.11.1",
-    "@uniswap/sdk": "^1.0.0-beta.4",
-    "@zeit/next-css": "^1.0.1",
-    "axios": "^0.19.0",
-    "bootstrap": "^4.3.1",
-    "dayjs": "^1.8.33",
-    "ethers": "^4.0.41",
-    "gh-pages": "^2.1.1",
-    "graphql-request": "^1.8.2",
-    "graphql-tag": "^2.10.4",
-    "next": "^9.3.2",
-    "next-fonts": "^1.0.3",
-    "next-images": "^1.3.1",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.0",
-    "react-blockies": "^1.4.1",
-    "react-bootstrap": "^1.0.0-beta.16",
-    "react-dom": "^16.13.0",
-    "react-reveal": "^1.2.2",
+    "@aragon/ui": "^1.7.0",
+    "@juggle/resize-observer": "^3.2.0",
+    "@sentry/browser": "^5.25.0",
+    "clipboard-polyfill": "^3.0.1",
+    "ethers": "^5.0.15",
+    "is-ipfs": "^2.0.0",
+    "polished": "^4.0.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.3",
     "react-spring": "^8.0.27",
-    "styled-components": "^5.0.1",
-    "token-amount": "^0.1.0",
-    "use-viewport": "^0.2.0",
-    "use-wallet": "^0.5.0",
-    "web3-eth-contract": "^1.2.4",
-    "web3-utils": "^1.2.4"
+    "react-use-measure": "^2.0.2",
+    "token-amount": "^0.2.0",
+    "use-token": "^0.2.0",
+    "use-wallet": "^0.8.0"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.2",
-    "babel-plugin-styled-components": "^1.10.7",
-    "eslint": "^6.8.0",
-    "eslint-config-react-app": "^5.0.1",
-    "eslint-config-react-tools": "^1.1.7",
-    "eslint-plugin-flowtype": "^4.7.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.17.0",
-    "eslint-plugin-react-hooks": "^2.3.0",
-    "husky": "^4.2.3",
-    "jest": "^24.9.0",
-    "lint-staged": "^10.0.9",
-    "prettier": "^1.19.1",
-    "serve": "^11.1.0"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@typechain/ethers-v5": "^2.0.0",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/styled-components": "^5.1.3",
+    "@typescript-eslint/eslint-plugin": "4.0.1",
+    "@typescript-eslint/parser": "4.0.1",
+    "babel-plugin-styled-components": "^1.11.1",
+    "bundlewatch": "^0.3.1",
+    "cross-env": "^7.0.2",
+    "customize-cra": "^1.0.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.3.0",
+    "prettier": "^2.1.2",
+    "react-app-rewired": "^2.1.6",
+    "react-router-dom": "^5.2.0",
+    "rimraf": "^3.0.2",
+    "styled-components": "^5.2.0",
+    "typechain": "^3.0.0",
+    "typescript": "^4.0.3"
+  },
+  "scripts": {
+    "start": "yarn sync-assets && cross-env TSC_COMPILE_ON_ERROR=true react-app-rewired start",
+    "start:ethereum": "cross-env REACT_APP_NETWORK_ENVIRONMENT=ethereum yarn start",
+    "start:rinkeby": "cross-env REACT_APP_NETWORK_ENVIRONMENT=rinkeby yarn start",
+    "build": "yarn sync-assets && yarn lint && react-app-rewired build",
+    "build:ethereum": "cross-env REACT_APP_NETWORK_ENVIRONMENT=ethereum yarn build",
+    "build:rinkeby": "cross-env REACT_APP_NETWORK_ENVIRONMENT=rinkeby yarn build",
+    "test": "react-app-rewired test --passWithNoTests --watchAll=false",
+    "testWatch": "yarn test --watchAll=true",
+    "eject": "react-scripts eject",
+    "lint": "eslint --ext ts,tsx src --max-warnings 0 && yarn typecheck",
+    "typecheck": "tsc",
+    "sync-assets": "rimraf ./public/aragon-ui && copy-aragon-ui-assets ./public && yarn generateAbiTypes",
+    "generateAbiTypes": "rimraf ./src/abi/types && typechain --target ethers-v5 --outDir ./src/abi/types './src/abi/*.json'"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-push": "yarn test",
+      "pre-commit": "yarn lint"
     }
   },
-  "lint-staged": {
-    "components/**/*.js": [
-      "eslint --fix"
-    ],
-    "lib/**/*.js": [
-      "eslint --fix"
-    ],
-    "pages/**/*.js": [
-      "eslint --fix"
-    ]
-  }
+  "browserslist": [
+    ">2%",
+    "last 1 edge versions",
+    "not ie > 0",
+    "not op_mini all"
+  ]
 }
