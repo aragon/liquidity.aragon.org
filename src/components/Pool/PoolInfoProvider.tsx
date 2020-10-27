@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useMemo } from 'react'
-import { PoolContractName } from '../../environment/types'
+import { ContractGroup } from '../../environment/types'
 
 export type PoolName =
   | 'unipoolAntV1Eth'
@@ -14,7 +14,7 @@ type PoolInfoProviderState = {
 type PoolAttributes = {
   tokenGraphic: string
   tokenSymbol: string
-  contracts: PoolContractName
+  contractGroup: ContractGroup
   liquidityUrl: string | null
 }
 
@@ -29,27 +29,27 @@ function PoolInfoProvider({
   const {
     tokenGraphic,
     tokenSymbol,
-    contracts,
+    contractGroup,
     liquidityUrl,
   } = useMemo((): PoolAttributes => {
     const attributes: Record<PoolName, PoolAttributes> = {
       unipoolAntV1Eth: {
         tokenGraphic: '',
         tokenSymbol: 'UNI',
-        contracts: 'unipoolAntV1',
+        contractGroup: 'unipoolAntV1',
         liquidityUrl: null,
       },
       unipoolAntV2Eth: {
         tokenGraphic: '',
         tokenSymbol: 'UNI',
-        contracts: 'unipoolAntV2',
+        contractGroup: 'unipoolAntV2',
         liquidityUrl:
           'https://info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae',
       },
       balancerAntV2Usdc: {
         tokenGraphic: '',
         tokenSymbol: 'BPT',
-        contracts: 'balancer',
+        contractGroup: 'balancer',
         liquidityUrl:
           'https://pools.balancer.exchange/#/pool/0xde0999ee4e4bea6fecb03bf4ebef2626942ec6f5/',
       },
@@ -62,10 +62,10 @@ function PoolInfoProvider({
     (): PoolInfoContext => ({
       tokenGraphic,
       tokenSymbol,
-      contracts,
+      contractGroup,
       liquidityUrl,
     }),
-    [tokenGraphic, tokenSymbol, contracts, liquidityUrl]
+    [tokenGraphic, tokenSymbol, contractGroup, liquidityUrl]
   )
 
   return (

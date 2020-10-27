@@ -18,7 +18,7 @@ interface PoolContracts {
   poolContract: string
 }
 
-export type PoolContractName = 'unipoolAntV1' | 'unipoolAntV2' | 'balancer'
+export type ContractGroup = 'unipoolAntV1' | 'unipoolAntV2' | 'balancer'
 
 export interface EnvNetworkConfig {
   chainId: ChainId
@@ -27,5 +27,5 @@ export interface EnvNetworkConfig {
     ethereum: string
   }
   ipfsGateway: string
-  contracts: Record<PoolContractName, PoolContracts>
+  contracts: Record<ContractGroup, PoolContracts>
 }

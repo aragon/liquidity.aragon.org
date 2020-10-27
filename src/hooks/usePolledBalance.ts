@@ -1,4 +1,12 @@
-export {}
+import { BigNumber } from 'ethers'
+import { useCallback, useState } from 'react'
+import { ContractGroup } from '../environment/types'
+import { captureErrorWithSentry } from '../sentry'
+import { useLiquidityPoolTokenContract } from './useContract'
+import { useInterval } from './useInterval'
+import { useMounted } from './useMounted'
+
+const POLL_INTERVAL = 5000
 
 // import { BigNumber } from 'ethers'
 // import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -19,8 +27,6 @@ export {}
 // } from './useContract'
 // import { useInterval } from './useInterval'
 // import { useMounted } from './useMounted'
-
-// const POLL_INTERVAL = 5000
 
 // export function useIncentiveStakedBalance(
 //   mockedAccount?: boolean
@@ -213,54 +219,43 @@ export {}
 //   return lastStakedBalance
 // }
 
-// export function useAntTokenBalance(
-//   tokenVersion: 'v1' | 'v2',
-//   account: string | null,
-//   readOnly?: boolean
-// ): BigNumber | null {
-//   const antTokenV1Contract = useAntTokenV1Contract(readOnly)
-//   const antTokenV2Contract = useAntTokenV2Contract(readOnly)
-//   const mounted = useMounted()
-//   const [tokenBalance, setTokenBalance] = useState<BigNumber | null>(null)
+export function usePoolTokenBalance(
+  contractGroup: ContractGroup,
+  account: string | null
+): BigNumber | null {
+  const poolTokenContract = useLiquidityPoolTokenContract(contractGroup)
+  const mounted = useMounted()
+  const [tokenBalance, setTokenBalance] = useState<BigNumber | null>(null)
 
-//   const tokenContract = useMemo(() => {
-//     const contracts = {
-//       v1: antTokenV1Contract,
-//       v2: antTokenV2Contract,
-//     }
+  const getBalance = useCallback(
+    async (clear) => {
+      if (!poolTokenContract || !account) {
+        // Clear any existing balance
+        if (mounted()) {
+          setTokenBalance(null)
+        }
+        return
+      }
 
-//     return contracts[tokenVersion]
-//   }, [antTokenV1Contract, antTokenV2Contract, tokenVersion])
+      try {
+        const balance = await poolTokenContract.balanceOf(account)
 
-//   const getBalance = useCallback(
-//     async (clear) => {
-//       if (!tokenContract || !account) {
-//         // Clear any existing balance
-//         if (mounted()) {
-//           setTokenBalance(null)
-//         }
-//         return
-//       }
+        // Avoid unnessesary re-renders by only updating value when it has actually changed
+        if (mounted() && (!tokenBalance || !balance.eq(tokenBalance))) {
+          setTokenBalance(balance)
+        }
+      } catch (err) {
+        captureErrorWithSentry(err)
+        clear()
+      }
+    },
+    [account, mounted, poolTokenContract, tokenBalance]
+  )
 
-//       try {
-//         const { balance } = await tokenContract.functions.balanceOf(account)
+  useInterval(getBalance, POLL_INTERVAL)
 
-//         // Avoid unnessesary re-renders by only updating value when it has actually changed
-//         if (mounted() && (!tokenBalance || !balance.eq(tokenBalance))) {
-//           setTokenBalance(balance)
-//         }
-//       } catch (err) {
-//         captureErrorWithSentry(err)
-//         clear()
-//       }
-//     },
-//     [account, mounted, tokenContract, tokenBalance]
-//   )
-
-//   useInterval(getBalance, POLL_INTERVAL)
-
-//   return tokenBalance
-// }
+  return tokenBalance
+}
 
 // export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {
 //   const antTokenV1Contract = useAntTokenV1Contract(true)

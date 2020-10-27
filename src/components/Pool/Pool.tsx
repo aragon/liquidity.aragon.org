@@ -6,6 +6,7 @@ import LayoutGutter from '../Layout/LayoutGutter'
 import LayoutLimiter from '../Layout/LayoutLimiter'
 import PoolControls from './PoolControls/PoolControls'
 import { PoolInfoProvider, PoolName, usePoolInfo } from './PoolInfoProvider'
+import { PoolBalanceProvider } from './PoolBalanceProvider'
 
 type PoolProps = {
   name: PoolName
@@ -25,26 +26,28 @@ function Pool({ name }: PoolProps): JSX.Element {
 
 function PoolContent(): JSX.Element {
   const history = useHistory()
-  const { liquidityUrl } = usePoolInfo()
+  const { liquidityUrl, contractGroup } = usePoolInfo()
 
   const handleNavigateHome = useCallback(() => {
     history.push('/')
   }, [history])
 
   return (
-    <>
-      <div
-        css={`
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 20px;
-        `}
-      >
-        <Link onClick={handleNavigateHome}>Go back home</Link>
-        {liquidityUrl && <Link href={liquidityUrl}>Add liquidity</Link>}
-      </div>
-      <PoolControls />
-    </>
+    <PoolBalanceProvider contractGroup={contractGroup}>
+      <>
+        <div
+          css={`
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+          `}
+        >
+          <Link onClick={handleNavigateHome}>Go back home</Link>
+          {liquidityUrl && <Link href={liquidityUrl}>Add liquidity</Link>}
+        </div>
+        <PoolControls />
+      </>
+    </PoolBalanceProvider>
   )
 }
 

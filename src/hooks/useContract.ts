@@ -13,12 +13,11 @@ import liquidityPoolAbi from '../abi/liquidity-pool.json'
 import liquidityPoolTokenAbi from '../abi/liquidity-pool-token.json'
 import { LiquidityPool } from '../abi/types/LiquidityPool'
 import { LiquidityPoolToken } from '../abi/types/LiquidityPoolToken'
+import { ContractGroup } from '../environment/types'
 
 const { endpoints, contracts } = networkEnvironment
 
 const DEFAULT_PROVIDER = new Providers.JsonRpcProvider(endpoints.ethereum)
-
-type ContractGroup = 'unipoolAntV1' | 'unipoolAntV2' | 'balancer'
 
 type UseContractProps = {
   address?: string
