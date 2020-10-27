@@ -1,6 +1,8 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
+  BigNumber,
   Contract as EthersContract,
+  ContractTransaction,
   providers as Providers,
   Signer,
 } from 'ethers'
@@ -86,4 +88,64 @@ export function useLiquidityPoolTokenContract(
     abi: liquidityPoolTokenAbi,
     readOnly,
   })
+}
+
+export function useAllowance(
+  contractGroup: ContractGroup
+): () => Promise<BigNumber> {
+  const { account } = useWallet()
+  const poolTokenContract = useLiquidityPoolTokenContract(contractGroup)
+  const { poolContract: poolContractAddress } = contracts[contractGroup]
+
+  return useCallback(async () => {
+    try {
+      if (!account) {
+        throw new Error('[useAllowance] Account is not connected!')
+      }
+
+      if (!poolTokenContract) {
+        throw new Error('[useAllowance] Pool token contract not loaded!')
+      }
+
+      return await poolTokenContract.allowance(account, poolContractAddress)
+    } catch (err) {
+      throw new Error(err.message)
+    }
+  }, [account, poolTokenContract, poolContractAddress])
+}
+
+export function useApprove(
+  contractGroup: ContractGroup
+): (amount: BigNumber) => Promise<ContractTransaction> {
+  const poolTokenContract = useLiquidityPoolTokenContract(contractGroup)
+  const { poolContract: poolContractAddress } = contracts[contractGroup]
+  const getAllowance = useAllowance(contractGroup)
+
+  return useCallback(
+    async (amount: BigNumber) => {
+      try {
+        if (!poolTokenContract) {
+          throw new Error('[useApprove] Pool token contract not loaded!')
+        }
+
+        const allowance = await getAllowance()
+        // If the current allowance is less than the requested allowance,
+        // just raise it
+        if (allowance.lt(amount)) {
+          return await poolTokenContract.approve(poolContractAddress, amount)
+        }
+
+        // Is the requested amount higher than the current allowance?
+        // If so, we need to set it down to 0 and then raise it
+        if (!allowance.isZero()) {
+          const tx = await poolTokenContract.approve(poolContractAddress, '0')
+          await tx.wait(1)
+        }
+        return await poolTokenContract.approve(poolContractAddress, amount)
+      } catch (err) {
+        throw new Error(err.messageu)
+      }
+    },
+    [getAllowance, poolContractAddress, poolTokenContract]
+  )
 }
