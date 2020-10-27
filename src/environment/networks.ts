@@ -11,12 +11,12 @@ const networks = new Map<EnvNetworkName, EnvNetworkConfig>([
       },
       ipfsGateway: 'https://ipfs.eth.aragon.network/ipfs',
       contracts: {
-        uniswapV1: {
+        unipoolAntV1: {
           lpToken: '',
           rewardToken: '',
           poolContract: '',
         },
-        uniswapV2: {
+        unipoolAntV2: {
           lpToken: '',
           rewardToken: '',
           poolContract: '',
@@ -39,12 +39,12 @@ const networks = new Map<EnvNetworkName, EnvNetworkConfig>([
       },
       ipfsGateway: 'https://ipfs.eth.aragon.network/ipfs',
       contracts: {
-        uniswapV1: {
+        unipoolAntV1: {
           lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
           rewardToken: '',
           poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
         },
-        uniswapV2: {
+        unipoolAntV2: {
           lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
           rewardToken: '',
           poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',

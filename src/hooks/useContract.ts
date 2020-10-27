@@ -16,7 +16,7 @@ const { endpoints, contracts } = networkEnvironment
 
 const DEFAULT_PROVIDER = new Providers.JsonRpcProvider(endpoints.ethereum)
 
-type ContractGroup = 'uniswapV1' | 'uniswapV2' | 'balancer'
+type ContractGroup = 'unipoolAntV1' | 'unipoolAntV2' | 'balancer'
 
 type UseContractProps = {
   address?: string
