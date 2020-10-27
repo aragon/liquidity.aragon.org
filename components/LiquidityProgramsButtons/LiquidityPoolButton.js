@@ -7,6 +7,7 @@ function LiquidityPoolButton({ children }) {
 
   const compactMode = layoutName === 'small'
 
+  // TODO: Add route navigation here
   const toggleButton = useCallback(() => {
     console.log('open')
   }, [])
