@@ -3,6 +3,7 @@ import React from 'react'
 import { ButtonBase, TextInput, useTheme, GU } from '@aragon/ui'
 import { shadowDepth } from '../../style/shadow'
 import { fontWeight } from '../../style/font'
+import { radius } from '../../style/radius'
 
 type AmountInputProps = {
   value?: string
@@ -58,6 +59,7 @@ function AmountInput({
         height: 56px;
         padding-left: 20px;
         padding-right: 20px;
+        border-radius: ${radius.medium};
       `}
     />
   )

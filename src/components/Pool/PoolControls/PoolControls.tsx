@@ -13,6 +13,7 @@ import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
 import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton'
 import { fontWeight } from '../../../style/font'
+import { theme } from '../../../style/theme'
 
 type TabName = 'stake' | 'withdraw' | 'claim'
 
@@ -78,7 +79,11 @@ function PoolControls(): JSX.Element {
       `}
     >
       {expired && (
-        <>
+        <div
+          css={`
+            text-align: center;
+          `}
+        >
           <h1
             css={`
               font-size: 26px;
@@ -98,7 +103,7 @@ function PoolControls(): JSX.Element {
             The ANT Liquidity Rewards program has ended. Withdraw your funds and
             claim the rewards!
           </p>
-        </>
+        </div>
       )}
       {!expired && (
         <Tabs
@@ -198,7 +203,10 @@ TabsProps): JSX.Element {
               onClick={onClick}
               disabled={disabled}
               css={`
-                opacity: ${isActiveTab ? 1 : 0.5};
+                border: 2px solid ${isActiveTab ? theme.accent : 'transparent'};
+
+                font-weight: ${fontWeight.medium};
+                ${isActiveTab ? 'box-shadow: none' : ''};
               `}
             >
               {label}
