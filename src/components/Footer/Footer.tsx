@@ -6,7 +6,8 @@ import LayoutGutter from '../Layout/LayoutGutter'
 
 // TODO: Update this information
 const ANT_URL = 'https://aragon.org/token/ant'
-const BLOG_URL = ''
+const BLOG_URL =
+  'https://aragon.org/blog/liquidity-rewards-uniswap-and-balancer'
 
 const ARAGON_WEBSITE_URL = 'https://aragon.org'
 

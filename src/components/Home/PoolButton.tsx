@@ -37,7 +37,7 @@ function PoolButton({
         css={`
           width: 100%;
           z-index: 2;
-          padding: ${compactMode ? 1 * GU : 1.5 * GU}px ${4 * GU}px;
+          padding: ${compactMode ? 3 * GU : 1.75 * GU}px ${4 * GU}px;
           padding-right: ${compactMode ? 4 * GU : 12 * GU}px;
           background: ${theme.surface};
           box-shadow: ${shadowDepth.medium};
