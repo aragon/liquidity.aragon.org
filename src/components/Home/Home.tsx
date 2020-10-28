@@ -27,8 +27,8 @@ function Home(): JSX.Element {
             `}
           >
             <PageHeading
-              title="Liquidity rewards"
-              description="Choose an option to stake, withdraw, or claim your rewards"
+              title="Liquidity rewards programs"
+              description="Select a program to stake, withdraw, or claim your rewards"
               css={`
                 margin-bottom: 60px;
               `}
@@ -39,7 +39,7 @@ function Home(): JSX.Element {
             <PoolButton to={PATH_BALANCER_ANTV2_USDC}>
               <PoolName name="balancerAntV2Usdc" />
             </PoolButton>
-            <PoolButton to={PATH_UNISWAP_ANT_ETH}>
+            <PoolButton to={PATH_UNISWAP_ANT_ETH} finished>
               <PoolName name="unipoolAntV1Eth" />
             </PoolButton>
           </div>

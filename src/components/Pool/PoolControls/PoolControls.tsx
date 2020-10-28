@@ -92,16 +92,22 @@ function PoolControls(): JSX.Element {
               font-weight: ${fontWeight.medium};
             `}
           >
-            This program has finished
+            Program completed!{' '}
+            <span role="img" aria-label="party-popper">
+              🎉
+            </span>
           </h1>
           <p
             css={`
               margin-bottom: 26px;
+              max-width: 550px;
+              margin-left: auto;
+              margin-right: auto;
               color: ${theme.surfaceContentSecondary};
             `}
           >
-            The ANT Liquidity Rewards program has ended. Withdraw your funds and
-            claim the rewards!
+            This program ended on August 21st, 2020. If you participated, please
+            connect your wallet to withdraw your funds and claim your rewards!
           </p>
         </div>
       )}
