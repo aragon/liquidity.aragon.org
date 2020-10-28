@@ -28,7 +28,7 @@ function Home(): JSX.Element {
           >
             <PageHeading
               title="Liquidity rewards"
-              description="Choose an option to stake, withdraw or claim your rewards"
+              description="Choose an option to stake, withdraw, or claim your rewards"
               css={`
                 margin-bottom: 60px;
               `}
