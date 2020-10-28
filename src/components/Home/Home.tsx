@@ -8,6 +8,7 @@ import {
   PATH_UNISWAP_ANTV2_ETH,
   PATH_UNISWAP_ANT_ETH,
 } from '../../Routes'
+import PageHeading from '../PageHeading/PageHeading'
 
 function Home(): JSX.Element {
   return (
@@ -20,15 +21,28 @@ function Home(): JSX.Element {
             justify-content: center;
           `}
         >
-          <PoolButton to={PATH_UNISWAP_ANTV2_ETH}>
-            <PoolName name="uniswapV2" />
-          </PoolButton>
-          <PoolButton to={PATH_BALANCER_ANTV2_USDC}>
-            <PoolName name="balancer" />
-          </PoolButton>
-          <PoolButton to={PATH_UNISWAP_ANT_ETH} finished>
-            <PoolName name="uniswapV1" />
-          </PoolButton>
+          <div
+            css={`
+              padding-bottom: 60px;
+            `}
+          >
+            <PageHeading
+              title="Liquidity rewards"
+              description="Choose an option to stake, withdraw or claim your rewards"
+              css={`
+                margin-bottom: 60px;
+              `}
+            />
+            <PoolButton to={PATH_UNISWAP_ANTV2_ETH}>
+              <PoolName name="uniswapV2" />
+            </PoolButton>
+            <PoolButton to={PATH_BALANCER_ANTV2_USDC}>
+              <PoolName name="balancer" />
+            </PoolButton>
+            <PoolButton to={PATH_UNISWAP_ANT_ETH} finished>
+              <PoolName name="uniswapV1" />
+            </PoolButton>
+          </div>
         </div>
       </LayoutLimiter>
     </LayoutGutter>

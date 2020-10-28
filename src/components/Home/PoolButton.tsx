@@ -29,7 +29,7 @@ function PoolButton({
     <div
       css={`
         position: relative;
-        margin-bottom: ${GU}px;
+        margin-bottom: ${2 * GU}px;
       `}
     >
       <ButtonBase
@@ -40,7 +40,7 @@ function PoolButton({
           padding: ${compactMode ? 1 * GU : 1.5 * GU}px ${4 * GU}px;
           padding-right: ${compactMode ? 4 * GU : 12 * GU}px;
           background: ${theme.surface};
-          box-shadow: ${shadowDepth.low};
+          box-shadow: ${shadowDepth.medium};
           border-radius: ${radius.high};
           color: ${theme.surfaceContentSecondary};
           text-align: left;

@@ -15,7 +15,7 @@ const levelProperties = {
   1: {
     tag: 'h1',
     margin: 1.75 * GU,
-    titleSize: 42,
+    titleSize: 46,
   },
   2: {
     tag: 'h2',
