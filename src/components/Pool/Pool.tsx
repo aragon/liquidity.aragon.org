@@ -1,9 +1,8 @@
-import React, { useCallback } from 'react'
-import { useHistory } from 'react-router-dom'
+import React from 'react'
 // @ts-ignore
-import { Link } from '@aragon/ui'
 import LayoutGutter from '../Layout/LayoutGutter'
 import LayoutLimiter from '../Layout/LayoutLimiter'
+import PoolBar from './PoolBar'
 import PoolControls from './PoolControls/PoolControls'
 import { PoolInfoProvider, PoolName, usePoolInfo } from './PoolInfoProvider'
 import { PoolBalanceProvider } from './PoolBalanceProvider'
@@ -18,34 +17,20 @@ function Pool({ name, expired }: PoolProps): JSX.Element {
     <PoolInfoProvider poolName={name} expired={expired}>
       <LayoutGutter>
         <LayoutLimiter size="extraSmall">
-          <PoolContent />
+          <PoolContent name={name} />
         </LayoutLimiter>
       </LayoutGutter>
     </PoolInfoProvider>
   )
 }
 
-function PoolContent(): JSX.Element {
-  const history = useHistory()
-  const { liquidityUrl, contractGroup } = usePoolInfo()
-
-  const handleNavigateHome = useCallback(() => {
-    history.push('/')
-  }, [history])
+function PoolContent({ name }: { name: PoolName }): JSX.Element {
+  const { contractGroup } = usePoolInfo()
 
   return (
     <PoolBalanceProvider contractGroup={contractGroup}>
       <>
-        <div
-          css={`
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-          `}
-        >
-          <Link onClick={handleNavigateHome}>Go back home</Link>
-          {liquidityUrl && <Link href={liquidityUrl}>Add liquidity</Link>}
-        </div>
+        <PoolBar name={name} />
         <PoolControls />
       </>
     </PoolBalanceProvider>

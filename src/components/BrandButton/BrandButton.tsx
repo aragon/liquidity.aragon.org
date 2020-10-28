@@ -13,6 +13,7 @@ type BrandButtonProps = {
   disabled?: boolean
   display?: 'auto' | 'all' | 'icon' | 'label'
   size?: 'large' | 'medium' | 'small' | 'mini'
+  href?: string | undefined
   type?: NativeButtonProps['type']
   onClick?: NativeButtonProps['onClick']
   wide?: boolean
@@ -26,6 +27,7 @@ function BrandButton({
   disabled = false,
   display = 'auto',
   size = 'medium',
+  href,
   icon,
   wide,
   children,
@@ -45,6 +47,7 @@ function BrandButton({
       // Instead we apply our own styles directly in this component
       size={size === 'large' ? 'medium' : size}
       wide={wide}
+      href={href}
       css={`
         border: 0;
         border-radius: ${radius.medium};

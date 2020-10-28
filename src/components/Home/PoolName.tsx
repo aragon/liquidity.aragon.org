@@ -6,29 +6,35 @@ import antV1 from '../../assets/token-ant-v1.svg'
 import antV2 from '../../assets/token-ant-v2.svg'
 import eth from '../../assets/token-eth.svg'
 import usdc from '../../assets/token-usdc.svg'
+import { PoolName } from '../Pool/PoolInfoProvider'
 
 type PoolInfo = {
   title: string
   tokenPair: [string, string]
 }
-type PoolNameProps = 'uniswapV2' | 'balancer' | 'uniswapV1'
 
-const POOL_INFO: Record<PoolNameProps, PoolInfo> = {
-  uniswapV2: {
+const POOL_INFO: Record<PoolName, PoolInfo> = {
+  unipoolAntV2Eth: {
     title: 'Uniswap ANTv2 / ETH',
     tokenPair: [antV2, eth],
   },
-  balancer: {
+  balancerAntV2Usdc: {
     title: 'Balancer ANTv2 / USDC',
     tokenPair: [antV2, usdc],
   },
-  uniswapV1: {
+  unipoolAntV1Eth: {
     title: 'Uniswap ANT / ETH',
     tokenPair: [antV1, eth],
   },
 }
 
-function PoolName({ name }: { name: PoolNameProps }): JSX.Element {
+function PoolTitle({
+  name,
+  size,
+}: {
+  name: PoolName
+  size?: number
+}): JSX.Element {
   const theme = useTheme()
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
@@ -64,12 +70,14 @@ function PoolName({ name }: { name: PoolNameProps }): JSX.Element {
         >
           <TokenIcon
             logo={firstTokenLogo}
+            size={size}
             css={`
               z-index: 1;
             `}
           />
           <TokenIcon
             logo={secondTokenLogo}
+            size={size}
             css={`
               margin-left: -${1 * GU}px;
             `}
@@ -77,7 +85,7 @@ function PoolName({ name }: { name: PoolNameProps }): JSX.Element {
         </div>
         <span
           css={`
-            margin-left: ${compactMode ? 2 * GU : 0}px;
+            margin-left: ${!compactMode ? 1.5 * GU : 0}px;
             font-size: ${3 * GU}px;
             color: ${theme.content};
           `}
@@ -89,4 +97,4 @@ function PoolName({ name }: { name: PoolNameProps }): JSX.Element {
   )
 }
 
-export default PoolName
+export default PoolTitle
