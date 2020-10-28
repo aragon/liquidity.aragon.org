@@ -34,13 +34,13 @@ function Home(): JSX.Element {
               `}
             />
             <PoolButton to={PATH_UNISWAP_ANTV2_ETH}>
-              <PoolName name="uniswapV2" />
+              <PoolName name="unipoolAntV2Eth" />
             </PoolButton>
             <PoolButton to={PATH_BALANCER_ANTV2_USDC}>
-              <PoolName name="balancer" />
+              <PoolName name="balancerAntV2Usdc" />
             </PoolButton>
-            <PoolButton to={PATH_UNISWAP_ANT_ETH} finished>
-              <PoolName name="uniswapV1" />
+            <PoolButton to={PATH_UNISWAP_ANT_ETH}>
+              <PoolName name="unipoolAntV1Eth" />
             </PoolButton>
           </div>
         </div>
