@@ -62,7 +62,7 @@ function PoolInfoProvider({
         },
         rewardToken: {
           graphic: tokenEthSvg,
-          symbol: 'ETH',
+          symbol: 'WETH',
         },
         contractGroup: 'unipoolAntV2',
         liquidityUrl:

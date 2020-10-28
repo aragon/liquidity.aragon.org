@@ -18,7 +18,7 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 
 function PoolControls(): JSX.Element {
   const theme = useTheme()
-  const [activeTab, setActiveTab] = useState<TabName>('claim')
+  const [activeTab, setActiveTab] = useState<TabName>('withdraw')
   const { stakeToken } = usePoolInfo()
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
@@ -117,6 +117,7 @@ type TabItem = {
   key: TabName
   label: string
   onClick: () => void
+  disabled?: boolean
 }
 
 function Tabs({
@@ -141,6 +142,7 @@ function Tabs({
         key: 'claim',
         label: 'Claim rewards',
         onClick: onClaimClick,
+        disabled: true,
       },
     ]
   }, [onStakeClick, onWithdrawClick, onClaimClick])
@@ -153,7 +155,7 @@ function Tabs({
         grid-gap: 10px;
       `}
     >
-      {items.map(({ key, label, onClick }) => {
+      {items.map(({ key, label, onClick, disabled }) => {
         const isActiveTab = key === activeTab
         return (
           <BrandButton
@@ -161,6 +163,7 @@ function Tabs({
             wide
             size="large"
             onClick={onClick}
+            disabled={disabled}
             css={`
               opacity: ${isActiveTab ? 1 : 0.5};
             `}

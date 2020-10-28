@@ -178,7 +178,7 @@ export function useStake(
   )
 }
 
-export function useWithdraw(
+export function useWithdrawAllIncludingRewards(
   contractGroup: ContractGroup
 ): () => Promise<ContractTransaction | null> {
   const poolContract = useLiquidityPoolContract(contractGroup)
@@ -186,7 +186,9 @@ export function useWithdraw(
   return useCallback(async () => {
     try {
       if (!poolContract) {
-        throw new Error(`[useWithdraw] Account not connected!`)
+        throw new Error(
+          `[useWithdrawAllIncludingRewards] Account not connected!`
+        )
       }
 
       return await poolContract.exit()
@@ -196,6 +198,29 @@ export function useWithdraw(
       return null
     }
   }, [poolContract])
+}
+
+export function useWithdraw(
+  contractGroup: ContractGroup
+): (amount: BigNumber) => Promise<ContractTransaction | null> {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+
+  return useCallback(
+    async (amount: BigNumber) => {
+      try {
+        if (!poolContract) {
+          throw new Error(`[useWithdraw] Account not connected!`)
+        }
+
+        return await poolContract.withdraw(amount)
+      } catch (err) {
+        console.error(err)
+
+        return null
+      }
+    },
+    [poolContract]
+  )
 }
 
 export function useClaimRewards(
