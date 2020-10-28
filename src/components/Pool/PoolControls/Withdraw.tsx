@@ -2,11 +2,12 @@ import React, { useCallback, useMemo, useState } from 'react'
 // @ts-ignore
 import TokenAmount from 'token-amount'
 import { useWithdraw } from '../../../hooks/useContract'
+import { useAccountModule } from '../../Account/AccountModuleProvider'
 import AmountCard from '../../AmountCard/AmountCard'
 import AmountInput from '../../AmountInput/AmountInput'
-import BrandButton from '../../BrandButton/BrandButton'
 import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
+import ControlButton from './ControlButton'
 import useInputValidation from './useInputValidation'
 
 function Withdraw(): JSX.Element {
@@ -16,6 +17,7 @@ function Withdraw(): JSX.Element {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
     tokenDecimals,
   } = usePoolBalance()
+  const { showAccount } = useAccountModule()
   const withdraw = useWithdraw(contractGroup)
 
   const {
@@ -44,9 +46,20 @@ function Withdraw(): JSX.Element {
     setAmount(maxAmount)
   }, [maxAmount])
 
-  const handleWithdraw = useCallback(() => {
-    withdraw(parsedAmountBn)
-  }, [withdraw, parsedAmountBn])
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault()
+
+      if (validationStatus === 'notConnected') {
+        showAccount()
+      }
+
+      if (validationStatus === 'valid') {
+        withdraw(parsedAmountBn)
+      }
+    },
+    [parsedAmountBn, showAccount, validationStatus, withdraw]
+  )
 
   const formattedStakedBalance = useMemo(
     (): string | null =>
@@ -58,7 +71,7 @@ function Withdraw(): JSX.Element {
   )
 
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <AmountInput
         value={amount}
         onChange={handleAmountChange}
@@ -77,10 +90,8 @@ function Withdraw(): JSX.Element {
           margin-bottom: 40px;
         `}
       />
-      <BrandButton wide mode="strong" size="large" onClick={handleWithdraw}>
-        Withdraw
-      </BrandButton>
-    </>
+      <ControlButton status={validationStatus} label="Withdraw" />
+    </form>
   )
 }
 
