@@ -30,12 +30,19 @@ function PoolBar({ name }: { name: PoolName }): JSX.Element {
           flex: 1;
           display: flex;
           justify-content: flex-start;
+          order: ${compactMode ? '2' : '1'};
+          width: ${compactMode ? '100%' : 'auto'};
+          margin-top: ${compactMode ? '20px' : '0'};
+          margin-bottom: ${compactMode ? '10px' : '0'};
         `}
       >
         <BrandButton
           icon={<IconArrowLeft />}
           label="Back"
           onClick={handleNavigateHome}
+          css={`
+            width: ${compactMode ? '100%' : 'auto'};
+          `}
         />
       </div>
       <div
@@ -43,6 +50,7 @@ function PoolBar({ name }: { name: PoolName }): JSX.Element {
           flex: 2;
           display: flex;
           justify-content: center;
+          order: ${compactMode ? '1' : '2'};
         `}
       >
         <PoolTitle name={name} size={41} />
@@ -52,10 +60,18 @@ function PoolBar({ name }: { name: PoolName }): JSX.Element {
           flex: 1;
           display: flex;
           justify-content: flex-end;
+          order: 3;
+          width: ${compactMode ? '100%' : 'auto'};
         `}
       >
         {liquidityUrl && (
-          <BrandButton label="Add liquidity" href={liquidityUrl} />
+          <BrandButton
+            label="Add liquidity"
+            href={liquidityUrl}
+            css={`
+              width: ${compactMode ? '100%' : 'auto'};
+            `}
+          />
         )}
       </div>
     </div>
