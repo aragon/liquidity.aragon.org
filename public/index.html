@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <!-- Provide fallback favicon.png for browsers that don't support .svg format -->
+    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon-152.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Aragon Liquidity Program" />
+
+    <!-- OpenGraph (Twitter, Facebook, Linkedin) -->
+    <!-- TODO: Update this information -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@AragonProject" />
+    <meta name="twitter:creator" content="@AragonProject" />
+
+    <meta property="og:title" content="Aragon Liquidity Program" />
+    <meta property="og:description" content="Aragon Liquidity Program" />
+    <meta property="og:url" content="https://liquidity.aragon.org/" />
+    <meta property="og:site_name" content="Aragon Liquidity Program" />
+    <!-- TODO: Add an image -->
+    <!-- <meta property="og:image" content="%PUBLIC_URL%/og-preview-image.png" />
+    <meta
+      property="og:image:secure_url"
+      content="%PUBLIC_URL%/og-preview-image.png"
+    /> -->
+
+    <!-- Preload fonts -->
+    <link
+      rel="preload"
+      href="%PUBLIC_URL%/manrope-variable.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+
+    <script type="text/javascript">
+      var Countly = Countly || {}
+      Countly.q = Countly.q || []
+
+      Countly.app_key = 'ddabbc3c7ccc61575c7014e8b5d481561c7ee770'
+      Countly.url = 'https://analytics.aragon.org/'
+      Countly.inactivity_time = 10
+      ;(function () {
+        var cly = document.createElement('script')
+        cly.type = 'text/javascript'
+        cly.async = true
+        cly.src = 'https://analytics.aragon.org/sdk/web/countly.min.js'
+        cly.onload = function () {
+          Countly.init()
+        }
+        var s = document.getElementsByTagName('script')[0]
+        s.parentNode.insertBefore(cly, s)
+      })()
+    </script>
+
+    <style>
+      @font-face {
+        font-family: 'Manrope';
+        src: url('/manrope-variable.ttf');
+        font-weight: 1 999;
+        font-display: swap;
+      }
+
+      body,
+      html {
+        font-family: 'Manrope', sans-serif !important;
+      }
+
+      body {
+        /* Always provide a scrollbar to prevent content jumping when moving between short and long pages */
+        overflow-y: scroll !important;
+
+        /* Match app background color to avoid white flicker on first load */
+        background-color: #f9fafc;
+      }
+    </style>
+
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>Aragon Liquidity Program</title>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
