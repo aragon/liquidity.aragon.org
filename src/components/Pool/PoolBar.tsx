@@ -20,7 +20,7 @@ function PoolBar({ name }: { name: PoolName }): JSX.Element {
     <div
       css={`
         display: flex;
-        margin-bottom: 20px;
+        margin-bottom: ${compactMode ? '20px' : '30px'};
         flex-direction: ${compactMode ? 'column' : 'row'};
         align-items: center;
       `}
