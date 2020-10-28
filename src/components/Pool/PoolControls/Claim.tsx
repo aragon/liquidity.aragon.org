@@ -5,8 +5,10 @@ import AmountCard from '../../AmountCard/AmountCard'
 import BrandButton from '../../BrandButton/BrandButton'
 import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton'
 import { usePoolBalance } from '../PoolBalanceProvider'
+import { usePoolInfo } from '../PoolInfoProvider'
 
 function Claim(): JSX.Element {
+  const { rewardToken } = usePoolInfo()
   const {
     rewardsBalanceInfo: [rewardsBalance, rewardsBalanceStatus],
     tokenDecimals,
@@ -44,6 +46,8 @@ function Claim(): JSX.Element {
     <>
       <AmountCard
         label="Rewards available to withdraw"
+        tokenGraphic={rewardToken.graphic}
+        suffix={rewardToken.symbol}
         value={balanceToDisplay}
         css={`
           margin-top: 40px;

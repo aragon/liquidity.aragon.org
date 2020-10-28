@@ -1,5 +1,9 @@
 import React, { ReactNode, useContext, useMemo } from 'react'
 import { ContractGroup } from '../../environment/types'
+import tokenUsdcSvg from '../../assets/token-usdc.svg'
+import tokenEthSvg from '../../assets/token-eth.svg'
+import tokenUniSvg from '../../assets/token-uni.svg'
+import tokenBptSvg from '../../assets/token-bpt.svg'
 
 export type PoolName =
   | 'unipoolAntV1Eth'
@@ -12,8 +16,14 @@ type PoolInfoProviderState = {
 }
 
 type PoolAttributes = {
-  tokenGraphic: string
-  tokenSymbol: string
+  stakeToken: {
+    graphic: string
+    symbol: string
+  }
+  rewardToken: {
+    graphic: string
+    symbol: string
+  }
   contractGroup: ContractGroup
   liquidityUrl: string | null
 }
@@ -27,28 +37,46 @@ function PoolInfoProvider({
   poolName,
 }: PoolInfoProviderState): JSX.Element {
   const {
-    tokenGraphic,
-    tokenSymbol,
+    stakeToken,
+    rewardToken,
     contractGroup,
     liquidityUrl,
   } = useMemo((): PoolAttributes => {
     const attributes: Record<PoolName, PoolAttributes> = {
       unipoolAntV1Eth: {
-        tokenGraphic: '',
-        tokenSymbol: 'UNI',
+        stakeToken: {
+          graphic: tokenUniSvg,
+          symbol: 'UNI',
+        },
+        rewardToken: {
+          graphic: tokenEthSvg,
+          symbol: 'ETH',
+        },
         contractGroup: 'unipoolAntV1',
         liquidityUrl: null,
       },
       unipoolAntV2Eth: {
-        tokenGraphic: '',
-        tokenSymbol: 'UNI',
+        stakeToken: {
+          graphic: tokenUniSvg,
+          symbol: 'UNI',
+        },
+        rewardToken: {
+          graphic: tokenEthSvg,
+          symbol: 'ETH',
+        },
         contractGroup: 'unipoolAntV2',
         liquidityUrl:
           'https://info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae',
       },
       balancerAntV2Usdc: {
-        tokenGraphic: '',
-        tokenSymbol: 'BPT',
+        stakeToken: {
+          graphic: tokenBptSvg,
+          symbol: 'BPT',
+        },
+        rewardToken: {
+          graphic: tokenUsdcSvg,
+          symbol: 'USDC',
+        },
         contractGroup: 'balancer',
         liquidityUrl:
           'https://pools.balancer.exchange/#/pool/0xde0999ee4e4bea6fecb03bf4ebef2626942ec6f5/',
@@ -60,12 +88,12 @@ function PoolInfoProvider({
 
   const contextValue = useMemo(
     (): PoolInfoContext => ({
-      tokenGraphic,
-      tokenSymbol,
+      stakeToken,
+      rewardToken,
       contractGroup,
       liquidityUrl,
     }),
-    [tokenGraphic, tokenSymbol, contractGroup, liquidityUrl]
+    [stakeToken, rewardToken, contractGroup, liquidityUrl]
   )
 
   return (

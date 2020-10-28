@@ -19,7 +19,7 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 function PoolControls(): JSX.Element {
   const theme = useTheme()
   const [activeTab, setActiveTab] = useState<TabName>('withdraw')
-  const { tokenSymbol } = usePoolInfo()
+  const { stakeToken } = usePoolInfo()
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
     tokenDecimals,
@@ -52,7 +52,7 @@ function PoolControls(): JSX.Element {
           >
             {formattedAccountBalance}
           </span>{' '}
-          {tokenSymbol}
+          {stakeToken.symbol}
         </>
       )
     }
@@ -61,7 +61,7 @@ function PoolControls(): JSX.Element {
   }, [
     accountBalanceStatus,
     formattedAccountBalance,
-    tokenSymbol,
+    stakeToken.symbol,
     theme.surfaceContent,
   ])
 
@@ -88,7 +88,7 @@ function PoolControls(): JSX.Element {
       >
         <p
           css={`
-            color: ${theme.surfaceContentSecondary};
+            color: ${theme.contentSecondary};
             margin-top: 20px;
             margin-bottom: 15px;
             min-width: 200px;

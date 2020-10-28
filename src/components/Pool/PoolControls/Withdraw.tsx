@@ -9,7 +9,7 @@ import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
 
 function Withdraw(): JSX.Element {
-  const { tokenSymbol } = usePoolInfo()
+  const { stakeToken } = usePoolInfo()
   const {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
     tokenDecimals,
@@ -47,7 +47,9 @@ function Withdraw(): JSX.Element {
     <>
       <AmountInput />
       <AmountCard
-        label={`Amount of ${tokenSymbol} available to withdraw`}
+        label={`Amount available to withdraw`}
+        tokenGraphic={stakeToken.graphic}
+        suffix={stakeToken.symbol}
         value={balanceToDisplay}
         css={`
           margin-top: 40px;
