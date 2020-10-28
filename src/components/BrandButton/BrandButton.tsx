@@ -13,7 +13,7 @@ type BrandButtonProps = {
   disabled?: boolean
   display?: 'auto' | 'all' | 'icon' | 'label'
   size?: 'large' | 'medium' | 'small' | 'mini'
-  href?: string | undefined
+  href?: string
   type?: NativeButtonProps['type']
   onClick?: NativeButtonProps['onClick']
   wide?: boolean
