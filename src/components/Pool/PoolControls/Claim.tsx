@@ -1,17 +1,20 @@
 import React, { useMemo } from 'react'
 // @ts-ignore
 import TokenAmount from 'token-amount'
+import { useClaimRewards } from '../../../hooks/useContract'
 import AmountCard from '../../AmountCard/AmountCard'
 import BrandButton from '../../BrandButton/BrandButton'
 import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
 
 function Claim(): JSX.Element {
-  const { rewardToken } = usePoolInfo()
+  const { rewardToken, contractGroup } = usePoolInfo()
   const {
     rewardsBalanceInfo: [rewardsBalance, rewardsBalanceStatus],
     tokenDecimals,
   } = usePoolBalance()
+
+  const handleClaim = useClaimRewards(contractGroup)
 
   const formattedRewardsBalance = useMemo(
     (): string | null =>
@@ -35,7 +38,7 @@ function Claim(): JSX.Element {
           margin-bottom: 40px;
         `}
       />
-      <BrandButton wide mode="strong" size="large">
+      <BrandButton wide mode="strong" size="large" onClick={handleClaim}>
         Claim rewards
       </BrandButton>
     </>

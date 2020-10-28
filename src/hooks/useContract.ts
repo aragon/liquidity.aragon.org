@@ -91,31 +91,29 @@ export function useLiquidityPoolTokenContract(
 
 export function useAllowance(
   contractGroup: ContractGroup
-): () => Promise<BigNumber> {
+): () => Promise<BigNumber | null> {
   const { account } = useWallet()
   const poolTokenContract = useLiquidityPoolTokenContract(contractGroup)
   const { poolContract: poolContractAddress } = contracts[contractGroup]
 
   return useCallback(async () => {
     try {
-      if (!account) {
+      if (!account || !poolTokenContract) {
         throw new Error('[useAllowance] Account is not connected!')
-      }
-
-      if (!poolTokenContract) {
-        throw new Error('[useAllowance] Pool token contract not loaded!')
       }
 
       return await poolTokenContract.allowance(account, poolContractAddress)
     } catch (err) {
-      throw new Error(err)
+      console.error(err)
+
+      return null
     }
   }, [account, poolTokenContract, poolContractAddress])
 }
 
 export function useApprove(
   contractGroup: ContractGroup
-): (amount: BigNumber) => Promise<ContractTransaction> {
+): (amount: BigNumber) => Promise<ContractTransaction | null> {
   const poolTokenContract = useLiquidityPoolTokenContract(contractGroup)
   const { poolContract: poolContractAddress } = contracts[contractGroup]
   const getAllowance = useAllowance(contractGroup)
@@ -123,11 +121,12 @@ export function useApprove(
   return useCallback(
     async (amount: BigNumber) => {
       try {
-        if (!poolTokenContract) {
-          throw new Error('[useApprove] Pool token contract not loaded!')
+        const allowance = await getAllowance()
+
+        if (!poolTokenContract || !allowance) {
+          throw new Error('[useApprove] Account not connected!')
         }
 
-        const allowance = await getAllowance()
         // If the current allowance is less than the requested allowance,
         // just raise it
         if (allowance.lt(amount)) {
@@ -142,7 +141,9 @@ export function useApprove(
         }
         return await poolTokenContract.approve(poolContractAddress, amount)
       } catch (err) {
-        throw new Error(err)
+        console.error(err)
+
+        return null
       }
     },
     [getAllowance, poolContractAddress, poolTokenContract]
@@ -151,7 +152,7 @@ export function useApprove(
 
 export function useStake(
   contractGroup: ContractGroup
-): (amount: BigNumber) => Promise<ContractTransaction> {
+): (amount: BigNumber) => Promise<ContractTransaction | null> {
   const poolContract = useLiquidityPoolContract(contractGroup)
   const getApproval = useApprove(contractGroup)
 
@@ -159,7 +160,7 @@ export function useStake(
     async (amount: BigNumber) => {
       try {
         if (!poolContract) {
-          throw new Error(`[useStake] Pool contract not loaded!`)
+          throw new Error(`[useStake] Account not connected!`)
         }
         // Get approval for the amount to stake
         await getApproval(amount)
@@ -168,7 +169,9 @@ export function useStake(
           gasLimit: 150000,
         })
       } catch (err) {
-        throw new Error(err)
+        console.error(err)
+
+        return null
       }
     },
     [getApproval, poolContract]
@@ -177,36 +180,40 @@ export function useStake(
 
 export function useWithdraw(
   contractGroup: ContractGroup
-): () => Promise<ContractTransaction> {
+): () => Promise<ContractTransaction | null> {
   const poolContract = useLiquidityPoolContract(contractGroup)
 
   return useCallback(async () => {
     try {
       if (!poolContract) {
-        throw new Error(`[useWithdraw] Pool contract not loaded!`)
+        throw new Error(`[useWithdraw] Account not connected!`)
       }
 
       return await poolContract.exit()
     } catch (err) {
-      throw new Error(err)
+      console.error(err)
+
+      return null
     }
   }, [poolContract])
 }
 
-export function useClaim(
+export function useClaimRewards(
   contractGroup: ContractGroup
-): () => Promise<ContractTransaction> {
+): () => Promise<ContractTransaction | null> {
   const poolContract = useLiquidityPoolContract(contractGroup)
 
   return useCallback(async () => {
     try {
       if (!poolContract) {
-        throw new Error(`[useClaim] Pool contract not loaded!`)
+        throw new Error(`[useClaim] Account not connected!`)
       }
 
       return await poolContract.getReward()
     } catch (err) {
-      throw new Error(err)
+      console.error(err)
+
+      return null
     }
   }, [poolContract])
 }
