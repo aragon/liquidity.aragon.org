@@ -1,7 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react'
 // @ts-ignore
 import TokenAmount from 'token-amount'
-import { useWithdraw } from '../../../hooks/useContract'
+import {
+  useWithdraw,
+  useWithdrawAllIncludingRewards,
+} from '../../../hooks/useContract'
 import { useAccountModule } from '../../Account/AccountModuleProvider'
 import AmountCard from '../../AmountCard/AmountCard'
 import AmountInput from '../../AmountInput/AmountInput'
@@ -10,7 +13,11 @@ import { usePoolInfo } from '../PoolInfoProvider'
 import ControlButton from './ControlButton'
 import useInputValidation from './useInputValidation'
 
-function Withdraw(): JSX.Element {
+type WithdrawProps = {
+  exitAllBalance: boolean
+}
+
+function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   const [amount, setAmount] = useState('')
   const { stakeToken, contractGroup } = usePoolInfo()
   const {
@@ -19,6 +26,9 @@ function Withdraw(): JSX.Element {
   } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const withdraw = useWithdraw(contractGroup)
+  const withdrawAllIncludingRewards = useWithdrawAllIncludingRewards(
+    contractGroup
+  )
 
   const {
     maxAmount,
@@ -30,6 +40,23 @@ function Withdraw(): JSX.Element {
     balance: stakedBalance,
     decimals: tokenDecimals,
   })
+
+  // TODO: Fix this hack
+  const exitAllValidationStatus = useMemo(() => {
+    if (!stakedBalance) {
+      return 'notConnected'
+    }
+
+    if (stakedBalance.isZero()) {
+      return 'insufficientBalance'
+    }
+
+    return 'valid'
+  }, [stakedBalance])
+
+  const filteredValidationStatus = exitAllBalance
+    ? exitAllValidationStatus
+    : validationStatus
 
   const handleAmountChange = useCallback(
     (event) => {
@@ -50,15 +77,26 @@ function Withdraw(): JSX.Element {
     (event) => {
       event.preventDefault()
 
-      if (validationStatus === 'notConnected') {
+      if (filteredValidationStatus === 'notConnected') {
         showAccount()
       }
 
-      if (validationStatus === 'valid') {
-        withdraw(parsedAmountBn)
+      if (filteredValidationStatus === 'valid') {
+        if (exitAllBalance) {
+          withdrawAllIncludingRewards()
+        } else {
+          withdraw(parsedAmountBn)
+        }
       }
     },
-    [parsedAmountBn, showAccount, validationStatus, withdraw]
+    [
+      parsedAmountBn,
+      showAccount,
+      filteredValidationStatus,
+      withdraw,
+      exitAllBalance,
+      withdrawAllIncludingRewards,
+    ]
   )
 
   const formattedStakedBalance = useMemo(
@@ -72,13 +110,22 @@ function Withdraw(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit}>
-      <AmountInput
-        value={amount}
-        onChange={handleAmountChange}
-        onMaxClick={handleMaxClick}
-        placeholder="Enter amount to withdraw"
-        showMax={validationStatus !== 'notConnected'}
-      />
+      {!exitAllBalance && (
+        <div
+          css={`
+            margin-bottom: 40px;
+          `}
+        >
+          <AmountInput
+            value={amount}
+            onChange={handleAmountChange}
+            onMaxClick={handleMaxClick}
+            placeholder="Enter amount to withdraw"
+            showMax={validationStatus !== 'notConnected'}
+          />
+        </div>
+      )}
+
       <AmountCard
         label={`Amount available to withdraw`}
         tokenGraphic={stakeToken.graphic}
@@ -86,11 +133,10 @@ function Withdraw(): JSX.Element {
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         loading={stakedBalanceStatus === 'loading'}
         css={`
-          margin-top: 40px;
           margin-bottom: 40px;
         `}
       />
-      <ControlButton status={validationStatus} label="Withdraw" />
+      <ControlButton status={filteredValidationStatus} label="Withdraw" />
     </form>
   )
 }

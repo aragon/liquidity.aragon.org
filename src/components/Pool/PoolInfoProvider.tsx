@@ -28,7 +28,9 @@ type PoolAttributes = {
   liquidityUrl: string | null
 }
 
-type PoolInfoContext = PoolAttributes
+type PoolInfoContext = PoolAttributes & {
+  poolName: PoolName
+}
 
 const UsePoolInfoContext = React.createContext<PoolInfoContext | null>(null)
 
@@ -92,8 +94,9 @@ function PoolInfoProvider({
       rewardToken,
       contractGroup,
       liquidityUrl,
+      poolName,
     }),
-    [stakeToken, rewardToken, contractGroup, liquidityUrl]
+    [stakeToken, rewardToken, contractGroup, liquidityUrl, poolName]
   )
 
   return (

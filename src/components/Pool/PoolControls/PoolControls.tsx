@@ -19,7 +19,7 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 function PoolControls(): JSX.Element {
   const theme = useTheme()
   const [activeTab, setActiveTab] = useState<TabName>('withdraw')
-  const { stakeToken } = usePoolInfo()
+  const { stakeToken, poolName } = usePoolInfo()
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
     tokenDecimals,
@@ -65,6 +65,8 @@ function PoolControls(): JSX.Element {
     theme.surfaceContent,
   ])
 
+  const expiredProgram = poolName === 'unipoolAntV1Eth'
+
   return (
     <div
       css={`
@@ -74,12 +76,15 @@ function PoolControls(): JSX.Element {
         box-shadow: ${shadowDepth.high};
       `}
     >
-      <Tabs
-        activeTab={activeTab}
-        onStakeClick={() => setActiveTab('stake')}
-        onWithdrawClick={() => setActiveTab('withdraw')}
-        onClaimClick={() => setActiveTab('claim')}
-      />
+      {!expiredProgram && (
+        <Tabs
+          activeTab={activeTab}
+          onStakeClick={() => setActiveTab('stake')}
+          onWithdrawClick={() => setActiveTab('withdraw')}
+          onClaimClick={() => setActiveTab('claim')}
+        />
+      )}
+
       <div
         css={`
           display: flex;
@@ -89,7 +94,6 @@ function PoolControls(): JSX.Element {
         <p
           css={`
             color: ${theme.contentSecondary};
-            margin-top: 20px;
             margin-bottom: 15px;
             min-width: 200px;
             text-align: right;
@@ -100,7 +104,7 @@ function PoolControls(): JSX.Element {
       </div>
 
       {activeTab === 'stake' && <Stake />}
-      {activeTab === 'withdraw' && <Withdraw />}
+      {activeTab === 'withdraw' && <Withdraw exitAllBalance={expiredProgram} />}
       {activeTab === 'claim' && <Claim />}
     </div>
   )
@@ -124,8 +128,8 @@ function Tabs({
   activeTab,
   onStakeClick,
   onWithdrawClick,
-  onClaimClick,
-}: TabsProps): JSX.Element {
+}: // onClaimClick,
+TabsProps): JSX.Element {
   const items = useMemo((): TabItem[] => {
     return [
       {
@@ -138,41 +142,45 @@ function Tabs({
         label: 'Withdraw',
         onClick: onWithdrawClick,
       },
-      {
-        key: 'claim',
-        label: 'Claim rewards',
-        onClick: onClaimClick,
-        disabled: true,
-      },
+      // {
+      //   key: 'claim',
+      //   label: 'Claim rewards',
+      //   onClick: onClaimClick,
+      //   disabled: true,
+      // },
     ]
-  }, [onStakeClick, onWithdrawClick, onClaimClick])
+  }, [onStakeClick, onWithdrawClick])
 
   return (
-    <div
-      css={`
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 10px;
-      `}
-    >
-      {items.map(({ key, label, onClick, disabled }) => {
-        const isActiveTab = key === activeTab
-        return (
-          <BrandButton
-            key={key}
-            wide
-            size="large"
-            onClick={onClick}
-            disabled={disabled}
-            css={`
-              opacity: ${isActiveTab ? 1 : 0.5};
-            `}
-          >
-            {label}
-          </BrandButton>
-        )
-      })}
-    </div>
+    <>
+      <div
+        css={`
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          /* grid-template-columns: 1fr 1fr 1fr; */
+          grid-gap: 10px;
+          margin-bottom: 20px;
+        `}
+      >
+        {items.map(({ key, label, onClick, disabled }) => {
+          const isActiveTab = key === activeTab
+          return (
+            <BrandButton
+              key={key}
+              wide
+              size="large"
+              onClick={onClick}
+              disabled={disabled}
+              css={`
+                opacity: ${isActiveTab ? 1 : 0.5};
+              `}
+            >
+              {label}
+            </BrandButton>
+          )
+        })}
+      </div>
+    </>
   )
 }
 
