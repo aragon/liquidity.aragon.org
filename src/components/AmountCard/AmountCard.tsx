@@ -4,12 +4,14 @@ import { useTheme } from '@aragon/ui'
 import { radius } from '../../style/radius'
 import { shadowDepth } from '../../style/shadow'
 import { fontWeight } from '../../style/font'
+import LoadingSkeleton from '../LoadingSkeleton/LoadingSkeleton'
 
 type AmountCardProps = {
   label?: ReactNode
   value?: ReactNode
   tokenGraphic?: string
   suffix?: string
+  loading?: boolean
 }
 
 function AmountCard({
@@ -17,6 +19,7 @@ function AmountCard({
   value,
   suffix,
   tokenGraphic,
+  loading = false,
   ...props
 }: AmountCardProps): JSX.Element {
   const theme = useTheme()
@@ -73,15 +76,25 @@ function AmountCard({
             font-weight: ${fontWeight.medium};
           `}
         >
-          {value}{' '}
-          <span
-            css={`
-              font-size: 0.75em;
-              font-weight: ${fontWeight.regular};
-            `}
-          >
-            {suffix}
-          </span>
+          {!loading ? (
+            <>
+              {value}{' '}
+              <span
+                css={`
+                  font-size: 0.75em;
+                  font-weight: ${fontWeight.regular};
+                `}
+              >
+                {suffix}
+              </span>
+            </>
+          ) : (
+            <LoadingSkeleton
+              css={`
+                width: 100%;
+              `}
+            />
+          )}
         </div>
       </div>
     </div>

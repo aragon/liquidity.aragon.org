@@ -1,10 +1,9 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { useMemo } from 'react'
 // @ts-ignore
 import TokenAmount from 'token-amount'
 import AmountCard from '../../AmountCard/AmountCard'
 import AmountInput from '../../AmountInput/AmountInput'
 import BrandButton from '../../BrandButton/BrandButton'
-import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton'
 import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
 
@@ -24,25 +23,6 @@ function Withdraw(): JSX.Element {
     [stakedBalance, tokenDecimals]
   )
 
-  const balanceToDisplay = useMemo((): ReactNode | string => {
-    if (stakedBalanceStatus === 'noAccount') {
-      return '0'
-    }
-
-    if (formattedStakedBalance) {
-      return formattedStakedBalance
-    }
-
-    return (
-      <LoadingSkeleton
-        css={`
-          width: 100%;
-          max-width: 100px;
-        `}
-      />
-    )
-  }, [formattedStakedBalance, stakedBalanceStatus])
-
   return (
     <>
       <AmountInput />
@@ -50,7 +30,8 @@ function Withdraw(): JSX.Element {
         label={`Amount available to withdraw`}
         tokenGraphic={stakeToken.graphic}
         suffix={stakeToken.symbol}
-        value={balanceToDisplay}
+        value={formattedStakedBalance ? formattedStakedBalance : '0'}
+        loading={stakedBalanceStatus === 'loading'}
         css={`
           margin-top: 40px;
           margin-bottom: 40px;
