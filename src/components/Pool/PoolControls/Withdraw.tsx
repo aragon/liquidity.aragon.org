@@ -14,7 +14,7 @@ import ControlButton from './ControlButton'
 import useInputValidation from './useInputValidation'
 
 type WithdrawProps = {
-  exitAllBalance: boolean
+  exitAllBalance?: boolean
 }
 
 function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {

@@ -12,6 +12,7 @@ export type PoolName =
 
 type PoolInfoProviderState = {
   poolName: PoolName
+  expired?: boolean
   children: ReactNode
 }
 
@@ -29,7 +30,7 @@ type PoolAttributes = {
 }
 
 type PoolInfoContext = PoolAttributes & {
-  poolName: PoolName
+  expired?: boolean
 }
 
 const UsePoolInfoContext = React.createContext<PoolInfoContext | null>(null)
@@ -37,6 +38,7 @@ const UsePoolInfoContext = React.createContext<PoolInfoContext | null>(null)
 function PoolInfoProvider({
   children,
   poolName,
+  expired,
 }: PoolInfoProviderState): JSX.Element {
   const {
     stakeToken,
@@ -94,9 +96,9 @@ function PoolInfoProvider({
       rewardToken,
       contractGroup,
       liquidityUrl,
-      poolName,
+      expired,
     }),
-    [stakeToken, rewardToken, contractGroup, liquidityUrl, poolName]
+    [stakeToken, rewardToken, contractGroup, liquidityUrl, expired]
   )
 
   return (

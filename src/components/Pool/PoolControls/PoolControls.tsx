@@ -19,7 +19,7 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 function PoolControls(): JSX.Element {
   const theme = useTheme()
   const [activeTab, setActiveTab] = useState<TabName>('withdraw')
-  const { stakeToken, poolName } = usePoolInfo()
+  const { stakeToken, expired } = usePoolInfo()
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
     tokenDecimals,
@@ -65,8 +65,6 @@ function PoolControls(): JSX.Element {
     theme.surfaceContent,
   ])
 
-  const expiredProgram = poolName === 'unipoolAntV1Eth'
-
   return (
     <div
       css={`
@@ -76,7 +74,7 @@ function PoolControls(): JSX.Element {
         box-shadow: ${shadowDepth.high};
       `}
     >
-      {!expiredProgram && (
+      {!expired && (
         <Tabs
           activeTab={activeTab}
           onStakeClick={() => setActiveTab('stake')}
@@ -104,7 +102,7 @@ function PoolControls(): JSX.Element {
       </div>
 
       {activeTab === 'stake' && <Stake />}
-      {activeTab === 'withdraw' && <Withdraw exitAllBalance={expiredProgram} />}
+      {activeTab === 'withdraw' && <Withdraw exitAllBalance={expired} />}
       {activeTab === 'claim' && <Claim />}
     </div>
   )
