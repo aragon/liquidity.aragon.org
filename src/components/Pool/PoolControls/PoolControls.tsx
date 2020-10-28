@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { ReactNode, useMemo, useState } from 'react'
 // @ts-ignore
 import { useTheme } from '@aragon/ui'
 // @ts-ignore
@@ -34,6 +34,37 @@ function PoolControls(): JSX.Element {
     [accountBalance, tokenDecimals]
   )
 
+  const balanceToDisplay = useMemo((): ReactNode | string => {
+    if (accountBalanceStatus === 'noAccount') {
+      return 'Connect your wallet to see your balance'
+    }
+
+    if (formattedAccountBalance) {
+      return (
+        <>
+          Your wallet balance:{' '}
+          <span
+            css={`
+              word-break: break-all;
+              color: ${theme.surfaceContent};
+              font-weight: ${fontWeight.medium};
+            `}
+          >
+            {formattedAccountBalance}
+          </span>{' '}
+          {tokenSymbol}
+        </>
+      )
+    }
+
+    return <LoadingSkeleton />
+  }, [
+    accountBalanceStatus,
+    formattedAccountBalance,
+    tokenSymbol,
+    theme.surfaceContent,
+  ])
+
   return (
     <div
       css={`
@@ -64,31 +95,7 @@ function PoolControls(): JSX.Element {
             text-align: right;
           `}
         >
-          {formattedAccountBalance ? (
-            <>
-              Your wallet balance:{' '}
-              <span
-                css={`
-                  word-break: break-all;
-                  color: ${theme.surfaceContent};
-                  font-weight: ${fontWeight.medium};
-                `}
-              >
-                {formattedAccountBalance}
-              </span>{' '}
-              {tokenSymbol}
-            </>
-          ) : accountBalanceStatus === 'noAccount' ? (
-            'Connect your wallet to see your balance'
-          ) : (
-            <span
-              css={`
-                width: 100%;
-              `}
-            >
-              <LoadingSkeleton />
-            </span>
-          )}
+          {balanceToDisplay}
         </p>
       </div>
 

@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 // @ts-ignore
 import { useTheme } from '@aragon/ui'
 import { radius } from '../../style/radius'
 import { shadowDepth } from '../../style/shadow'
 
 type AmountCardProps = {
-  label?: string
-  value?: string
+  label?: ReactNode
+  value?: ReactNode
 }
 
 function AmountCard({ label, value, ...props }: AmountCardProps): JSX.Element {

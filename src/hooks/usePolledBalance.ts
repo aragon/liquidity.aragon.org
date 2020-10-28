@@ -2,7 +2,10 @@ import { BigNumber } from 'ethers'
 import { useCallback, useState } from 'react'
 import { ContractGroup } from '../environment/types'
 import { captureErrorWithSentry } from '../sentry'
-import { useLiquidityPoolTokenContract } from './useContract'
+import {
+  useLiquidityPoolContract,
+  useLiquidityPoolTokenContract,
+} from './useContract'
 import { useInterval } from './useInterval'
 import { useMounted } from './useMounted'
 
@@ -268,6 +271,55 @@ export function usePoolTokenBalance(
   useInterval(getBalance, POLL_INTERVAL)
 
   return [tokenBalance, status]
+}
+
+export function usePoolStakedBalance(
+  contractGroup: ContractGroup,
+  account: string | null
+): [BigNumber | null, LoadingStatus] {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+  const mounted = useMounted()
+  const [stakedBalance, setStakedBalance] = useState<BigNumber | null>(null)
+  const [status, setStatus] = useState<LoadingStatus>('noAccount')
+
+  const getBalance = useCallback(
+    async (clear) => {
+      if (!poolContract || !account) {
+        // Clear any existing balance
+        if (mounted()) {
+          setStatus('noAccount')
+          setStakedBalance(null)
+        }
+        return
+      }
+
+      try {
+        if (!stakedBalance && mounted()) {
+          setStatus('loading')
+        }
+
+        const balance = await poolContract.balanceOf(account)
+
+        // Avoid unnessesary re-renders by only updating value when it has actually changed
+        if (mounted() && (!stakedBalance || !balance.eq(stakedBalance))) {
+          setStatus('success')
+          setStakedBalance(balance)
+        }
+      } catch (err) {
+        if (mounted()) {
+          setStatus('error')
+        }
+
+        captureErrorWithSentry(err)
+        clear()
+      }
+    },
+    [account, mounted, poolContract, stakedBalance]
+  )
+
+  useInterval(getBalance, POLL_INTERVAL)
+
+  return [stakedBalance, status]
 }
 
 // export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {
