@@ -5,7 +5,6 @@ import { Link, GU } from '@aragon/ui'
 import AccountModule from '../Account/AccountModule'
 import HeaderLogo from './HeaderLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
-import LayoutLimiter from '../Layout/LayoutLimiter'
 
 function Header(): JSX.Element {
   const location = useLocation()
@@ -24,22 +23,20 @@ function Header(): JSX.Element {
       `}
     >
       <LayoutGutter>
-        <LayoutLimiter>
-          <div
-            css={`
-              height: ${8 * GU}px;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            `}
-          >
-            <Link onClick={handleLogoClick}>
-              <HeaderLogo />
-            </Link>
+        <div
+          css={`
+            height: ${8 * GU}px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          `}
+        >
+          <Link onClick={handleLogoClick}>
+            <HeaderLogo />
+          </Link>
 
-            <AccountModule />
-          </div>
-        </LayoutLimiter>
+          <AccountModule />
+        </div>
       </LayoutGutter>
     </header>
   )

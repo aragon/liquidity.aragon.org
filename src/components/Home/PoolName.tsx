@@ -83,15 +83,16 @@ function PoolTitle({
             `}
           />
         </div>
-        <span
+        <h2
           css={`
-            margin-left: ${!compactMode ? 1.5 * GU : 0}px;
+            margin-left: ${compactMode ? 0 : 2 * GU}px;
+            margin-top: ${compactMode ? 1.5 * GU : 0}px;
             font-size: ${3 * GU}px;
             color: ${theme.content};
           `}
         >
           {title}
-        </span>
+        </h2>
       </div>
     </div>
   )

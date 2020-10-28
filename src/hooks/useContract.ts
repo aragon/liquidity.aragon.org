@@ -133,12 +133,6 @@ export function useApprove(
           return await poolTokenContract.approve(poolContractAddress, amount)
         }
 
-        // Is the requested amount higher than the current allowance?
-        // If so, we need to set it down to 0 and then raise it
-        if (!allowance.isZero()) {
-          const tx = await poolTokenContract.approve(poolContractAddress, '0')
-          await tx.wait(1)
-        }
         return await poolTokenContract.approve(poolContractAddress, amount)
       } catch (err) {
         console.error(err)

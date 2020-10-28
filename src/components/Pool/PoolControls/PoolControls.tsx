@@ -13,13 +13,17 @@ import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
 import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton'
 import { fontWeight } from '../../../style/font'
+import { theme } from '../../../style/theme'
 
 type TabName = 'stake' | 'withdraw' | 'claim'
 
 function PoolControls(): JSX.Element {
   const theme = useTheme()
-  const [activeTab, setActiveTab] = useState<TabName>('withdraw')
   const { stakeToken, expired } = usePoolInfo()
+  const [activeTab, setActiveTab] = useState<TabName>(
+    expired ? 'withdraw' : 'stake'
+  )
+
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
     tokenDecimals,
@@ -68,12 +72,39 @@ function PoolControls(): JSX.Element {
   return (
     <div
       css={`
-        padding: 50px;
+        padding: 40px;
         background-color: ${theme.surface};
         border-radius: ${radius.high};
         box-shadow: ${shadowDepth.high};
       `}
     >
+      {expired && (
+        <div
+          css={`
+            text-align: center;
+          `}
+        >
+          <h1
+            css={`
+              font-size: 26px;
+              margin-bottom: 10px;
+              line-height: 1.1;
+              font-weight: ${fontWeight.medium};
+            `}
+          >
+            This program has finished
+          </h1>
+          <p
+            css={`
+              margin-bottom: 26px;
+              color: ${theme.surfaceContentSecondary};
+            `}
+          >
+            The ANT Liquidity Rewards program has ended. Withdraw your funds and
+            claim the rewards!
+          </p>
+        </div>
+      )}
       {!expired && (
         <Tabs
           activeTab={activeTab}
@@ -83,23 +114,25 @@ function PoolControls(): JSX.Element {
         />
       )}
 
-      <div
-        css={`
-          display: flex;
-          justify-content: flex-end;
-        `}
-      >
-        <p
+      {!expired && (
+        <div
           css={`
-            color: ${theme.contentSecondary};
-            margin-bottom: 15px;
-            min-width: 200px;
-            text-align: right;
+            display: flex;
+            justify-content: flex-end;
           `}
         >
-          {balanceToDisplay}
-        </p>
-      </div>
+          <p
+            css={`
+              color: ${theme.contentSecondary};
+              margin-bottom: 15px;
+              min-width: 200px;
+              text-align: right;
+            `}
+          >
+            {balanceToDisplay}
+          </p>
+        </div>
+      )}
 
       {activeTab === 'stake' && <Stake />}
       {activeTab === 'withdraw' && <Withdraw exitAllBalance={expired} />}
@@ -170,7 +203,10 @@ TabsProps): JSX.Element {
               onClick={onClick}
               disabled={disabled}
               css={`
-                opacity: ${isActiveTab ? 1 : 0.5};
+                border: 2px solid ${isActiveTab ? theme.accent : 'transparent'};
+
+                font-weight: ${fontWeight.medium};
+                ${isActiveTab ? 'box-shadow: none' : ''};
               `}
             >
               {label}
