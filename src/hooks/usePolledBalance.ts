@@ -219,32 +219,45 @@ const POLL_INTERVAL = 5000
 //   return lastStakedBalance
 // }
 
+export type LoadingStatus = 'noAccount' | 'loading' | 'success' | 'error'
+
 export function usePoolTokenBalance(
   contractGroup: ContractGroup,
   account: string | null
-): BigNumber | null {
+): [BigNumber | null, LoadingStatus] {
   const poolTokenContract = useLiquidityPoolTokenContract(contractGroup)
   const mounted = useMounted()
   const [tokenBalance, setTokenBalance] = useState<BigNumber | null>(null)
+  const [status, setStatus] = useState<LoadingStatus>('noAccount')
 
   const getBalance = useCallback(
     async (clear) => {
       if (!poolTokenContract || !account) {
         // Clear any existing balance
         if (mounted()) {
+          setStatus('noAccount')
           setTokenBalance(null)
         }
         return
       }
 
       try {
+        if (!tokenBalance && mounted()) {
+          setStatus('loading')
+        }
+
         const balance = await poolTokenContract.balanceOf(account)
 
         // Avoid unnessesary re-renders by only updating value when it has actually changed
         if (mounted() && (!tokenBalance || !balance.eq(tokenBalance))) {
+          setStatus('success')
           setTokenBalance(balance)
         }
       } catch (err) {
+        if (mounted()) {
+          setStatus('error')
+        }
+
         captureErrorWithSentry(err)
         clear()
       }
@@ -254,7 +267,7 @@ export function usePoolTokenBalance(
 
   useInterval(getBalance, POLL_INTERVAL)
 
-  return tokenBalance
+  return [tokenBalance, status]
 }
 
 // export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {

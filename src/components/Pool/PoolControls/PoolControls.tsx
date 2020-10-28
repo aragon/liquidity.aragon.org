@@ -1,18 +1,38 @@
 import React, { useMemo, useState } from 'react'
 // @ts-ignore
 import { useTheme } from '@aragon/ui'
+// @ts-ignore
+import TokenAmount from 'token-amount'
 import BrandButton from '../../BrandButton/BrandButton'
 import Claim from './Claim'
 import Stake from './Stake'
 import Withdraw from './Withdraw'
 import { radius } from '../../../style/radius'
 import { shadowDepth } from '../../../style/shadow'
+import { usePoolBalance } from '../PoolBalanceProvider'
+import { usePoolInfo } from '../PoolInfoProvider'
+import LoadingSkeleton from '../../LoadingSkeleton/LoadingSkeleton'
+import { fontWeight } from '../../../style/font'
 
 type TabName = 'stake' | 'withdraw' | 'claim'
 
 function PoolControls(): JSX.Element {
   const theme = useTheme()
   const [activeTab, setActiveTab] = useState<TabName>('withdraw')
+  const { tokenSymbol } = usePoolInfo()
+  const {
+    accountBalanceInfo: [accountBalance, accountBalanceStatus],
+    tokenDecimals,
+  } = usePoolBalance()
+
+  const formattedAccountBalance = useMemo(
+    (): string | null =>
+      accountBalance &&
+      new TokenAmount(accountBalance, tokenDecimals).format({
+        digits: tokenDecimals,
+      }),
+    [accountBalance, tokenDecimals]
+  )
 
   return (
     <div
@@ -35,7 +55,41 @@ function PoolControls(): JSX.Element {
           justify-content: flex-end;
         `}
       >
-        Account balance: 243234234 UNI
+        <p
+          css={`
+            color: ${theme.surfaceContentSecondary};
+            margin-top: 20px;
+            margin-bottom: 15px;
+            min-width: 200px;
+            text-align: right;
+          `}
+        >
+          {formattedAccountBalance ? (
+            <>
+              Your wallet balance:{' '}
+              <span
+                css={`
+                  word-break: break-all;
+                  color: ${theme.surfaceContent};
+                  font-weight: ${fontWeight.medium};
+                `}
+              >
+                {formattedAccountBalance}
+              </span>{' '}
+              {tokenSymbol}
+            </>
+          ) : accountBalanceStatus === 'noAccount' ? (
+            'Connect your wallet to see your balance'
+          ) : (
+            <span
+              css={`
+                width: 100%;
+              `}
+            >
+              <LoadingSkeleton />
+            </span>
+          )}
+        </p>
       </div>
 
       {activeTab === 'stake' && <Stake />}

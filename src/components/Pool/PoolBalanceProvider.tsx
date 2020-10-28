@@ -1,19 +1,23 @@
 import React, { ReactNode, useContext, useMemo } from 'react'
 import { BigNumber } from 'ethers'
 import { useWallet } from 'use-wallet'
-import { usePoolTokenBalance } from '../../hooks/usePolledBalance'
+import {
+  LoadingStatus,
+  usePoolTokenBalance,
+} from '../../hooks/usePolledBalance'
 import { ContractGroup } from '../../environment/types'
 
 const TOKEN_DECIMALS = 18
 
-type PolledValue = BigNumber | null
+// type PolledValue = BigNumber | null
+type PolledValueWithStatus = [BigNumber | null, LoadingStatus]
 
 type BalancesContext = {
-  accountBalance: PolledValue
+  accountBalanceInfo: PolledValueWithStatus | null
 }
 
 const AccountBalancesContext = React.createContext<BalancesContext>({
-  accountBalance: null,
+  accountBalanceInfo: null,
 })
 
 type PoolBalanceProps = {
@@ -27,15 +31,13 @@ function PoolBalanceProvider({
 }: PoolBalanceProps): JSX.Element {
   const { account } = useWallet()
 
-  const accountBalance = usePoolTokenBalance(contractGroup, account)
-
-  console.log(accountBalance?.toString())
+  const accountBalanceInfo = usePoolTokenBalance(contractGroup, account)
 
   const contextValue = useMemo(
     (): BalancesContext => ({
-      accountBalance,
+      accountBalanceInfo,
     }),
-    [accountBalance]
+    [accountBalanceInfo]
   )
 
   return (
@@ -46,17 +48,17 @@ function PoolBalanceProvider({
 }
 
 type AccountBalances = {
-  accountBalance: PolledValue
+  accountBalanceInfo: PolledValueWithStatus
   tokenDecimals: number
 }
 
 function usePoolBalance(): AccountBalances {
-  const { accountBalance } = useContext(AccountBalancesContext)
+  const { accountBalanceInfo } = useContext(AccountBalancesContext)
 
   return {
-    accountBalance,
+    accountBalanceInfo,
     tokenDecimals: TOKEN_DECIMALS,
-  }
+  } as AccountBalances
 }
 
 export { usePoolBalance, PoolBalanceProvider }
