@@ -81,7 +81,7 @@ function ProgramFinished() {
             ${theme.accentEnd} 81.4%
           );
           mix-blend-mode: normal;
-          box-shadow: 0px 2px 2px rgba(87, 95, 119, 0.15);
+          box-shadow: ${shadowDepth.low};
           border-radius: 46px;
           color: ${theme.surface};
           padding: 4px 12px;
