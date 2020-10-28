@@ -40,19 +40,19 @@ const networks = new Map<EnvNetworkName, EnvNetworkConfig>([
       ipfsGateway: 'https://ipfs.eth.aragon.network/ipfs',
       contracts: {
         unipoolAntV1: {
+          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
           lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
           rewardToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
-          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
         },
         unipoolAntV2: {
+          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
           lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
           rewardToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
-          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
         },
         balancer: {
+          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
           lpToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
           rewardToken: '0xa117000000f279d81a1d3cc75430faa017fa5a2e',
-          poolContract: '0xd91c406571cd6edcdd67e3519096c868dfc160d5',
         },
       },
     },
