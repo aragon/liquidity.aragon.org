@@ -322,6 +322,55 @@ export function usePoolStakedBalance(
   return [stakedBalance, status]
 }
 
+export function useRewardsBalance(
+  contractGroup: ContractGroup,
+  account: string | null
+): [BigNumber | null, LoadingStatus] {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+  const mounted = useMounted()
+  const [rewardsBalance, setRewardsBalance] = useState<BigNumber | null>(null)
+  const [status, setStatus] = useState<LoadingStatus>('noAccount')
+
+  const getBalance = useCallback(
+    async (clear) => {
+      if (!poolContract || !account) {
+        // Clear any existing balance
+        if (mounted()) {
+          setStatus('noAccount')
+          setRewardsBalance(null)
+        }
+        return
+      }
+
+      try {
+        if (!rewardsBalance && mounted()) {
+          setStatus('loading')
+        }
+
+        const balance = await poolContract.earned(account)
+
+        // Avoid unnessesary re-renders by only updating value when it has actually changed
+        if (mounted() && (!rewardsBalance || !balance.eq(rewardsBalance))) {
+          setStatus('success')
+          setRewardsBalance(balance)
+        }
+      } catch (err) {
+        if (mounted()) {
+          setStatus('error')
+        }
+
+        captureErrorWithSentry(err)
+        clear()
+      }
+    },
+    [account, mounted, poolContract, rewardsBalance]
+  )
+
+  useInterval(getBalance, POLL_INTERVAL)
+
+  return [rewardsBalance, status]
+}
+
 // export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {
 //   const antTokenV1Contract = useAntTokenV1Contract(true)
 //   const antTokenV2Contract = useAntTokenV2Contract(true)
