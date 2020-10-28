@@ -31,13 +31,13 @@ function AmountInput({
           <ButtonBase
             onClick={onMaxClick}
             css={`
-              padding: ${0.65 * GU}px ${1.25 * GU}px;
+              padding: ${0.9 * GU}px ${1.25 * GU}px;
               background-color: white;
               box-shadow: ${shadowDepth.low};
               text-transform: uppercase;
               font-weight: ${fontWeight.medium};
               color: ${theme.link};
-              font-size: 12px;
+              font-size: 13px;
               line-height: 1;
 
               &:active {
@@ -51,8 +51,14 @@ function AmountInput({
       }
       adornmentPosition="end"
       adornmentSettings={{
-        padding: 1.5 * GU,
+        padding: 2 * GU,
       }}
+      css={`
+        font-size: 18px;
+        height: 56px;
+        padding-left: 20px;
+        padding-right: 20px;
+      `}
     />
   )
 }

@@ -97,8 +97,8 @@ function Stake(): JSX.Element {
         suffix={stakeToken.symbol}
         loading={stakedBalanceStatus === 'loading'}
         css={`
-          margin-top: 40px;
-          margin-bottom: 40px;
+          margin-top: 30px;
+          margin-bottom: 30px;
         `}
       />
       <ControlButton

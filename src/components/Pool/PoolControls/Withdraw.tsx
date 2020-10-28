@@ -113,7 +113,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
       {!exitAllBalance && (
         <div
           css={`
-            margin-bottom: 40px;
+            margin-bottom: 30px;
           `}
         >
           <AmountInput
@@ -133,7 +133,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         loading={stakedBalanceStatus === 'loading'}
         css={`
-          margin-bottom: 40px;
+          margin-bottom: 30px;
         `}
       />
       <ControlButton
