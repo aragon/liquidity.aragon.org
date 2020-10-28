@@ -141,7 +141,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
         labels={{
           notConnected: 'Connect wallet',
           insufficientBalance: exitAllBalance
-            ? 'You have no stake to withdraw'
+            ? 'You have no funds to withdraw'
             : 'Insufficient stake balance',
           noAmount: 'Enter an amount',
           valid: 'Withdraw',
