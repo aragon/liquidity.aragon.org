@@ -70,7 +70,8 @@ function ProgramFinished() {
         margin: auto;
         margin-top: ${compactMode ? `${1 * GU}px` : '-1em'};
         right: 96px;
-        width: 159px;
+        width: 190px;
+        text-align: center;
       `}
     >
       <div
@@ -90,7 +91,7 @@ function ProgramFinished() {
           margin-bottom: ${compactMode ? `${1 * GU}px` : '0'};
         `}
       >
-        Program Finished
+        Program Completed
       </div>
     </div>
   )
