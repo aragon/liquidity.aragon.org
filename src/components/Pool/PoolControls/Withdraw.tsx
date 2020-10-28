@@ -136,7 +136,18 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
           margin-bottom: 40px;
         `}
       />
-      <ControlButton status={filteredValidationStatus} label="Withdraw" />
+      <ControlButton
+        status={filteredValidationStatus}
+        labels={{
+          notConnected: 'Connect wallet',
+          insufficientBalance: exitAllBalance
+            ? 'You have no stake to withdraw'
+            : 'Insufficient stake balance',
+          noAmount: 'Enter an amount',
+          valid: 'Withdraw',
+          loading: 'Loading…',
+        }}
+      />
     </form>
   )
 }
