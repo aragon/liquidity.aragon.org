@@ -18,7 +18,7 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 
 function PoolControls(): JSX.Element {
   const theme = useTheme()
-  const [activeTab, setActiveTab] = useState<TabName>('withdraw')
+  const [activeTab, setActiveTab] = useState<TabName>('stake')
   const { stakeToken, expired } = usePoolInfo()
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
