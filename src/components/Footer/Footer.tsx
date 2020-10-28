@@ -5,8 +5,9 @@ import FooterLogo from './FooterLogo'
 import LayoutGutter from '../Layout/LayoutGutter'
 import LayoutLimiter from '../Layout/LayoutLimiter'
 
+// TODO: Update this information
 const ANT_URL = 'https://aragon.org/token/ant'
-const WIKI_URL = 'https://wiki.aragon.org/'
+const BLOG_URL = ''
 
 const ARAGON_WEBSITE_URL = 'https://aragon.org'
 
@@ -41,7 +42,7 @@ function Footer(): JSX.Element {
             >
               <FooterLink href={ARAGON_WEBSITE_URL}>About</FooterLink>
               <FooterLink href={ANT_URL}>ANT</FooterLink>
-              <FooterLink href={WIKI_URL}>Wiki</FooterLink>
+              <FooterLink href={BLOG_URL}>Blog</FooterLink>
             </div>
             <Link href={ARAGON_WEBSITE_URL}>
               <FooterLogo />
