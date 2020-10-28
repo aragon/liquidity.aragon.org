@@ -101,7 +101,16 @@ function Stake(): JSX.Element {
           margin-bottom: 40px;
         `}
       />
-      <ControlButton status={validationStatus} label="Stake" />
+      <ControlButton
+        status={validationStatus}
+        labels={{
+          notConnected: 'Connect wallet',
+          insufficientBalance: 'Insufficient wallet balance',
+          noAmount: 'Enter an amount',
+          valid: 'Stake',
+          loading: 'Loading…',
+        }}
+      />
     </form>
   )
 }

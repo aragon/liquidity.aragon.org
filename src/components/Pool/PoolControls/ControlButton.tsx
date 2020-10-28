@@ -8,22 +8,13 @@ import { ValidationStatus } from '../types'
 import LoadingSpinner from '../../LoadingSpinner/LoadingSpinner'
 
 type ButtonStatus = ValidationStatus | 'loading'
+
 type ConverterButtonProps = {
   status: ButtonStatus
-  label: string
+  labels: Record<ButtonStatus, string>
 }
 
-function ControlButton({ status, label }: ConverterButtonProps): JSX.Element {
-  const buttonMessages = useMemo((): Record<ButtonStatus, string> => {
-    return {
-      notConnected: 'Connect wallet',
-      insufficientBalance: 'Insufficient balance',
-      noAmount: 'Enter an amount',
-      valid: label,
-      loading: 'Loading…',
-    }
-  }, [label])
-
+function ControlButton({ labels, status }: ConverterButtonProps): JSX.Element {
   const disableButton =
     status === 'insufficientBalance' ||
     status === 'noAmount' ||
@@ -47,7 +38,7 @@ function ControlButton({ status, label }: ConverterButtonProps): JSX.Element {
       disabled={disableButton}
       size="large"
       icon={icon}
-      label={buttonMessages[status]}
+      label={labels[status]}
     />
   )
 }
