@@ -2,12 +2,8 @@
   "version": 2,
   "public": true,
   "scope": "aragon",
+  "alias": "liquidity.aragon.org",
   "github": {
     "silent": true
-  },
-  "build": {
-    "env": {
-      "NETWORK_ENVIRONMENT": "rinkeby"
-    }
   }
 }
