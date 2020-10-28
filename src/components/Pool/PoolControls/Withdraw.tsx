@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 // @ts-ignore
 import TokenAmount from 'token-amount'
+import { useWithdraw } from '../../../hooks/useContract'
 import AmountCard from '../../AmountCard/AmountCard'
 import AmountInput from '../../AmountInput/AmountInput'
 import BrandButton from '../../BrandButton/BrandButton'
@@ -10,19 +11,23 @@ import useInputValidation from './useInputValidation'
 
 function Withdraw(): JSX.Element {
   const [amount, setAmount] = useState('')
-  const { stakeToken } = usePoolInfo()
+  const { stakeToken, contractGroup } = usePoolInfo()
   const {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
     tokenDecimals,
   } = usePoolBalance()
+  const withdraw = useWithdraw(contractGroup)
 
-  const { maxAmount, validationStatus, floatRegex } = useInputValidation({
+  const {
+    maxAmount,
+    validationStatus,
+    floatRegex,
+    parsedAmountBn,
+  } = useInputValidation({
     amount: amount,
     balance: stakedBalance,
     decimals: tokenDecimals,
   })
-
-  console.log(validationStatus)
 
   const handleAmountChange = useCallback(
     (event) => {
@@ -38,6 +43,10 @@ function Withdraw(): JSX.Element {
   const handleMaxClick = useCallback(() => {
     setAmount(maxAmount)
   }, [maxAmount])
+
+  const handleWithdraw = useCallback(() => {
+    withdraw(parsedAmountBn)
+  }, [withdraw, parsedAmountBn])
 
   const formattedStakedBalance = useMemo(
     (): string | null =>
@@ -68,7 +77,7 @@ function Withdraw(): JSX.Element {
           margin-bottom: 40px;
         `}
       />
-      <BrandButton wide mode="strong" size="large">
+      <BrandButton wide mode="strong" size="large" onClick={handleWithdraw}>
         Withdraw
       </BrandButton>
     </>
