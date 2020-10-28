@@ -10,11 +10,12 @@ import { PoolBalanceProvider } from './PoolBalanceProvider'
 
 type PoolProps = {
   name: PoolName
+  expired?: boolean
 }
 
-function Pool({ name }: PoolProps): JSX.Element {
+function Pool({ name, expired }: PoolProps): JSX.Element {
   return (
-    <PoolInfoProvider poolName={name}>
+    <PoolInfoProvider poolName={name} expired={expired}>
       <LayoutGutter>
         <LayoutLimiter size="extraSmall">
           <PoolContent />
