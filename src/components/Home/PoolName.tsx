@@ -15,11 +15,11 @@ type PoolNameProps = 'uniswapV2' | 'balancer' | 'uniswapV1'
 
 const POOL_INFO: Record<PoolNameProps, PoolInfo> = {
   uniswapV2: {
-    title: 'Uniswap ANT / ETH',
+    title: 'Uniswap ANTv2 / ETH',
     tokenPair: [antV2, eth],
   },
   balancer: {
-    title: 'Balancer ANT / USDC',
+    title: 'Balancer ANTv2 / USDC',
     tokenPair: [antV2, usdc],
   },
   uniswapV1: {
