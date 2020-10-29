@@ -110,7 +110,7 @@ function Stake(): JSX.Element {
         onChange={handleAmountChange}
         onMaxClick={handleMaxClick}
         placeholder="Enter amount to stake"
-        showMax={validationStatus !== 'notConnected'}
+        disableMax={validationStatus === 'notConnected'}
       />
       <AmountCard
         label="Total amount staked"

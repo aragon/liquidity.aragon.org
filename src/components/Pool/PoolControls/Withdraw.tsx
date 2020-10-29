@@ -121,7 +121,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
             onChange={handleAmountChange}
             onMaxClick={handleMaxClick}
             placeholder="Enter amount to withdraw"
-            showMax={validationStatus !== 'notConnected'}
+            disableMax={validationStatus === 'notConnected'}
           />
         </div>
       )}
