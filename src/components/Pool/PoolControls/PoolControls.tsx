@@ -26,16 +26,15 @@ function PoolControls(): JSX.Element {
 
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
-    tokenDecimals,
   } = usePoolBalance()
 
   const formattedAccountBalance = useMemo(
     (): string | null =>
       accountBalance &&
-      new TokenAmount(accountBalance, tokenDecimals).format({
-        digits: tokenDecimals,
+      new TokenAmount(accountBalance, stakeToken.decimals).format({
+        digits: stakeToken.decimals,
       }),
-    [accountBalance, tokenDecimals]
+    [accountBalance, stakeToken.decimals]
   )
 
   const balanceToDisplay = useMemo((): ReactNode | string => {
@@ -165,8 +164,8 @@ function Tabs({
   activeTab,
   onStakeClick,
   onWithdrawClick,
-}: // onClaimClick,
-TabsProps): JSX.Element {
+  onClaimClick,
+}: TabsProps): JSX.Element {
   const items = useMemo((): TabItem[] => {
     return [
       {
@@ -179,22 +178,20 @@ TabsProps): JSX.Element {
         label: 'Withdraw',
         onClick: onWithdrawClick,
       },
-      // {
-      //   key: 'claim',
-      //   label: 'Claim rewards',
-      //   onClick: onClaimClick,
-      //   disabled: true,
-      // },
+      {
+        key: 'claim',
+        label: 'Claim rewards',
+        onClick: onClaimClick,
+      },
     ]
-  }, [onStakeClick, onWithdrawClick])
+  }, [onStakeClick, onWithdrawClick, onClaimClick])
 
   return (
     <>
       <div
         css={`
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          /* grid-template-columns: 1fr 1fr 1fr; */
+          grid-template-columns: 1fr 1fr 1fr;
           grid-gap: 10px;
           margin-bottom: 20px;
         `}

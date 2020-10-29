@@ -17,7 +17,6 @@ function Stake(): JSX.Element {
   const {
     accountBalanceInfo: [accountBalance],
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
-    tokenDecimals,
   } = usePoolBalance()
   const stake = useStake(contractGroup)
 
@@ -29,7 +28,7 @@ function Stake(): JSX.Element {
   } = useInputValidation({
     amount: amount,
     balance: accountBalance,
-    decimals: tokenDecimals,
+    decimals: stakeToken.decimals,
   })
 
   const handleAmountChange = useCallback(
@@ -65,10 +64,10 @@ function Stake(): JSX.Element {
   const formattedStakedBalance = useMemo(
     (): string | null =>
       stakedBalance &&
-      new TokenAmount(stakedBalance, tokenDecimals).format({
-        digits: tokenDecimals,
+      new TokenAmount(stakedBalance, stakeToken.decimals).format({
+        digits: stakeToken.decimals,
       }),
-    [stakedBalance, tokenDecimals]
+    [stakedBalance, stakeToken.decimals]
   )
 
   return (

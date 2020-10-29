@@ -9,9 +9,6 @@ import {
 } from '../../hooks/usePolledBalance'
 import { ContractGroup } from '../../environment/types'
 
-const TOKEN_DECIMALS = 18
-
-// type PolledValue = BigNumber | null
 type PolledValueWithStatus = [BigNumber | null, LoadingStatus]
 
 type BalancesContext = {
@@ -61,7 +58,6 @@ type AccountBalances = {
   accountBalanceInfo: PolledValueWithStatus
   stakedBalanceInfo: PolledValueWithStatus
   rewardsBalanceInfo: PolledValueWithStatus
-  tokenDecimals: number
 }
 
 function usePoolBalance(): AccountBalances {
@@ -75,7 +71,6 @@ function usePoolBalance(): AccountBalances {
     accountBalanceInfo,
     stakedBalanceInfo,
     rewardsBalanceInfo,
-    tokenDecimals: TOKEN_DECIMALS,
   } as AccountBalances
 }
 

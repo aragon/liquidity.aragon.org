@@ -9,20 +9,18 @@ import { usePoolInfo } from '../PoolInfoProvider'
 
 function Claim(): JSX.Element {
   const { rewardToken, contractGroup } = usePoolInfo()
-  const {
-    rewardsBalanceInfo: [rewardsBalance, rewardsBalanceStatus],
-    tokenDecimals,
-  } = usePoolBalance()
-
+  const { rewardsBalanceInfo } = usePoolBalance()
   const handleClaim = useClaimRewards(contractGroup)
+
+  const [rewardsBalance, rewardsBalanceStatus] = rewardsBalanceInfo
 
   const formattedRewardsBalance = useMemo(
     (): string | null =>
       rewardsBalance &&
-      new TokenAmount(rewardsBalance, tokenDecimals).format({
-        digits: tokenDecimals,
+      new TokenAmount(rewardsBalance, rewardToken.decimals).format({
+        digits: rewardToken.decimals,
       }),
-    [rewardsBalance, tokenDecimals]
+    [rewardsBalance, rewardToken.decimals]
   )
 
   return (
