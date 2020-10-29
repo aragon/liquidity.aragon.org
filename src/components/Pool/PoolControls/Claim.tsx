@@ -6,6 +6,7 @@ import { useAccountModule } from '../../Account/AccountModuleProvider'
 import AmountCard from '../../AmountCard/AmountCard'
 import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
+import { ValidationStatus } from '../types'
 import ControlButton from './ControlButton'
 
 function Claim(): JSX.Element {
@@ -25,12 +26,12 @@ function Claim(): JSX.Element {
     [rewardsBalance, rewardToken.decimals]
   )
 
-  const validationStatus = useMemo(() => {
+  const validationStatus = useMemo((): ValidationStatus => {
     if (!rewardsBalance) {
       return 'notConnected'
     }
 
-    if (rewardsBalance?.isZero()) {
+    if (rewardsBalance.isZero()) {
       return 'noAmount'
     }
 
