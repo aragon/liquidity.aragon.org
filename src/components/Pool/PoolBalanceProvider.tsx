@@ -3,11 +3,15 @@ import { BigNumber } from 'ethers'
 import { useWallet } from 'use-wallet'
 import {
   LoadingStatus,
+  usePoolRewardRate,
   usePoolStakedBalance,
   usePoolTokenBalance,
+  usePoolTotalSupply,
   useRewardsBalance,
 } from '../../hooks/usePolledBalance'
 import { ContractGroup } from '../../environment/types'
+
+const FORMATTED_DIGITS = 5
 
 type PolledValueWithStatus = [BigNumber | null, LoadingStatus]
 
@@ -15,12 +19,16 @@ type BalancesContext = {
   accountBalanceInfo: PolledValueWithStatus | null
   stakedBalanceInfo: PolledValueWithStatus | null
   rewardsBalanceInfo: PolledValueWithStatus | null
+  totalSupplyInfo: PolledValueWithStatus | null
+  rewardRateInfo: PolledValueWithStatus | null
 }
 
 const AccountBalancesContext = React.createContext<BalancesContext>({
   accountBalanceInfo: null,
   stakedBalanceInfo: null,
   rewardsBalanceInfo: null,
+  totalSupplyInfo: null,
+  rewardRateInfo: null,
 })
 
 type PoolBalanceProps = {
@@ -37,14 +45,24 @@ function PoolBalanceProvider({
   const accountBalanceInfo = usePoolTokenBalance(contractGroup, account)
   const stakedBalanceInfo = usePoolStakedBalance(contractGroup, account)
   const rewardsBalanceInfo = useRewardsBalance(contractGroup, account)
+  const totalSupplyInfo = usePoolTotalSupply(contractGroup)
+  const rewardRateInfo = usePoolRewardRate(contractGroup)
 
   const contextValue = useMemo(
     (): BalancesContext => ({
       accountBalanceInfo,
       stakedBalanceInfo,
       rewardsBalanceInfo,
+      totalSupplyInfo,
+      rewardRateInfo,
     }),
-    [accountBalanceInfo, stakedBalanceInfo, rewardsBalanceInfo]
+    [
+      accountBalanceInfo,
+      stakedBalanceInfo,
+      rewardsBalanceInfo,
+      totalSupplyInfo,
+      rewardRateInfo,
+    ]
   )
 
   return (
@@ -58,6 +76,9 @@ type AccountBalances = {
   accountBalanceInfo: PolledValueWithStatus
   stakedBalanceInfo: PolledValueWithStatus
   rewardsBalanceInfo: PolledValueWithStatus
+  totalSupplyInfo: PolledValueWithStatus
+  rewardRateInfo: PolledValueWithStatus
+  formattedDigits: number
 }
 
 function usePoolBalance(): AccountBalances {
@@ -65,12 +86,17 @@ function usePoolBalance(): AccountBalances {
     accountBalanceInfo,
     stakedBalanceInfo,
     rewardsBalanceInfo,
+    totalSupplyInfo,
+    rewardRateInfo,
   } = useContext(AccountBalancesContext)
 
   return {
     accountBalanceInfo,
     stakedBalanceInfo,
     rewardsBalanceInfo,
+    totalSupplyInfo,
+    rewardRateInfo,
+    formattedDigits: FORMATTED_DIGITS,
   } as AccountBalances
 }
 

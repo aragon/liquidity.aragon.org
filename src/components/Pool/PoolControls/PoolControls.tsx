@@ -26,15 +26,16 @@ function PoolControls(): JSX.Element {
 
   const {
     accountBalanceInfo: [accountBalance, accountBalanceStatus],
+    formattedDigits,
   } = usePoolBalance()
 
   const formattedAccountBalance = useMemo(
     (): string | null =>
       accountBalance &&
       new TokenAmount(accountBalance, stakeToken.decimals).format({
-        digits: stakeToken.decimals,
+        digits: formattedDigits,
       }),
-    [accountBalance, stakeToken.decimals]
+    [accountBalance, stakeToken.decimals, formattedDigits]
   )
 
   const balanceToDisplay = useMemo((): ReactNode | string => {

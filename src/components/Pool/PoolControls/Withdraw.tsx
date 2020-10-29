@@ -22,6 +22,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   const { stakeToken, contractGroup } = usePoolInfo()
   const {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
+    formattedDigits,
   } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const withdraw = useWithdraw(contractGroup)
@@ -102,9 +103,9 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
     (): string | null =>
       stakedBalance &&
       new TokenAmount(stakedBalance, stakeToken.decimals).format({
-        digits: stakeToken.decimals,
+        digits: formattedDigits,
       }),
-    [stakedBalance, stakeToken.decimals]
+    [stakedBalance, stakeToken.decimals, formattedDigits]
   )
 
   return (
@@ -112,7 +113,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
       {!exitAllBalance && (
         <div
           css={`
-            margin-bottom: 30px;
+            margin-bottom: 10px;
           `}
         >
           <AmountInput
@@ -131,9 +132,6 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
         suffix={stakeToken.symbol}
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         loading={stakedBalanceStatus === 'loading'}
-        css={`
-          margin-bottom: 30px;
-        `}
       />
       <ControlButton
         status={filteredValidationStatus}

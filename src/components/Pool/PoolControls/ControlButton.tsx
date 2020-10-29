@@ -39,6 +39,9 @@ function ControlButton({ labels, status }: ConverterButtonProps): JSX.Element {
       size="large"
       icon={icon}
       label={labels[status]}
+      css={`
+        margin-top: 30px;
+      `}
     />
   )
 }

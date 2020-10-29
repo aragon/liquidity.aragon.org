@@ -12,11 +12,14 @@ import useInputValidation from './useInputValidation'
 
 function Stake(): JSX.Element {
   const [amount, setAmount] = useState('')
-  const { stakeToken, contractGroup } = usePoolInfo()
+  const { stakeToken, rewardToken, contractGroup } = usePoolInfo()
   const { showAccount } = useAccountModule()
   const {
     accountBalanceInfo: [accountBalance],
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
+    totalSupplyInfo: [poolTotalSupply],
+    rewardRateInfo: [rewardRate],
+    formattedDigits,
   } = usePoolBalance()
   const stake = useStake(contractGroup)
 
@@ -30,6 +33,45 @@ function Stake(): JSX.Element {
     balance: accountBalance,
     decimals: stakeToken.decimals,
   })
+
+  const formattedRewards = useMemo(() => {
+    if (!rewardRate || !poolTotalSupply || !stakedBalance) {
+      return '0'
+    }
+
+    const weekSeconds = 604800
+
+    // (reward rate) * (user stake) / (total stake) * 7 days (seconds)
+    const rewards = rewardRate
+      .mul(weekSeconds)
+      .mul(stakedBalance.add(parsedAmountBn)) // Add user input amount to total
+      .div(poolTotalSupply.add(parsedAmountBn))
+
+    const formattedValue = new TokenAmount(
+      rewards,
+      rewardToken.decimals
+    ).format({
+      digits: formattedDigits,
+    })
+
+    return formattedValue
+  }, [
+    rewardRate,
+    poolTotalSupply,
+    stakedBalance,
+    rewardToken.decimals,
+    parsedAmountBn,
+    formattedDigits,
+  ])
+
+  const formattedStakedBalance = useMemo(
+    (): string | null =>
+      stakedBalance &&
+      new TokenAmount(stakedBalance, stakeToken.decimals).format({
+        digits: formattedDigits,
+      }),
+    [stakedBalance, stakeToken.decimals, formattedDigits]
+  )
 
   const handleAmountChange = useCallback(
     (event) => {
@@ -61,15 +103,6 @@ function Stake(): JSX.Element {
     [parsedAmountBn, showAccount, validationStatus, stake]
   )
 
-  const formattedStakedBalance = useMemo(
-    (): string | null =>
-      stakedBalance &&
-      new TokenAmount(stakedBalance, stakeToken.decimals).format({
-        digits: stakeToken.decimals,
-      }),
-    [stakedBalance, stakeToken.decimals]
-  )
-
   return (
     <form onSubmit={handleSubmit}>
       <AmountInput
@@ -79,26 +112,22 @@ function Stake(): JSX.Element {
         placeholder="Enter amount to stake"
         showMax={validationStatus !== 'notConnected'}
       />
-      {/* <AmountCard
-        label="Your estimated rewards"
-        value="Testing"
-        tokenGraphic={rewardToken.graphic}
-        suffix={`${rewardToken.symbol} / week`}
-        css={`
-          margin-top: 40px;
-          margin-bottom: 40px;
-        `}
-      /> */}
       <AmountCard
-        label="Amount staked"
+        label="Total amount staked"
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         tokenGraphic={stakeToken.graphic}
         suffix={stakeToken.symbol}
         loading={stakedBalanceStatus === 'loading'}
         css={`
-          margin-top: 30px;
-          margin-bottom: 30px;
+          margin-top: 10px;
+          margin-bottom: 10px;
         `}
+      />
+      <AmountCard
+        label="Your estimated rewards"
+        value={formattedRewards}
+        tokenGraphic={rewardToken.graphic}
+        suffix={`${rewardToken.symbol} / week`}
       />
       <ControlButton
         status={validationStatus}
