@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 // @ts-ignore
 import TokenAmount from 'token-amount'
 import { useClaimRewards } from '../../../hooks/useContract'
+import { useAccountModule } from '../../Account/AccountModuleProvider'
 import AmountCard from '../../AmountCard/AmountCard'
-import BrandButton from '../../BrandButton/BrandButton'
 import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
+import ControlButton from './ControlButton'
 
 function Claim(): JSX.Element {
   const { rewardToken, contractGroup } = usePoolInfo()
   const { rewardsBalanceInfo } = usePoolBalance()
+  const { showAccount } = useAccountModule()
   const handleClaim = useClaimRewards(contractGroup)
 
   const [rewardsBalance, rewardsBalanceStatus] = rewardsBalanceInfo
@@ -23,8 +25,35 @@ function Claim(): JSX.Element {
     [rewardsBalance, rewardToken.decimals]
   )
 
+  const validationStatus = useMemo(() => {
+    if (!rewardsBalance) {
+      return 'notConnected'
+    }
+
+    if (rewardsBalance?.isZero()) {
+      return 'noAmount'
+    }
+
+    return 'valid'
+  }, [rewardsBalance])
+
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault()
+
+      if (validationStatus === 'notConnected') {
+        showAccount()
+      }
+
+      if (validationStatus === 'valid') {
+        handleClaim()
+      }
+    },
+    [showAccount, validationStatus, handleClaim]
+  )
+
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <AmountCard
         label="Rewards available to withdraw"
         tokenGraphic={rewardToken.graphic}
@@ -36,10 +65,17 @@ function Claim(): JSX.Element {
           margin-bottom: 30px;
         `}
       />
-      <BrandButton wide mode="strong" size="large" onClick={handleClaim}>
-        Claim rewards
-      </BrandButton>
-    </>
+      <ControlButton
+        status={validationStatus}
+        labels={{
+          notConnected: 'Connect wallet',
+          insufficientBalance: '',
+          noAmount: 'No rewards to claim',
+          valid: 'Claim rewards',
+          loading: '',
+        }}
+      />
+    </form>
   )
 }
 
