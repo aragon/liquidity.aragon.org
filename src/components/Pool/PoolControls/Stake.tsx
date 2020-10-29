@@ -51,7 +51,6 @@ function Stake(): JSX.Element {
       rewards,
       rewardToken.decimals
     ).format({
-      commify: true,
       digits: formattedDigits,
     })
 
