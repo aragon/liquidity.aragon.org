@@ -43,9 +43,9 @@ function Stake(): JSX.Element {
 
     // (reward rate) * (user stake) / (total stake) * 7 days (seconds)
     const rewards = rewardRate
-      .mul(stakedBalance.add(parsedAmountBn))
-      .div(poolTotalSupply)
       .mul(weekSeconds)
+      .mul(stakedBalance.add(parsedAmountBn)) // Add user input amount to total
+      .div(poolTotalSupply.add(parsedAmountBn))
 
     const formattedValue = new TokenAmount(
       rewards,
@@ -68,13 +68,10 @@ function Stake(): JSX.Element {
   const formattedStakedBalance = useMemo(
     (): string | null =>
       stakedBalance &&
-      new TokenAmount(
-        stakedBalance.add(parsedAmountBn),
-        stakeToken.decimals
-      ).format({
+      new TokenAmount(stakedBalance, stakeToken.decimals).format({
         digits: formattedDigits,
       }),
-    [stakedBalance, stakeToken.decimals, parsedAmountBn, formattedDigits]
+    [stakedBalance, stakeToken.decimals, formattedDigits]
   )
 
   const handleAmountChange = useCallback(
@@ -132,9 +129,6 @@ function Stake(): JSX.Element {
         value={formattedRewards}
         tokenGraphic={rewardToken.graphic}
         suffix={`${rewardToken.symbol} / week`}
-        css={`
-          margin-bottom: 30px;
-        `}
       />
       <ControlButton
         status={validationStatus}
