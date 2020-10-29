@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 // @ts-ignore
-import { useTheme } from '@aragon/ui'
+import { useLayout, useTheme } from '@aragon/ui'
 import { radius } from '../../style/radius'
 import { shadowDepth } from '../../style/shadow'
 import { fontWeight } from '../../style/font'
@@ -23,6 +23,9 @@ function AmountCard({
   ...props
 }: AmountCardProps): JSX.Element {
   const theme = useTheme()
+  const { layoutName } = useLayout()
+
+  const compactMode = layoutName === 'small'
 
   return (
     <div
@@ -30,13 +33,13 @@ function AmountCard({
         display: flex;
         align-items: center;
         background-color: ${theme.surface};
-        padding: 30px;
+        padding: ${compactMode ? '25px' : '30px'};
         border-radius: ${radius.high};
         box-shadow: ${shadowDepth.medium};
       `}
       {...props}
     >
-      {tokenGraphic && (
+      {tokenGraphic && !compactMode && (
         <div
           css={`
             border-radius: 100%;
@@ -78,7 +81,13 @@ function AmountCard({
         >
           {!loading ? (
             <>
-              {value}{' '}
+              <span
+                css={`
+                  word-break: break-all;
+                `}
+              >
+                {value}
+              </span>{' '}
               <span
                 css={`
                   font-size: 0.75em;
