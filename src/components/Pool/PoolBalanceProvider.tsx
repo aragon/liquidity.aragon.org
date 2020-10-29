@@ -11,7 +11,7 @@ import {
 } from '../../hooks/usePolledBalance'
 import { ContractGroup } from '../../environment/types'
 
-const FORMATTED_DIGITS = 6
+const FORMATTED_DIGITS = 5
 
 type PolledValueWithStatus = [BigNumber | null, LoadingStatus]
 
