@@ -22,7 +22,6 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   const { stakeToken, contractGroup } = usePoolInfo()
   const {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
-    tokenDecimals,
   } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const withdraw = useWithdraw(contractGroup)
@@ -38,7 +37,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   } = useInputValidation({
     amount: amount,
     balance: stakedBalance,
-    decimals: tokenDecimals,
+    decimals: stakeToken.decimals,
   })
 
   // TODO: Fix this hack
@@ -102,10 +101,10 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   const formattedStakedBalance = useMemo(
     (): string | null =>
       stakedBalance &&
-      new TokenAmount(stakedBalance, tokenDecimals).format({
-        digits: tokenDecimals,
+      new TokenAmount(stakedBalance, stakeToken.decimals).format({
+        digits: stakeToken.decimals,
       }),
-    [stakedBalance, tokenDecimals]
+    [stakedBalance, stakeToken.decimals]
   )
 
   return (

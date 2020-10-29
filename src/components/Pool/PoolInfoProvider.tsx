@@ -20,10 +20,12 @@ type PoolAttributes = {
   stakeToken: {
     graphic: string
     symbol: string
+    decimals: number
   }
   rewardToken: {
     graphic: string
     symbol: string
+    decimals: number
   }
   contractGroup: ContractGroup
   liquidityUrl: string | null
@@ -47,14 +49,17 @@ function PoolInfoProvider({
     liquidityUrl,
   } = useMemo((): PoolAttributes => {
     const attributes: Record<PoolName, PoolAttributes> = {
+      // TODO: Fetch token information dynamically
       unipoolAntV1Eth: {
         stakeToken: {
           graphic: tokenUniSvg,
           symbol: 'UNI',
+          decimals: 18,
         },
         rewardToken: {
           graphic: tokenEthSvg,
           symbol: 'ETH',
+          decimals: 18,
         },
         contractGroup: 'unipoolAntV1',
         liquidityUrl: null,
@@ -63,10 +68,12 @@ function PoolInfoProvider({
         stakeToken: {
           graphic: tokenUniSvg,
           symbol: 'UNI',
+          decimals: 18,
         },
         rewardToken: {
           graphic: tokenEthSvg,
           symbol: 'WETH',
+          decimals: 18,
         },
         contractGroup: 'unipoolAntV2',
         liquidityUrl:
@@ -76,10 +83,12 @@ function PoolInfoProvider({
         stakeToken: {
           graphic: tokenBptSvg,
           symbol: 'BPT',
+          decimals: 18,
         },
         rewardToken: {
           graphic: tokenUsdcSvg,
           symbol: 'USDC',
+          decimals: 6,
         },
         contractGroup: 'balancer',
         liquidityUrl:
