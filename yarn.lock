@@ -14518,10 +14518,10 @@ use-token@^0.2.0:
   dependencies:
     js-sha3 "^0.8.0"
 
-use-wallet@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/use-wallet/-/use-wallet-0.8.0.tgz#fc6277d2257af930a3235c40f551e737b187416a"
-  integrity sha512-+IWWSiOG4rj3zKOtb/7A9W2ys8ZdA+X8gUHNVc4/+qxEXwTo72M+qGplFCZLB6/+lH+oyQ6wL9fGNfyTLDt6AQ==
+use-wallet@^0.9.0-alpha.1:
+  version "0.9.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/use-wallet/-/use-wallet-0.9.0-alpha.1.tgz#0125c2ef2889883339d0ae0c3f56fda7a9a349d3"
+  integrity sha512-KgG7pVBcP7phgypB4H2P4DLHH6cqivzRB6qPJ2QWrgjQhqgNzaJEhK+c6ZrPpTpueNdsGu6sY/zn6hTEnd8oZg==
   dependencies:
     "@aragon/provided-connector" "^6.0.7"
     "@web3-react/authereum-connector" "^6.1.1"
