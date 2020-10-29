@@ -12,7 +12,7 @@ import useInputValidation from './useInputValidation'
 
 function Stake(): JSX.Element {
   const [amount, setAmount] = useState('')
-  const { stakeToken, contractGroup } = usePoolInfo()
+  const { stakeToken, rewardToken, contractGroup } = usePoolInfo()
   const { showAccount } = useAccountModule()
   const {
     accountBalanceInfo: [accountBalance],
@@ -79,16 +79,6 @@ function Stake(): JSX.Element {
         placeholder="Enter amount to stake"
         showMax={validationStatus !== 'notConnected'}
       />
-      {/* <AmountCard
-        label="Your estimated rewards"
-        value="Testing"
-        tokenGraphic={rewardToken.graphic}
-        suffix={`${rewardToken.symbol} / week`}
-        css={`
-          margin-top: 40px;
-          margin-bottom: 40px;
-        `}
-      /> */}
       <AmountCard
         label="Amount staked"
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
@@ -96,10 +86,20 @@ function Stake(): JSX.Element {
         suffix={stakeToken.symbol}
         loading={stakedBalanceStatus === 'loading'}
         css={`
-          margin-top: 30px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        `}
+      />
+      <AmountCard
+        label="Your estimated rewards"
+        value="Testing"
+        tokenGraphic={rewardToken.graphic}
+        suffix={`${rewardToken.symbol} / week`}
+        css={`
           margin-bottom: 30px;
         `}
       />
+
       <ControlButton
         status={validationStatus}
         labels={{

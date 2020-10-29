@@ -62,7 +62,7 @@ function Claim(): JSX.Element {
         value={formattedRewardsBalance ? formattedRewardsBalance : '0'}
         loading={rewardsBalanceStatus === 'loading'}
         css={`
-          margin-top: 30px;
+          margin-top: 10px;
           margin-bottom: 30px;
         `}
       />

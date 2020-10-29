@@ -112,7 +112,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
       {!exitAllBalance && (
         <div
           css={`
-            margin-bottom: 30px;
+            margin-bottom: 10px;
           `}
         >
           <AmountInput
