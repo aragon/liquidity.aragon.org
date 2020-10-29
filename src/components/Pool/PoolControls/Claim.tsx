@@ -56,14 +56,13 @@ function Claim(): JSX.Element {
   return (
     <form onSubmit={handleSubmit}>
       <AmountCard
-        label="Rewards available to withdraw"
+        label="Total rewards generated"
         tokenGraphic={rewardToken.graphic}
         suffix={rewardToken.symbol}
         value={formattedRewardsBalance ? formattedRewardsBalance : '0'}
         loading={rewardsBalanceStatus === 'loading'}
         css={`
           margin-top: 10px;
-          margin-bottom: 30px;
         `}
       />
       <ControlButton

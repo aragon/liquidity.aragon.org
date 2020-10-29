@@ -132,9 +132,6 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
         suffix={stakeToken.symbol}
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         loading={stakedBalanceStatus === 'loading'}
-        css={`
-          margin-bottom: 30px;
-        `}
       />
       <ControlButton
         status={filteredValidationStatus}
