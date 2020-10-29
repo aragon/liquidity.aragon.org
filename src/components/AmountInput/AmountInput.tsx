@@ -7,7 +7,7 @@ import { radius } from '../../style/radius'
 
 type AmountInputProps = {
   value?: string
-  showMax?: boolean
+  disableMax?: boolean
   onChange?: (event: any) => void
   onMaxClick?: () => void
   placeholder?: string
@@ -18,7 +18,7 @@ function AmountInput({
   onChange,
   onMaxClick,
   placeholder,
-  showMax,
+  disableMax,
 }: AmountInputProps): JSX.Element {
   const theme = useTheme()
   return (
@@ -28,27 +28,28 @@ function AmountInput({
       placeholder={placeholder}
       wide
       adornment={
-        showMax && (
-          <ButtonBase
-            onClick={onMaxClick}
-            css={`
-              padding: ${0.9 * GU}px ${1.25 * GU}px;
-              background-color: white;
-              box-shadow: ${shadowDepth.low};
-              text-transform: uppercase;
-              font-weight: ${fontWeight.medium};
-              color: ${theme.link};
-              font-size: 13px;
-              line-height: 1;
+        <ButtonBase
+          onClick={onMaxClick}
+          disabled={disableMax}
+          css={`
+            padding: ${0.9 * GU}px ${1.25 * GU}px;
+            background-color: white;
+            box-shadow: ${shadowDepth.low};
+            text-transform: uppercase;
+            font-weight: ${fontWeight.medium};
+            font-size: 13px;
+            line-height: 1;
 
-              &:active {
-                transform: translateY(1px);
-              }
-            `}
-          >
-            Max
-          </ButtonBase>
-        )
+            opacity: ${disableMax ? '0.5' : '1'};
+            color: ${disableMax ? theme.contentSecondary : theme.link};
+
+            &:active {
+              transform: translateY(1px);
+            }
+          `}
+        >
+          Max
+        </ButtonBase>
       }
       adornmentPosition="end"
       adornmentSettings={{
