@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ContractGroup } from '../environment/types'
 import { captureErrorWithSentry } from '../sentry'
 import {
@@ -10,217 +10,6 @@ import { useInterval } from './useInterval'
 import { useMounted } from './useMounted'
 
 const POLL_INTERVAL = 5000
-
-// import { BigNumber } from 'ethers'
-// import { useCallback, useEffect, useMemo, useState } from 'react'
-// import { networkEnvironment } from '../environment'
-// import {
-//   MOCK_BALANCER_POOL_ACCOUNT,
-//   MOCK_INCENTIVE_POOL_ACCOUNT,
-//   MOCK_UNISWAP_POOL_ACCOUNT,
-// } from '../mock'
-// import { useWallet } from '../providers/Wallet'
-// import { captureErrorWithSentry } from '../sentry'
-// import {
-//   useAntTokenV1Contract,
-//   useAntTokenV2Contract,
-//   useBalancerPoolContract,
-//   useIncentivePoolContract,
-//   useUniswapPoolContract,
-// } from './useContract'
-// import { useInterval } from './useInterval'
-// import { useMounted } from './useMounted'
-
-// export function useIncentiveStakedBalance(
-//   mockedAccount?: boolean
-// ): BigNumber | null {
-//   const wallet = useWallet()
-//   const mounted = useMounted()
-//   const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
-//     null
-//   )
-
-//   const account = mockedAccount ? MOCK_INCENTIVE_POOL_ACCOUNT : wallet.account
-//   const incentivePoolContract = useIncentivePoolContract()
-//   const uniswapPoolContract = useUniswapPoolContract()
-
-//   const getStakedBalance = useCallback(
-//     async (clear) => {
-//       if (!incentivePoolContract || !uniswapPoolContract || !account) {
-//         // Clear any residual value
-//         if (mounted()) {
-//           setLastStakedBalance(null)
-//         }
-//         return
-//       }
-
-//       try {
-//         const { balanceOf } = incentivePoolContract.functions
-
-//         const {
-//           totalSupply: getTotalSupply,
-//           getReserves,
-//         } = uniswapPoolContract.functions
-
-//         const [
-//           { 0: userBalance },
-//           { 0: totalSupply },
-//           { 0: antReserve },
-//         ] = await Promise.all([
-//           balanceOf(account),
-//           getTotalSupply(),
-//           getReserves(),
-//         ])
-
-//         const stakedBalance = userBalance.mul(antReserve).div(totalSupply)
-
-//         // Avoid unnessesary re-renders by only updating value when it has actually changed
-//         if (
-//           mounted() &&
-//           (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
-//         ) {
-//           setLastStakedBalance(stakedBalance)
-//         }
-//       } catch (err) {
-//         captureErrorWithSentry(err)
-//         clear()
-//       }
-//     },
-//     [
-//       account,
-//       mounted,
-//       incentivePoolContract,
-//       lastStakedBalance,
-//       uniswapPoolContract,
-//     ]
-//   )
-
-//   useInterval(getStakedBalance, POLL_INTERVAL)
-
-//   return lastStakedBalance
-// }
-
-// export function useUniswapStakedBalance(
-//   mockedAccount?: boolean
-// ): BigNumber | null {
-//   const wallet = useWallet()
-//   const mounted = useMounted()
-//   const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
-//     null
-//   )
-
-//   const account = mockedAccount ? MOCK_UNISWAP_POOL_ACCOUNT : wallet.account
-//   const uniswapPoolContract = useUniswapPoolContract()
-
-//   const getStakedBalance = useCallback(
-//     async (clear) => {
-//       if (!uniswapPoolContract || !account) {
-//         // Clear any residual value
-//         if (mounted()) {
-//           setLastStakedBalance(null)
-//         }
-//         return
-//       }
-
-//       try {
-//         const {
-//           balanceOf,
-//           totalSupply: getTotalSupply,
-//           getReserves,
-//         } = uniswapPoolContract.functions
-
-//         const [
-//           { 0: userBalance },
-//           { 0: totalSupply },
-//           { 0: antReserve },
-//         ] = await Promise.all([
-//           balanceOf(account),
-//           getTotalSupply(),
-//           getReserves(),
-//         ])
-
-//         const stakedBalance = userBalance.mul(antReserve).div(totalSupply)
-
-//         // Avoid unnessesary re-renders by only updating value when it has actually changed
-//         if (
-//           mounted() &&
-//           (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
-//         ) {
-//           setLastStakedBalance(stakedBalance)
-//         }
-//       } catch (err) {
-//         captureErrorWithSentry(err)
-//         clear()
-//       }
-//     },
-//     [account, mounted, lastStakedBalance, uniswapPoolContract]
-//   )
-
-//   useInterval(getStakedBalance, POLL_INTERVAL)
-
-//   return lastStakedBalance
-// }
-
-// export function useBalancerStakedBalance(
-//   mockedAccount?: boolean
-// ): BigNumber | null {
-//   const wallet = useWallet()
-//   const mounted = useMounted()
-//   const [lastStakedBalance, setLastStakedBalance] = useState<BigNumber | null>(
-//     null
-//   )
-
-//   const account = mockedAccount ? MOCK_BALANCER_POOL_ACCOUNT : wallet.account
-//   const balancerPoolContract = useBalancerPoolContract()
-
-//   const getStakedBalance = useCallback(
-//     async (clear) => {
-//       if (!balancerPoolContract || !account) {
-//         // Clear any residual value
-//         if (mounted()) {
-//           setLastStakedBalance(null)
-//         }
-//         return
-//       }
-
-//       try {
-//         const {
-//           balanceOf,
-//           totalSupply: getTotalSupply,
-//           getBalance,
-//         } = balancerPoolContract.functions
-
-//         const [
-//           { 0: userBalance },
-//           { 0: totalSupply },
-//           { 0: poolAntBalance },
-//         ] = await Promise.all([
-//           balanceOf(account),
-//           getTotalSupply(),
-//           getBalance(networkEnvironment.contracts.tokenAntV1),
-//         ])
-
-//         const stakedBalance = userBalance.mul(poolAntBalance).div(totalSupply)
-
-//         // Avoid unnessesary re-renders by only updating value when it has actually changed
-//         if (
-//           mounted() &&
-//           (!lastStakedBalance || !stakedBalance.eq(lastStakedBalance))
-//         ) {
-//           setLastStakedBalance(stakedBalance)
-//         }
-//       } catch (err) {
-//         captureErrorWithSentry(err)
-//         clear()
-//       }
-//     },
-//     [account, mounted, lastStakedBalance, balancerPoolContract]
-//   )
-
-//   useInterval(getStakedBalance, POLL_INTERVAL)
-
-//   return lastStakedBalance
-// }
 
 export type LoadingStatus = 'noAccount' | 'loading' | 'success' | 'error'
 
@@ -371,42 +160,101 @@ export function useRewardsBalance(
   return [rewardsBalance, status]
 }
 
-// export function useAntTotalSupply(tokenVersion: 'v1' | 'v2'): BigNumber | null {
-//   const antTokenV1Contract = useAntTokenV1Contract(true)
-//   const antTokenV2Contract = useAntTokenV2Contract(true)
-//   const mounted = useMounted()
-//   const [totalSupply, setTotalSupply] = useState<BigNumber | null>(null)
+export function usePoolTotalSupply(
+  contractGroup: ContractGroup
+): [BigNumber | null, LoadingStatus] {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+  const mounted = useMounted()
+  const [totalSupply, setTotalSupply] = useState<BigNumber | null>(null)
+  const [status, setStatus] = useState<LoadingStatus>('noAccount')
 
-//   const tokenContract = useMemo(() => {
-//     const contracts = {
-//       v1: antTokenV1Contract,
-//       v2: antTokenV2Contract,
-//     }
+  const getBalance = useCallback(
+    async (clear) => {
+      if (!poolContract) {
+        // Clear any existing value
+        if (mounted()) {
+          setStatus('noAccount')
+          setTotalSupply(null)
+        }
+        return
+      }
 
-//     return contracts[tokenVersion]
-//   }, [antTokenV1Contract, antTokenV2Contract, tokenVersion])
+      try {
+        if (!totalSupply && mounted()) {
+          setStatus('loading')
+        }
 
-//   useEffect(() => {
-//     const getTotalSupply = async () => {
-//       if (!tokenContract) {
-//         return
-//       }
+        const currentTotalSupply = await poolContract.totalSupply()
 
-//       try {
-//         const {
-//           0: fetchedTotalsupply,
-//         } = await tokenContract.functions.totalSupply()
+        // Avoid unnessesary re-renders by only updating value when it has actually changed
+        if (
+          mounted() &&
+          (!totalSupply || !currentTotalSupply.eq(totalSupply))
+        ) {
+          setStatus('success')
+          setTotalSupply(currentTotalSupply)
+        }
+      } catch (err) {
+        if (mounted()) {
+          setStatus('error')
+        }
 
-//         if (mounted()) {
-//           setTotalSupply(fetchedTotalsupply)
-//         }
-//       } catch (err) {
-//         captureErrorWithSentry(err)
-//       }
-//     }
+        captureErrorWithSentry(err)
+        clear()
+      }
+    },
+    [mounted, poolContract, totalSupply]
+  )
 
-//     getTotalSupply()
-//   }, [mounted, tokenContract])
+  useInterval(getBalance, POLL_INTERVAL)
 
-//   return totalSupply
-// }
+  return [totalSupply, status]
+}
+
+export function usePoolRewardRate(
+  contractGroup: ContractGroup
+): [BigNumber | null, LoadingStatus] {
+  const poolContract = useLiquidityPoolContract(contractGroup)
+  const mounted = useMounted()
+  const [rewardRate, setRewardRate] = useState<BigNumber | null>(null)
+  const [status, setStatus] = useState<LoadingStatus>('noAccount')
+
+  const getRewardRate = useCallback(async () => {
+    if (!poolContract) {
+      // Clear any existing value
+      if (mounted()) {
+        setStatus('noAccount')
+        setRewardRate(null)
+      }
+      return
+    }
+
+    try {
+      if (!rewardRate && mounted()) {
+        setStatus('loading')
+      }
+
+      const currentTotalSupply = await poolContract.rewardRate()
+
+      // Avoid unnessesary re-renders by only updating value when it has actually changed
+      if (mounted() && (!rewardRate || !currentTotalSupply.eq(rewardRate))) {
+        setStatus('success')
+        setRewardRate(currentTotalSupply)
+      }
+    } catch (err) {
+      if (mounted()) {
+        setStatus('error')
+      }
+
+      captureErrorWithSentry(err)
+    }
+  }, [mounted, poolContract, rewardRate])
+
+  useEffect(() => {
+    if (!rewardRate) {
+      getRewardRate()
+    }
+  }, [getRewardRate, rewardRate])
+
+  return [rewardRate, status]
+}

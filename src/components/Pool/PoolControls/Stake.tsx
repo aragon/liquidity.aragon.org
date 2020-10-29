@@ -17,6 +17,9 @@ function Stake(): JSX.Element {
   const {
     accountBalanceInfo: [accountBalance],
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
+    totalSupplyInfo: [poolTotalSupply],
+    rewardRateInfo: [rewardRate],
+    formattedDigits,
   } = usePoolBalance()
   const stake = useStake(contractGroup)
 
@@ -30,6 +33,49 @@ function Stake(): JSX.Element {
     balance: accountBalance,
     decimals: stakeToken.decimals,
   })
+
+  const formattedRewards = useMemo(() => {
+    if (!rewardRate || !poolTotalSupply || !stakedBalance) {
+      return '0'
+    }
+
+    const weekSeconds = 604800
+
+    // (reward rate) * (user stake) / (total stake) * 7 days (seconds)
+    const rewards = rewardRate
+      .mul(stakedBalance.add(parsedAmountBn))
+      .div(poolTotalSupply)
+      .mul(weekSeconds)
+
+    const formattedValue = new TokenAmount(
+      rewards,
+      rewardToken.decimals
+    ).format({
+      commify: true,
+      digits: formattedDigits,
+    })
+
+    return formattedValue
+  }, [
+    rewardRate,
+    poolTotalSupply,
+    stakedBalance,
+    rewardToken.decimals,
+    parsedAmountBn,
+    formattedDigits,
+  ])
+
+  const formattedStakedBalance = useMemo(
+    (): string | null =>
+      stakedBalance &&
+      new TokenAmount(
+        stakedBalance.add(parsedAmountBn),
+        stakeToken.decimals
+      ).format({
+        digits: formattedDigits,
+      }),
+    [stakedBalance, stakeToken.decimals, parsedAmountBn, formattedDigits]
+  )
 
   const handleAmountChange = useCallback(
     (event) => {
@@ -61,15 +107,6 @@ function Stake(): JSX.Element {
     [parsedAmountBn, showAccount, validationStatus, stake]
   )
 
-  const formattedStakedBalance = useMemo(
-    (): string | null =>
-      stakedBalance &&
-      new TokenAmount(stakedBalance, stakeToken.decimals).format({
-        digits: stakeToken.decimals,
-      }),
-    [stakedBalance, stakeToken.decimals]
-  )
-
   return (
     <form onSubmit={handleSubmit}>
       <AmountInput
@@ -80,7 +117,7 @@ function Stake(): JSX.Element {
         showMax={validationStatus !== 'notConnected'}
       />
       <AmountCard
-        label="Amount staked"
+        label="Total amount staked"
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         tokenGraphic={stakeToken.graphic}
         suffix={stakeToken.symbol}
@@ -92,14 +129,13 @@ function Stake(): JSX.Element {
       />
       <AmountCard
         label="Your estimated rewards"
-        value="Testing"
+        value={formattedRewards}
         tokenGraphic={rewardToken.graphic}
         suffix={`${rewardToken.symbol} / week`}
         css={`
           margin-bottom: 30px;
         `}
       />
-
       <ControlButton
         status={validationStatus}
         labels={{

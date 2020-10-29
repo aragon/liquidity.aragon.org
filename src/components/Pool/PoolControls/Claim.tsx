@@ -11,7 +11,7 @@ import ControlButton from './ControlButton'
 
 function Claim(): JSX.Element {
   const { rewardToken, contractGroup } = usePoolInfo()
-  const { rewardsBalanceInfo } = usePoolBalance()
+  const { rewardsBalanceInfo, formattedDigits } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const handleClaim = useClaimRewards(contractGroup)
 
@@ -21,9 +21,9 @@ function Claim(): JSX.Element {
     (): string | null =>
       rewardsBalance &&
       new TokenAmount(rewardsBalance, rewardToken.decimals).format({
-        digits: rewardToken.decimals,
+        digits: formattedDigits,
       }),
-    [rewardsBalance, rewardToken.decimals]
+    [rewardsBalance, rewardToken.decimals, formattedDigits]
   )
 
   const validationStatus = useMemo((): ValidationStatus => {
