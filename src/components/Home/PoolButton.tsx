@@ -1,19 +1,21 @@
-import React, { ReactNode, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 // @ts-ignore
 import { ButtonBase, GU, IconRight, useLayout, useTheme } from '@aragon/ui'
 import { shadowDepth } from '../../style/shadow'
 import { radius } from '../../style/radius'
 import { fontWeight } from '../../style/font'
+import { PoolName } from '../Pool/PoolInfoProvider'
+import PoolTitle from './PoolTitle'
 
 function PoolButton({
   to,
   finished = false,
-  children,
+  name,
 }: {
   to: string
   finished?: boolean
-  children: ReactNode
+  name: PoolName
 }): JSX.Element {
   const theme = useTheme()
   const { layoutName } = useLayout()
@@ -29,27 +31,30 @@ function PoolButton({
     <div
       css={`
         position: relative;
-        margin-bottom: ${2 * GU}px;
+
+        &:not(:last-child) {
+          margin-bottom: ${2 * GU}px;
+        }
       `}
     >
       <ButtonBase
         onClick={handleNavigate}
         css={`
           width: 100%;
+          font-size: inherit;
           z-index: 2;
-          padding: ${compactMode ? 3 * GU : 1.75 * GU}px ${4 * GU}px;
+          padding: ${3.25 * GU}px ${4.25 * GU}px;
           padding-right: ${compactMode ? 4 * GU : 12 * GU}px;
           background: ${theme.surface};
           box-shadow: ${shadowDepth.medium};
           border-radius: ${radius.high};
-          color: ${theme.surfaceContentSecondary};
           text-align: left;
           white-space: initial;
           transition: color 250ms ease-in-out;
         `}
       >
         {!compactMode && <ToggleButton />}
-        <div>{children}</div>
+        <PoolTitle name={name} />
         {finished && <ProgramFinished />}
       </ButtonBase>
     </div>
@@ -65,12 +70,13 @@ function ProgramFinished() {
   return (
     <div
       css={`
+        font-size: 13px;
         position: ${compactMode ? 'initial' : 'absolute'};
         top: ${compactMode ? 'inherit' : '50%'};
         margin: auto;
         margin-top: ${compactMode ? `${1 * GU}px` : '-1em'};
-        right: 96px;
-        width: 190px;
+        right: 110px;
+        width: 182px;
         text-align: center;
       `}
     >
@@ -83,12 +89,12 @@ function ProgramFinished() {
           );
           mix-blend-mode: normal;
           box-shadow: ${shadowDepth.low};
-          border-radius: 46px;
+          border-radius: ${radius.pill};
           color: ${theme.surface};
           padding: 4px 12px;
           text-transform: uppercase;
-          font-weight: ${fontWeight.bold};
-          margin-bottom: ${compactMode ? `${1 * GU}px` : '0'};
+          font-weight: ${fontWeight.semiBold};
+          margin-top: ${compactMode ? `${2 * GU}px` : '0'};
         `}
       >
         Program Completed
@@ -99,6 +105,7 @@ function ProgramFinished() {
 
 function ToggleButton() {
   const { layoutName } = useLayout()
+  const theme = useTheme()
 
   const compactMode = layoutName === 'small'
 
@@ -114,6 +121,7 @@ function ToggleButton() {
         margin-top: -0.5em;
         right: ${3.5 * GU}px;
         background-color: #dfebf766;
+        color: ${theme.surfaceContentSecondary};
         border-radius: ${compactMode ? 4 * GU : 6.25 * GU}px;
         width: 1em;
         height: 1em;

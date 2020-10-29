@@ -10,16 +10,19 @@ import { PoolName } from '../Pool/PoolInfoProvider'
 
 type PoolInfo = {
   title: string
+  endDate?: string
   tokenPair: [string, string]
 }
 
 const POOL_INFO: Record<PoolName, PoolInfo> = {
   unipoolAntV2Eth: {
     title: 'Uniswap ANTv2 / ETH',
+    endDate: 'Ends November 12th, 15:00 UTC',
     tokenPair: [antV2, eth],
   },
   balancerAntV2Usdc: {
     title: 'Balancer ANTv2 / USDC',
+    endDate: 'Ends November 12th, 15:00 UTC',
     tokenPair: [antV2, usdc],
   },
   unipoolAntV1Eth: {
@@ -30,16 +33,16 @@ const POOL_INFO: Record<PoolName, PoolInfo> = {
 
 function PoolTitle({
   name,
-  size,
+  tokenSize,
 }: {
   name: PoolName
-  size?: number
+  tokenSize?: number
 }): JSX.Element {
   const theme = useTheme()
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
 
-  const { title, tokenPair } = POOL_INFO[name]
+  const { title, tokenPair, endDate } = POOL_INFO[name]
   const [firstTokenLogo, secondTokenLogo] = tokenPair
 
   return (
@@ -47,7 +50,6 @@ function PoolTitle({
       css={`
         display: flex;
         align-items: center;
-        padding: ${0.5 * GU}px 0;
         justify-content: ${compactMode ? 'center' : 'inherit'};
       `}
     >
@@ -65,34 +67,50 @@ function PoolTitle({
           css={`
             display: flex;
             flex-shrink: 0;
-            padding: ${0.5 * GU}px;
           `}
         >
           <TokenIcon
             logo={firstTokenLogo}
-            size={size}
+            size={tokenSize}
             css={`
               z-index: 1;
             `}
           />
           <TokenIcon
             logo={secondTokenLogo}
-            size={size}
+            size={tokenSize}
             css={`
               margin-left: -${1 * GU}px;
             `}
           />
         </div>
-        <h2
+        <div
           css={`
-            margin-left: ${compactMode ? 0 : 2 * GU}px;
             margin-top: ${compactMode ? 1.5 * GU : 0}px;
-            font-size: ${3 * GU}px;
-            color: ${theme.content};
+            margin-left: ${compactMode ? 0 : 2 * GU}px;
           `}
         >
-          {title}
-        </h2>
+          <h2
+            css={`
+              font-size: ${3 * GU}px;
+              color: ${theme.content};
+              line-height: 1.2;
+            `}
+          >
+            {title}
+          </h2>
+          {endDate && (
+            <p
+              css={`
+                font-size: 14px;
+                color: ${theme.surfaceContentSecondary};
+                margin-top: ${0.25 * GU}px;
+              `}
+            >
+              {endDate}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )

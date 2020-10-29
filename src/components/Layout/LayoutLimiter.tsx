@@ -8,7 +8,7 @@ type LayoutGutterProps = {
 }
 
 const LIMITER_WIDTHS: Record<Sizes, string> = {
-  extraSmall: '760px',
+  extraSmall: '780px',
   small: '960px',
   medium: '1180px',
   large: '1360px',
