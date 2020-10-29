@@ -2,7 +2,6 @@ import React from 'react'
 import LayoutGutter from '../Layout/LayoutGutter'
 import LayoutLimiter from '../Layout/LayoutLimiter'
 import PoolButton from './PoolButton'
-import PoolName from './PoolName'
 import {
   PATH_BALANCER_ANTV2_USDC,
   PATH_UNISWAP_ANTV2_ETH,
@@ -33,15 +32,16 @@ function Home(): JSX.Element {
                 margin-bottom: 60px;
               `}
             />
-            <PoolButton to={PATH_UNISWAP_ANTV2_ETH}>
-              <PoolName name="unipoolAntV2Eth" />
-            </PoolButton>
-            <PoolButton to={PATH_BALANCER_ANTV2_USDC}>
-              <PoolName name="balancerAntV2Usdc" />
-            </PoolButton>
-            <PoolButton to={PATH_UNISWAP_ANT_ETH} finished>
-              <PoolName name="unipoolAntV1Eth" />
-            </PoolButton>
+            <PoolButton to={PATH_UNISWAP_ANTV2_ETH} name="unipoolAntV2Eth" />
+            <PoolButton
+              to={PATH_BALANCER_ANTV2_USDC}
+              name="balancerAntV2Usdc"
+            />
+            <PoolButton
+              to={PATH_UNISWAP_ANT_ETH}
+              name="unipoolAntV1Eth"
+              finished
+            />
           </div>
         </div>
       </LayoutLimiter>

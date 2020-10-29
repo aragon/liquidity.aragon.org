@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 // @ts-ignore
-import { IconArrowLeft, useLayout } from '@aragon/ui'
+import { IconArrowLeft, IconExternal, useLayout } from '@aragon/ui'
 import BrandButton from '../BrandButton/BrandButton'
-import PoolTitle from '../Home/PoolName'
+import PoolTitle from '../Home/PoolTitle'
 import { PoolName, usePoolInfo } from './PoolInfoProvider'
 
 function PoolBar({ name }: { name: PoolName }): JSX.Element {
@@ -25,55 +25,42 @@ function PoolBar({ name }: { name: PoolName }): JSX.Element {
         align-items: center;
       `}
     >
-      <div
+      <BrandButton
+        icon={<IconArrowLeft />}
+        label="Back"
+        onClick={handleNavigateHome}
         css={`
-          flex: 1;
-          display: flex;
-          justify-content: flex-start;
-          order: ${compactMode ? '2' : '1'};
           width: ${compactMode ? '100%' : 'auto'};
-          margin-top: ${compactMode ? '20px' : '0'};
+          order: ${compactMode ? '2' : '1'};
           margin-bottom: ${compactMode ? '10px' : '0'};
         `}
-      >
-        <BrandButton
-          icon={<IconArrowLeft />}
-          label="Back"
-          onClick={handleNavigateHome}
-          css={`
-            width: ${compactMode ? '100%' : 'auto'};
-          `}
-        />
-      </div>
-      <div
-        css={`
-          flex: 2;
-          display: flex;
-          justify-content: center;
-          order: ${compactMode ? '1' : '2'};
-        `}
-      >
-        <PoolTitle name={name} size={41} />
-      </div>
+      />
+
       <div
         css={`
           flex: 1;
-          display: flex;
-          justify-content: flex-end;
-          order: 3;
-          width: ${compactMode ? '100%' : 'auto'};
+          width: 100%;
+          justify-content: center;
+          order: ${compactMode ? '1' : '2'};
+          margin-bottom: ${compactMode ? '25px' : '0'};
         `}
       >
-        {liquidityUrl && (
-          <BrandButton
-            label="Add liquidity"
-            href={liquidityUrl}
-            css={`
-              width: ${compactMode ? '100%' : 'auto'};
-            `}
-          />
-        )}
+        <PoolTitle name={name} tokenSize={48} />
       </div>
+
+      <BrandButton
+        label="Add liquidity"
+        icon={<IconExternal />}
+        href={liquidityUrl ? liquidityUrl : ''}
+        disabled={!liquidityUrl}
+        css={`
+          width: ${compactMode ? '100%' : 'auto'};
+          order: 3;
+
+          // To keep the layout flow we visibil
+          ${!liquidityUrl ? 'opacity: 0; visibility: hidden;' : ''}
+        `}
+      />
     </div>
   )
 }
