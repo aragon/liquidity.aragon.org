@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 // @ts-ignore
-import { GU, useTheme } from '@aragon/ui'
+import { GU, useLayout, useTheme } from '@aragon/ui'
 import { fontWeight } from '../../style/font'
 
 type HeadingLevel = '1' | '2'
@@ -16,11 +16,13 @@ const levelProperties = {
     tag: 'h1',
     margin: 1.75 * GU,
     titleSize: 46,
+    mobileSize: 38,
   },
   2: {
     tag: 'h2',
     margin: 1.75 * GU,
     titleSize: 34,
+    mobileSize: 26,
   },
 }
 
@@ -32,7 +34,10 @@ function PageHeading({
 }: PageHeadingProps): JSX.Element {
   const theme = useTheme()
 
-  const { margin, titleSize } = levelProperties[level]
+  const { layoutName } = useLayout()
+  const compactMode = layoutName === 'small'
+
+  const { margin, titleSize, mobileSize } = levelProperties[level]
 
   return (
     <div
@@ -46,7 +51,7 @@ function PageHeading({
         css={`
           font-weight: bold;
           line-height: 1.2;
-          font-size: ${titleSize}px;
+          font-size: ${compactMode ? mobileSize : titleSize}px;
         `}
       >
         {title}
@@ -54,7 +59,7 @@ function PageHeading({
       {description && (
         <p
           css={`
-            font-size: 24px;
+            font-size: ${compactMode ? `19` : `24`}px;
             line-height: 1.4;
             margin-top: ${margin}px;
             color: ${theme.contentSecondary};

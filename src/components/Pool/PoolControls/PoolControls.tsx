@@ -1,6 +1,6 @@
 import React, { ReactNode, useMemo, useState } from 'react'
 // @ts-ignore
-import { useTheme } from '@aragon/ui'
+import { useLayout, useTheme } from '@aragon/ui'
 // @ts-ignore
 import TokenAmount from 'token-amount'
 import BrandButton from '../../BrandButton/BrandButton'
@@ -19,6 +19,7 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 
 function PoolControls(): JSX.Element {
   const theme = useTheme()
+
   const { stakeToken, expired } = usePoolInfo()
   const [activeTab, setActiveTab] = useState<TabName>(
     expired ? 'withdraw' : 'stake'
@@ -167,6 +168,9 @@ function Tabs({
   onWithdrawClick,
   onClaimClick,
 }: TabsProps): JSX.Element {
+  const { layoutName } = useLayout()
+  const compactMode = layoutName === 'small'
+
   const items = useMemo((): TabItem[] => {
     return [
       {
@@ -192,7 +196,7 @@ function Tabs({
       <div
         css={`
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: ${compactMode ? `1fr` : `1fr 1fr 1fr`};
           grid-gap: 10px;
           margin-bottom: 20px;
         `}
