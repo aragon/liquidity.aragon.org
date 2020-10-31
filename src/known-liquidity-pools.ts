@@ -4,12 +4,20 @@ import tokenUniSvg from './assets/token-uni.svg'
 import tokenBptSvg from './assets/token-bpt.svg'
 import { ContractGroup } from './environment/types'
 
+export enum PoolRoute {
+  UniswapAntV2 = '/uniswap-antv2-eth',
+  Balancer = '/balancer-antv2-usdc',
+  UniswapAntV1 = '/uniswap-ant-eth',
+}
+
 export type PoolName =
   | 'unipoolAntV1Eth'
   | 'unipoolAntV2Eth'
   | 'balancerAntV2Usdc'
 
 export type PoolAttributes = {
+  title: string
+  path: PoolRoute
   stakeToken: {
     graphic: string
     symbol: string
@@ -30,6 +38,8 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
   [
     'unipoolAntV2Eth',
     {
+      title: 'Uniswap ANTv2 / ETH',
+      path: PoolRoute.UniswapAntV2,
       stakeToken: {
         graphic: tokenUniSvg,
         symbol: 'UNI',
@@ -49,6 +59,8 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
   [
     'balancerAntV2Usdc',
     {
+      title: 'Balancer ANTv2 / USDC',
+      path: PoolRoute.Balancer,
       stakeToken: {
         graphic: tokenBptSvg,
         symbol: 'BPT',
@@ -68,6 +80,8 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
   [
     'unipoolAntV1Eth',
     {
+      title: 'Uniswap ANT / ETH',
+      path: PoolRoute.UniswapAntV1,
       stakeToken: {
         graphic: tokenUniSvg,
         symbol: 'UNI',

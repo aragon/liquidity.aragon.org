@@ -31,18 +31,24 @@ const POOL_INFO: Record<PoolName, PoolInfo> = {
   },
 }
 
-function PoolTitle({
-  name,
-  tokenSize,
-}: {
+type PoolTitleProps = {
+  title: string
+  endDate?: string
   name: PoolName
   tokenSize?: number
-}): JSX.Element {
+}
+
+function PoolTitle({
+  title,
+  endDate,
+  name,
+  tokenSize,
+}: PoolTitleProps): JSX.Element {
   const theme = useTheme()
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
 
-  const { title, tokenPair, endDate } = POOL_INFO[name]
+  const { tokenPair } = POOL_INFO[name]
   const [firstTokenLogo, secondTokenLogo] = tokenPair
 
   return (
@@ -107,7 +113,7 @@ function PoolTitle({
                 margin-top: ${0.25 * GU}px;
               `}
             >
-              {endDate}
+              Ends {endDate}
             </p>
           )}
         </div>
