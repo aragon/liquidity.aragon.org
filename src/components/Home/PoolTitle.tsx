@@ -6,7 +6,7 @@ import antV1 from '../../assets/token-ant-v1.svg'
 import antV2 from '../../assets/token-ant-v2.svg'
 import eth from '../../assets/token-eth.svg'
 import usdc from '../../assets/token-usdc.svg'
-import { PoolName } from '../Pool/PoolInfoProvider'
+import { PoolName } from '../../known-liquidity-pools'
 
 type PoolInfo = {
   title: string

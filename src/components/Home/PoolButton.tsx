@@ -5,8 +5,8 @@ import { ButtonBase, GU, IconRight, useLayout, useTheme } from '@aragon/ui'
 import { shadowDepth } from '../../style/shadow'
 import { radius } from '../../style/radius'
 import { fontWeight } from '../../style/font'
-import { PoolName } from '../Pool/PoolInfoProvider'
 import PoolTitle from './PoolTitle'
+import { PoolName } from '../../known-liquidity-pools'
 
 function PoolButton({
   to,

@@ -4,17 +4,17 @@ import LayoutGutter from '../Layout/LayoutGutter'
 import LayoutLimiter from '../Layout/LayoutLimiter'
 import PoolBar from './PoolBar'
 import PoolControls from './PoolControls/PoolControls'
-import { PoolInfoProvider, PoolName, usePoolInfo } from './PoolInfoProvider'
+import { PoolInfoProvider, usePoolInfo } from './PoolInfoProvider'
 import { PoolBalanceProvider } from './PoolBalanceProvider'
+import { PoolName } from '../../known-liquidity-pools'
 
 type PoolProps = {
   name: PoolName
-  expired?: boolean
 }
 
-function Pool({ name, expired }: PoolProps): JSX.Element {
+function Pool({ name }: PoolProps): JSX.Element {
   return (
-    <PoolInfoProvider poolName={name} expired={expired}>
+    <PoolInfoProvider poolName={name}>
       <LayoutGutter>
         <LayoutLimiter size="extraSmall">
           <PoolContent name={name} />

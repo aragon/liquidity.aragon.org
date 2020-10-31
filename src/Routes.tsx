@@ -24,7 +24,7 @@ export default function Routes(): JSX.Element {
       <Route
         exact
         path={PATH_UNISWAP_ANT_ETH}
-        render={() => <Pool name="unipoolAntV1Eth" expired={true} />}
+        render={() => <Pool name="unipoolAntV1Eth" />}
       />
       <Redirect to="/" />
     </Switch>

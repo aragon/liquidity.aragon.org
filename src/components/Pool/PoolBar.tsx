@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom'
 import { IconArrowLeft, IconExternal, useLayout } from '@aragon/ui'
 import BrandButton from '../BrandButton/BrandButton'
 import PoolTitle from '../Home/PoolTitle'
-import { PoolName, usePoolInfo } from './PoolInfoProvider'
+import { usePoolInfo } from './PoolInfoProvider'
+import { PoolName } from '../../known-liquidity-pools'
 
 function PoolBar({ name }: { name: PoolName }): JSX.Element {
   const history = useHistory()
