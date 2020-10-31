@@ -1,7 +1,7 @@
 import React from 'react'
 // @ts-ignore
 import { GU, useTheme, useLayout } from '@aragon/ui'
-import TokenIcon from './TokenIcon'
+import TokenIcon from '../TokenIcon/TokenIcon'
 import antV1 from '../../assets/token-ant-v1.svg'
 import antV2 from '../../assets/token-ant-v2.svg'
 import eth from '../../assets/token-eth.svg'

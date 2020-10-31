@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 // @ts-ignore
 import { IconArrowLeft, IconExternal, useLayout } from '@aragon/ui'
 import BrandButton from '../BrandButton/BrandButton'
-import PoolTitle from '../Home/PoolTitle'
+import PoolTitle from '../PoolTitle/PoolTitle'
 import { usePoolInfo } from './PoolInfoProvider'
 import { PoolName } from '../../known-liquidity-pools'
 
