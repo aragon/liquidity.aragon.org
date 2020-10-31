@@ -8,27 +8,10 @@ import eth from '../../assets/token-eth.svg'
 import usdc from '../../assets/token-usdc.svg'
 import { PoolName } from '../../known-liquidity-pools'
 
-type PoolInfo = {
-  title: string
-  endDate?: string
-  tokenPair: [string, string]
-}
-
-const POOL_INFO: Record<PoolName, PoolInfo> = {
-  unipoolAntV2Eth: {
-    title: 'Uniswap ANTv2 / ETH',
-    endDate: 'Ends November 12th, 15:00 UTC',
-    tokenPair: [antV2, eth],
-  },
-  balancerAntV2Usdc: {
-    title: 'Balancer ANTv2 / USDC',
-    endDate: 'Ends November 12th, 15:00 UTC',
-    tokenPair: [antV2, usdc],
-  },
-  unipoolAntV1Eth: {
-    title: 'Uniswap ANT / ETH',
-    tokenPair: [antV1, eth],
-  },
+const TOKEN_PAIR: Record<PoolName, [string, string]> = {
+  unipoolAntV2Eth: [antV2, eth],
+  balancerAntV2Usdc: [antV2, usdc],
+  unipoolAntV1Eth: [antV1, eth],
 }
 
 type PoolTitleProps = {
@@ -48,8 +31,7 @@ function PoolTitle({
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
 
-  const { tokenPair } = POOL_INFO[name]
-  const [firstTokenLogo, secondTokenLogo] = tokenPair
+  const [firstTokenIcon, secondTokenIcon] = TOKEN_PAIR[name]
 
   return (
     <div
@@ -76,14 +58,14 @@ function PoolTitle({
           `}
         >
           <TokenIcon
-            logo={firstTokenLogo}
+            logo={firstTokenIcon}
             size={tokenSize}
             css={`
               z-index: 1;
             `}
           />
           <TokenIcon
-            logo={secondTokenLogo}
+            logo={secondTokenIcon}
             size={tokenSize}
             css={`
               margin-left: -${1 * GU}px;
