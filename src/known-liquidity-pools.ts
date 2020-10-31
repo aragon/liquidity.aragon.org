@@ -22,7 +22,8 @@ export type PoolAttributes = {
   }
   contractGroup: ContractGroup
   liquidityUrl: string | null
-  expired?: boolean
+  endDate: string
+  ended?: boolean
 }
 
 export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
@@ -40,6 +41,7 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
         decimals: 18,
       },
       contractGroup: 'unipoolAntV2',
+      endDate: 'November 12th, 15:00 UTC',
       liquidityUrl:
         'https://info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae',
     },
@@ -58,6 +60,7 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
         decimals: 6,
       },
       contractGroup: 'balancer',
+      endDate: 'November 12th, 15:00 UTC',
       liquidityUrl:
         'https://pools.balancer.exchange/#/pool/0xde0999ee4e4bea6fecb03bf4ebef2626942ec6f5/',
     },
@@ -77,7 +80,8 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
       },
       contractGroup: 'unipoolAntV1',
       liquidityUrl: null,
-      expired: true,
+      endDate: 'August 21st, 2020',
+      ended: true,
     },
   ],
 ])
