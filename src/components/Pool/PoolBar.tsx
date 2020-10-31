@@ -3,12 +3,13 @@ import { useHistory } from 'react-router-dom'
 // @ts-ignore
 import { IconArrowLeft, IconExternal, useLayout } from '@aragon/ui'
 import BrandButton from '../BrandButton/BrandButton'
-import PoolTitle from '../Home/PoolTitle'
-import { PoolName, usePoolInfo } from './PoolInfoProvider'
+import PoolTitle from '../PoolTitle/PoolTitle'
+import { usePoolInfo } from './PoolInfoProvider'
+import { PoolName } from '../../known-liquidity-pools'
 
 function PoolBar({ name }: { name: PoolName }): JSX.Element {
   const history = useHistory()
-  const { liquidityUrl } = usePoolInfo()
+  const { liquidityUrl, title, endDate, ended } = usePoolInfo()
   const { layoutName } = useLayout()
   const compactMode = layoutName === 'small'
 
@@ -45,7 +46,12 @@ function PoolBar({ name }: { name: PoolName }): JSX.Element {
           margin-bottom: ${compactMode ? '25px' : '0'};
         `}
       >
-        <PoolTitle name={name} tokenSize={48} />
+        <PoolTitle
+          title={title}
+          endDate={!ended ? endDate : ''}
+          name={name}
+          tokenSize={48}
+        />
       </div>
 
       <BrandButton

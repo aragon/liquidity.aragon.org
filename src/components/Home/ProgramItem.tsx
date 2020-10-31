@@ -5,18 +5,24 @@ import { ButtonBase, GU, IconRight, useLayout, useTheme } from '@aragon/ui'
 import { shadowDepth } from '../../style/shadow'
 import { radius } from '../../style/radius'
 import { fontWeight } from '../../style/font'
-import { PoolName } from '../Pool/PoolInfoProvider'
-import PoolTitle from './PoolTitle'
+import PoolTitle from '../PoolTitle/PoolTitle'
+import { PoolName } from '../../known-liquidity-pools'
 
-function PoolButton({
-  to,
-  finished = false,
-  name,
-}: {
+type ProgramItemProps = {
   to: string
-  finished?: boolean
+  completed?: boolean
   name: PoolName
-}): JSX.Element {
+  title: string
+  endDate?: string
+}
+
+function ProgramItem({
+  to,
+  completed = false,
+  name,
+  title,
+  endDate,
+}: ProgramItemProps): JSX.Element {
   const theme = useTheme()
   const { layoutName } = useLayout()
   const history = useHistory()
@@ -31,10 +37,6 @@ function PoolButton({
     <div
       css={`
         position: relative;
-
-        &:not(:last-child) {
-          margin-bottom: ${2 * GU}px;
-        }
       `}
     >
       <ButtonBase
@@ -53,15 +55,15 @@ function PoolButton({
           transition: color 250ms ease-in-out;
         `}
       >
-        {!compactMode && <ToggleButton />}
-        <PoolTitle name={name} />
-        {finished && <ProgramFinished />}
+        {!compactMode && <ArrowRight />}
+        <PoolTitle title={title} endDate={endDate} name={name} />
+        {completed && <ProgramCompleted />}
       </ButtonBase>
     </div>
   )
 }
 
-function ProgramFinished() {
+function ProgramCompleted() {
   const { layoutName } = useLayout()
   const theme = useTheme()
 
@@ -103,7 +105,7 @@ function ProgramFinished() {
   )
 }
 
-function ToggleButton() {
+function ArrowRight() {
   const { layoutName } = useLayout()
   const theme = useTheme()
 
@@ -141,4 +143,4 @@ function ToggleButton() {
   )
 }
 
-export default PoolButton
+export default ProgramItem

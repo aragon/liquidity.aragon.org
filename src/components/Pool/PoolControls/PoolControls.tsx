@@ -20,9 +20,9 @@ type TabName = 'stake' | 'withdraw' | 'claim'
 function PoolControls(): JSX.Element {
   const theme = useTheme()
 
-  const { stakeToken, expired } = usePoolInfo()
+  const { stakeToken, ended, endDate } = usePoolInfo()
   const [activeTab, setActiveTab] = useState<TabName>(
-    expired ? 'withdraw' : 'stake'
+    ended ? 'withdraw' : 'stake'
   )
 
   const {
@@ -79,7 +79,7 @@ function PoolControls(): JSX.Element {
         box-shadow: ${shadowDepth.high};
       `}
     >
-      {expired && (
+      {ended && (
         <div
           css={`
             text-align: center;
@@ -107,12 +107,12 @@ function PoolControls(): JSX.Element {
               color: ${theme.surfaceContentSecondary};
             `}
           >
-            This program ended on August 21st, 2020. If you participated, please
-            connect your wallet to withdraw your funds and claim your rewards!
+            This program ended on {endDate}. If you participated, please connect
+            your wallet to withdraw your funds and claim your rewards!
           </p>
         </div>
       )}
-      {!expired && (
+      {!ended && (
         <Tabs
           activeTab={activeTab}
           onStakeClick={() => setActiveTab('stake')}
@@ -121,7 +121,7 @@ function PoolControls(): JSX.Element {
         />
       )}
 
-      {!expired && (
+      {!ended && (
         <div
           css={`
             display: flex;
@@ -142,7 +142,7 @@ function PoolControls(): JSX.Element {
       )}
 
       {activeTab === 'stake' && <Stake />}
-      {activeTab === 'withdraw' && <Withdraw exitAllBalance={expired} />}
+      {activeTab === 'withdraw' && <Withdraw exitAllBalance={ended} />}
       {activeTab === 'claim' && <Claim />}
     </div>
   )

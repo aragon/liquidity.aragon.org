@@ -19,6 +19,7 @@ module.exports = {
     // Loosen checks to ease integration with existing untyped packages
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
   ignorePatterns: ['src/abi/types/index.ts'],
 }
