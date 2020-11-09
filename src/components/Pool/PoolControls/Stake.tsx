@@ -17,11 +17,19 @@ function Stake(): JSX.Element {
   const {
     accountBalanceInfo: [accountBalance],
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
-    totalSupplyInfo: [poolTotalSupply],
-    rewardRateInfo: [rewardRate],
+    totalSupplyInfo: [poolTotalSupply, poolTotalSupplyStatus],
+    rewardRateInfo: [rewardRate, rewardRateStatus],
     formattedDigits,
   } = usePoolBalance()
   const stake = useStake(contractGroup)
+
+  const rewardsCardLoading = useMemo(
+    () =>
+      [stakedBalanceStatus, poolTotalSupplyStatus, rewardRateStatus].includes(
+        'loading'
+      ),
+    [stakedBalanceStatus, poolTotalSupplyStatus, rewardRateStatus]
+  )
 
   const {
     maxAmount,
@@ -128,6 +136,7 @@ function Stake(): JSX.Element {
         value={formattedRewards}
         tokenGraphic={rewardToken.graphic}
         suffix={`${rewardToken.symbol} / week`}
+        loading={rewardsCardLoading}
       />
       <ControlButton
         status={validationStatus}
