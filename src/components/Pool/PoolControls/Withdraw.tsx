@@ -24,6 +24,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   const {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
     formattedDigits,
+    rewardsBalanceInfo: [rewardsBalance],
   } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const withdraw = useWithdraw(contractGroup)
@@ -44,16 +45,16 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
 
   // TODO: Fix this hack
   const exitAllValidationStatus = useMemo(() => {
-    if (!stakedBalance) {
+    if (!stakedBalance || !rewardsBalance) {
       return 'notConnected'
     }
 
-    if (stakedBalance.isZero()) {
+    if (stakedBalance.isZero() && rewardsBalance.isZero()) {
       return 'insufficientBalance'
     }
 
     return 'valid'
-  }, [stakedBalance])
+  }, [stakedBalance, rewardsBalance])
 
   const filteredValidationStatus = exitAllBalance
     ? exitAllValidationStatus
