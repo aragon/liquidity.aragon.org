@@ -18,7 +18,12 @@ export default function Routes(): JSX.Element {
     <Switch>
       <Route exact path="/" component={Home} />
       {knownPools.map(({ path, name }) => (
-        <Route exact path={path} render={() => <Pool name={name} />} />
+        <Route
+          exact
+          path={path}
+          render={() => <Pool name={name} />}
+          key={name}
+        />
       ))}
       <Redirect to="/" />
     </Switch>
