@@ -10,11 +10,11 @@ import TotalRewardsCard from './TotalRewardsCard'
 
 function Claim(): JSX.Element {
   const { contractGroup } = usePoolInfo()
-  const { rewardsBalanceInfo } = usePoolBalance()
+  const {
+    rewardsBalanceInfo: [rewardsBalance],
+  } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const handleClaim = useClaimRewards(contractGroup)
-
-  const [rewardsBalance] = rewardsBalanceInfo
 
   const validationStatus = useMemo((): ValidationStatus => {
     if (!rewardsBalance) {

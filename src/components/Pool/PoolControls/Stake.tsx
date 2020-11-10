@@ -23,7 +23,7 @@ function Stake(): JSX.Element {
   } = usePoolBalance()
   const stake = useStake(contractGroup)
 
-  const rewardsCardLoading = useMemo(
+  const estRewardsLoading = useMemo(
     () =>
       [stakedBalanceStatus, poolTotalSupplyStatus, rewardRateStatus].includes(
         'loading'
@@ -136,7 +136,7 @@ function Stake(): JSX.Element {
         value={formattedRewards}
         tokenGraphic={rewardToken.graphic}
         suffix={`${rewardToken.symbol} / week`}
-        loading={rewardsCardLoading}
+        loading={estRewardsLoading}
       />
       <ControlButton
         status={validationStatus}
