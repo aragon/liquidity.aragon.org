@@ -11,6 +11,7 @@ import AmountInput from '../../AmountInput/AmountInput'
 import { usePoolBalance } from '../PoolBalanceProvider'
 import { usePoolInfo } from '../PoolInfoProvider'
 import ControlButton from './ControlButton'
+import TotalRewardsCard from './TotalRewardsCard'
 import useInputValidation from './useInputValidation'
 
 type WithdrawProps = {
@@ -23,6 +24,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
   const {
     stakedBalanceInfo: [stakedBalance, stakedBalanceStatus],
     formattedDigits,
+    rewardsBalanceInfo: [rewardsBalance],
   } = usePoolBalance()
   const { showAccount } = useAccountModule()
   const withdraw = useWithdraw(contractGroup)
@@ -43,16 +45,16 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
 
   // TODO: Fix this hack
   const exitAllValidationStatus = useMemo(() => {
-    if (!stakedBalance) {
+    if (!stakedBalance || !rewardsBalance) {
       return 'notConnected'
     }
 
-    if (stakedBalance.isZero()) {
+    if (stakedBalance.isZero() && rewardsBalance.isZero()) {
       return 'insufficientBalance'
     }
 
     return 'valid'
-  }, [stakedBalance])
+  }, [stakedBalance, rewardsBalance])
 
   const filteredValidationStatus = exitAllBalance
     ? exitAllValidationStatus
@@ -127,12 +129,19 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
       )}
 
       <AmountCard
-        label={`Amount available to withdraw`}
+        label={
+          exitAllBalance
+            ? 'Total amount staked'
+            : 'Amount available to withdraw'
+        }
         tokenGraphic={stakeToken.graphic}
         suffix={stakeToken.symbol}
         value={formattedStakedBalance ? formattedStakedBalance : '0'}
         loading={stakedBalanceStatus === 'loading'}
       />
+
+      {exitAllBalance && <TotalRewardsCard />}
+
       <ControlButton
         status={filteredValidationStatus}
         labels={{
@@ -141,7 +150,7 @@ function Withdraw({ exitAllBalance }: WithdrawProps): JSX.Element {
             ? 'You have no funds to withdraw'
             : 'Insufficient stake balance',
           noAmount: 'Enter an amount',
-          valid: 'Withdraw',
+          valid: exitAllBalance ? 'Withdraw all' : 'Withdraw',
           loading: 'Loading…',
         }}
       />
