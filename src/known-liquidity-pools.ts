@@ -54,6 +54,7 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
       endDate: 'November 12th, 15:00 UTC',
       liquidityUrl:
         'https://info.uniswap.org/pair/0x9def9511fec79f83afcbffe4776b1d817dc775ae',
+      ended: true,
     },
   ],
   [
@@ -75,6 +76,7 @@ export const KNOWN_LIQUIDITY_POOLS = new Map<PoolName, PoolAttributes>([
       endDate: 'November 12th, 15:00 UTC',
       liquidityUrl:
         'https://pools.balancer.exchange/#/pool/0xde0999ee4e4bea6fecb03bf4ebef2626942ec6f5/',
+      ended: true,
     },
   ],
   [
